@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+
 Sitemap: https://epochpilot.com/sitemap.xml

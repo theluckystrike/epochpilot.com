@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unix Timestamps Explained: Why Epoch Matters in 2025 — EpochPilot</title>
+<meta name="description" content="A comprehensive guide to Unix epoch time: its origin, how it works across programming languages and systems, the Y2038 problem, and best practices for timestamp handling.">
+<link rel="canonical" href="https://epochpilot.com/blog/post-1.html">
+<meta property="og:title" content="Unix Timestamps Explained: Why Epoch Matters in 2025">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <article class="article-content">
+    <h1>Unix Timestamps Explained: Why Epoch Matters in 2025</h1>
+    <div class="blog-meta">March 28, 2025 &middot; 9 min read</div>
+
+    <p>Every time you call <code>Date.now()</code> in JavaScript, <code>time.time()</code> in Python, or <code>System.currentTimeMillis()</code> in Java, you are asking the same fundamental question: how many time units have elapsed since January 1, 1970, at 00:00:00 UTC?</p>
+
+    <p>This number — the Unix timestamp, or epoch time — is the invisible backbone of nearly every computer system built in the last five decades. Databases index by it, APIs transmit it, logs sort by it, and distributed systems synchronize with it. Understanding how it works is not optional for modern developers — it is foundational.</p>
+
+    <h2>The Origin: Why January 1, 1970?</h2>
+
+    <p>The choice of epoch was pragmatic, not symbolic. When Ken Thompson and Dennis Ritchie were designing the Unix time system in the early 1970s, they needed a starting point that was recent enough to be useful but old enough to cover dates already in logs. January 1, 1970 was approximately when Unix was being developed, and it was a clean starting point (beginning of a year, beginning of a decade).</p>
+
+    <p>The original Unix time was stored as a 32-bit signed integer counting seconds. With 2^31 - 1 maximum positive value (2,147,483,647), this covered dates from December 13, 1901 (negative values represent dates before the epoch) to January 19, 2038. At the time, 68 years into the future seemed like plenty.</p>
+
+    <h2>Seconds vs Milliseconds</h2>
+
+    <p>Different systems use different precision:</p>
+
+    <pre><code># Python — seconds (float)
+import time
+time.time()  # 1712000000.123456
+
+// JavaScript — milliseconds (integer)
+Date.now()  // 1712000000123
+
+// Java — milliseconds (long)
+System.currentTimeMillis()  // 1712000000123L
+
+// Go — seconds + nanoseconds
+time.Now().Unix()      // 1712000000
+time.Now().UnixNano()  // 1712000000123456789</code></pre>
+
+    <p>The most common source of bugs when working with timestamps is confusing seconds and milliseconds. A timestamp of <code>1712000000</code> (seconds) represents April 1, 2024. But if you accidentally treat it as milliseconds, you get January 20, 1970 — 19 days after epoch. Always check whether your system expects seconds (10 digits in 2025) or milliseconds (13 digits).</p>
+
+    <p>A quick heuristic: if the number has 10 digits, it is seconds. If it has 13 digits, it is milliseconds. You can verify with our <a href="https://epochpilot.com/">epoch converter</a>, which auto-detects the format.</p>
+
+    <h2>Timestamps Across Programming Languages</h2>
+
+    <h3>JavaScript</h3>
+    <pre><code>// Current epoch in milliseconds
+const now = Date.now();
+
+// From a Date object
+const date = new Date('2025-04-02T12:00:00Z');
+const epoch = date.getTime();  // milliseconds
+const epochSec = Math.floor(epoch / 1000);
+
+// From epoch to Date
+const restored = new Date(1712059200 * 1000);
+console.log(restored.toISOString());  // "2025-04-02T16:00:00.000Z"</code></pre>
+
+    <h3>Python</h3>
+    <pre><code>import time
+from datetime import datetime, timezone
+
+# Current epoch in seconds (float)
+now = time.time()
+
+# From datetime to epoch
+dt = datetime(2025, 4, 2, 12, 0, 0, tzinfo=timezone.utc)
+epoch = dt.timestamp()
+
+# From epoch to datetime
+restored = datetime.fromtimestamp(1712059200, tz=timezone.utc)
+print(restored.isoformat())  # "2025-04-02T16:00:00+00:00"</code></pre>
+
+    <h3>SQL (PostgreSQL)</h3>
+    <pre><code>-- Current epoch
+SELECT EXTRACT(EPOCH FROM NOW());
+
+-- Epoch to timestamp
+SELECT TO_TIMESTAMP(1712059200);
+
+-- Timestamp to epoch
+SELECT EXTRACT(EPOCH FROM TIMESTAMP '2025-04-02 12:00:00 UTC');</code></pre>
+
+    <h2>The Y2038 Problem</h2>
+
+    <p>On January 19, 2038, at 03:14:07 UTC, a 32-bit signed integer counting seconds since epoch will overflow. The value 2,147,483,647 will roll over to -2,147,483,648, and systems using 32-bit time will think it is December 13, 1901.</p>
+
+    <p>This is not a theoretical concern. As of 2025:</p>
+    <ul>
+      <li>Most modern operating systems have migrated to 64-bit time (which extends to approximately 292 billion years).</li>
+      <li>Linux kernel 5.6 (2020) added support for 64-bit timestamps on 32-bit systems.</li>
+      <li>Embedded systems (IoT devices, industrial controllers) are the primary risk — many run older 32-bit code and have lifespans exceeding 13 years.</li>
+      <li>Database schemas using <code>INT</code> instead of <code>BIGINT</code> for timestamps will overflow.</li>
+      <li>File formats and protocols with 32-bit timestamp fields (some parts of ext4, NFS, some binary protocols) need updates.</li>
+    </ul>
+
+    <p>If you are building a system today, always use 64-bit integers for timestamps. There is no performance benefit to using 32-bit, and the overflow risk is real for any system that might still be running in 2038.</p>
+
+    <h2>Timezone Considerations</h2>
+
+    <p>A Unix timestamp is always UTC. It has no timezone information embedded in it. The number <code>1712059200</code> means the same instant in time regardless of whether you are in Tokyo, London, or San Francisco.</p>
+
+    <p>The confusion arises when converting to human-readable format. The same timestamp renders differently depending on the timezone of the formatter:</p>
+
+    <pre><code>const epoch = 1712059200;
+const date = new Date(epoch * 1000);
+
+console.log(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+// "4/2/2025, 4:00:00 PM"
+
+console.log(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+// "4/2/2025, 12:00:00 PM"
+
+console.log(date.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+// "4/3/2025, 1:00:00 AM"</code></pre>
+
+    <p>Best practice: store and transmit timestamps as epoch (seconds or milliseconds). Only convert to a timezone-specific string at the display layer, as close to the user as possible. Tools like <a href="https://claudhq.com">ClaudHQ</a> can help analyze codebases for timezone handling patterns and identify potential bugs before they reach production.</p>
+
+    <h2>Common Pitfalls</h2>
+
+    <h3>Daylight Saving Time</h3>
+    <p>DST transitions create two kinds of anomalies: a "spring forward" gap (where an hour does not exist) and a "fall back" overlap (where an hour occurs twice). If your application schedules events at "2:30 AM" on the night of a DST transition, you need to handle both cases explicitly.</p>
+
+    <h3>Leap Seconds</h3>
+    <p>Unix time technically does not account for leap seconds. A Unix day is always exactly 86,400 seconds. When a leap second occurs, the system clock either repeats a second or smooths the adjustment over a period ("leap smear"). Most applications do not need to worry about this, but high-precision systems (financial trading, scientific measurement) do.</p>
+
+    <h3>Clock Skew in Distributed Systems</h3>
+    <p>In a distributed system, different servers have slightly different clock values. NTP (Network Time Protocol) keeps them synchronized to within a few milliseconds, but this is not always enough. If your application logic depends on the ordering of events across servers, use a logical clock (like a Lamport timestamp) instead of relying solely on wall-clock time.</p>
+
+    <h2>Timestamps in APIs</h2>
+
+    <p>API design choices around timestamps affect usability and correctness:</p>
+    <ul>
+      <li><strong>Epoch seconds</strong> — Compact, unambiguous, but not human-readable. Good for machine-to-machine communication.</li>
+      <li><strong>Epoch milliseconds</strong> — Same benefits with more precision. JavaScript's native format.</li>
+      <li><strong>ISO 8601 strings</strong> — Human-readable, includes timezone info. Larger payload size but eliminates ambiguity about format.</li>
+    </ul>
+
+    <p>The trend in modern APIs is toward ISO 8601 (<code>2025-04-02T12:00:00Z</code>) for readability, with epoch values available as an alternative. Whatever you choose, document it clearly and be consistent.</p>
+
+    <h2>Conclusion</h2>
+
+    <p>Unix timestamps are simple in concept (count of seconds from a fixed point) but complex in practice (precision, timezone conversion, overflow, DST, clock skew). The key principles are: always store in UTC, always use 64-bit integers, convert to local time only at the display layer, and document your precision (seconds vs milliseconds).</p>
+
+    <p>The epoch is not just a convention — it is the common language that allows systems written in different languages, running on different operating systems, in different timezones, to agree on when something happened. Fifty-five years after its creation, it remains as relevant as ever.</p>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </div>
+  <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://kappakit.com">KappaKit</a> &middot; <a href="https://ml3x.com">ML3X</a></p>
+</footer>
+</body>
+</html>

@@ -1,84 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About EpochPilot</title>
-    <meta name="description" content="Learn about EpochPilot's mission to make MLOps accessible and provide proven practices for production machine learning systems.">
-    <meta name="keywords" content="about EpochPilot, MLOps mission, machine learning operations education">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="About EpochPilot">
-    <meta property="og:description" content="EpochPilot's mission to make MLOps accessible and practical.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://epochpilot.com/about">
-    <link rel="canonical" href="https://epochpilot.com/about">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>* { font-family: 'Inter', sans-serif; } html { scroll-behavior: smooth; }</style>
-    <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebPage","name":"About EpochPilot","url":"https://epochpilot.com/about","description":"Learn about EpochPilot's mission for MLOps education.","isPartOf":{"@type":"WebSite","name":"EpochPilot","url":"https://epochpilot.com"}}
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — EpochPilot Timestamp Converter</title>
+<meta name="description" content="EpochPilot is a free browser-based suite of time tools: epoch converter, timezone comparison, cron parser, and time difference calculator.">
+<link rel="canonical" href="https://epochpilot.com/about.html">
+<link rel="stylesheet" href="/assets/style.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <nav class="bg-gradient-to-r from-sky-600 to-cyan-500 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="/" class="text-white text-2xl font-bold tracking-tight">EpochPilot</a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="/" class="text-sky-100 hover:text-white transition">Home</a>
-                    <a href="/guides" class="text-sky-100 hover:text-white transition">Guides</a>
-                    <a href="/tools" class="text-sky-100 hover:text-white transition">Tools</a>
-                    <a href="/blog/getting-started" class="text-sky-100 hover:text-white transition">Blog</a>
-                    <a href="/about" class="text-white font-semibold transition">About</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <header class="bg-gradient-to-br from-sky-600 via-sky-500 to-cyan-400 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">About EpochPilot</h1>
-            <p class="text-xl text-sky-100 max-w-2xl">Our mission and the network of AI resources we belong to.</p>
-        </div>
-    </header>
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="prose prose-lg max-w-none text-gray-600 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-900">Our Mission</h2>
-            <p>EpochPilot exists to make MLOps accessible to every team that builds machine learning systems. We believe that the operational practices surrounding model development are just as important as the models themselves, yet they receive a fraction of the attention in most ML education programs. Our guides, tool evaluations, and best practices bridge this gap by providing the practical, battle-tested knowledge that takes teams from notebook experiments to reliable production ML systems.</p>
-            <p>Our content is created by ML engineers who have operated training infrastructure at scale, managed model deployment pipelines across diverse environments, and debugged production model failures under time pressure. Every recommendation comes from direct experience, not theoretical speculation. We focus on practices that work reliably across different team sizes, compute budgets, and organizational maturity levels, recognizing that a startup with two ML engineers has different needs than an enterprise with a dedicated MLOps team.</p>
-            <p>EpochPilot is part of a network of specialized AI and ML resources. Our flagship resource, <a href="https://zovo.one" rel="dofollow" class="text-sky-600 font-semibold hover:text-sky-800 underline">zovo.one</a>, provides a comprehensive AI tools platform that complements the operational focus of EpochPilot with broader AI development resources.</p>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </nav>
+</header>
 
-            <h2 class="text-3xl font-bold text-gray-900 mt-12">Related Sites</h2>
-            <p>Explore our network of specialized AI and ML resources:</p>
-            <div class="grid sm:grid-cols-2 gap-4 mt-4">
-                <a href="https://ml3x.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">ML3X</span>
-                    <p class="text-sm text-gray-500 mt-1">Applied machine learning and production ML</p>
-                </a>
-                <a href="https://invokebot.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">InvokeBot</span>
-                    <p class="text-sm text-gray-500 mt-1">Bot automation and API orchestration</p>
-                </a>
-                <a href="https://kappakit.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">KappaKit</span>
-                    <p class="text-sm text-gray-500 mt-1">Modular AI components and building blocks</p>
-                </a>
-                <a href="https://heytensor.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">HeyTensor</span>
-                    <p class="text-sm text-gray-500 mt-1">Deep learning tutorials and neural networks</p>
-                </a>
-            </div>
-        </div>
-    </section>
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="text-white text-xl font-bold mb-4 md:mb-0">EpochPilot</div>
-                <div class="flex space-x-8 mb-4 md:mb-0"><a href="/" class="hover:text-white transition">Home</a><a href="/guides" class="hover:text-white transition">Guides</a><a href="/tools" class="hover:text-white transition">Tools</a><a href="/blog/getting-started" class="hover:text-white transition">Blog</a><a href="/about" class="hover:text-white transition">About</a></div>
-                <p class="text-sm">&copy; 2025 EpochPilot. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+<main>
+  <div class="article-content">
+    <h1>About EpochPilot</h1>
+    <p>EpochPilot is a free, browser-based collection of time and timestamp tools built for developers, DevOps engineers, and anyone who works with Unix timestamps, timezones, or scheduled tasks.</p>
+
+    <h2>Why We Built This</h2>
+    <p>Time is deceptively complex. Unix timestamps look simple — just a number — but converting between formats, accounting for timezone offsets, handling daylight saving transitions, and parsing cron expressions all introduce subtle bugs that waste real engineering time.</p>
+    <p>EpochPilot puts six essential time tools in one page: epoch conversion, live clocks, timezone comparison, time difference calculation, cron expression parsing, and relative time display. Everything runs in your browser with no server-side processing.</p>
+
+    <h2>The Tools</h2>
+    <ul>
+      <li><strong>Epoch Converter</strong> — Convert Unix timestamps (seconds or milliseconds) to human-readable dates in ISO 8601, RFC 2822, and locale formats. Reverse conversion too.</li>
+      <li><strong>Live Clock</strong> — Real-time display of the current epoch, UTC time, local time, and ISO 8601.</li>
+      <li><strong>Timezone Converter</strong> — Convert between 35+ major timezones using the browser's native Intl API for accurate DST handling.</li>
+      <li><strong>Time Difference</strong> — Calculate the exact difference between two timestamps in days, hours, minutes, and seconds.</li>
+      <li><strong>Cron Parser</strong> — Parse standard 5-field cron expressions and see the next 5 execution times. Includes presets for common schedules.</li>
+      <li><strong>Relative Time</strong> — See how far in the past or future a given timestamp is, expressed naturally.</li>
+    </ul>
+
+    <h2>Part of the Zovo Ecosystem</h2>
+    <p>EpochPilot is built by <a href="https://zovo.one">zovo.one</a>, a network of focused developer utilities. Other tools include <a href="https://kappakit.com">KappaKit</a> for encoding, hashing, and regex testing, and <a href="https://ml3x.com">ML3X</a> for matrix math and linear algebra.</p>
+
+    <h2>Technical Notes</h2>
+    <p>Timezone conversions use the Intl.DateTimeFormat API, which delegates to the ICU timezone database maintained by the operating system. This means DST transitions are handled correctly without any custom timezone offset tables. The cron parser iterates minute-by-minute from the current time, matching against the five-field expression, bounded to one year of iteration.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </div>
+  <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://kappakit.com">KappaKit</a> &middot; <a href="https://ml3x.com">ML3X</a></p>
+</footer>
 </body>
 </html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expressions: The Complete Guide with Examples — EpochPilot</title>
+<meta name="description" content="A comprehensive guide to cron expressions: syntax, fields, operators, real-world scheduling examples, and common mistakes to avoid in crontab and CI/CD pipelines.">
+<link rel="canonical" href="https://epochpilot.com/blog/post-2.html">
+<meta property="og:title" content="Cron Expressions: The Complete Guide with Examples">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <article class="article-content">
+    <h1>Cron Expressions: The Complete Guide with Examples</h1>
+    <div class="blog-meta">March 12, 2025 &middot; 11 min read</div>
+
+    <p>Cron is one of the oldest and most reliable scheduling systems in computing. Originally written by Ken Thompson for Unix in 1975, the cron daemon has been running scheduled tasks on servers for fifty years. Despite the rise of modern scheduling services (AWS EventBridge, Google Cloud Scheduler, Kubernetes CronJobs), the cron expression syntax remains the universal language for describing recurring schedules.</p>
+
+    <p>This guide covers the complete cron syntax, walks through real-world scheduling examples, and identifies the mistakes that catch even experienced DevOps engineers.</p>
+
+    <h2>The Five Fields</h2>
+
+    <p>A standard cron expression has five fields, separated by spaces:</p>
+
+    <pre><code>  *     *     *     *     *
+  |     |     |     |     |
+  |     |     |     |     +-- Day of Week (0-6, Sunday=0)
+  |     |     |     +-------- Month (1-12)
+  |     |     +-------------- Day of Month (1-31)
+  |     +-------------------- Hour (0-23)
+  +-------------------------- Minute (0-59)</code></pre>
+
+    <p>Each field accepts four types of values:</p>
+    <ul>
+      <li><strong>Specific value</strong>: <code>5</code> — matches only 5</li>
+      <li><strong>Wildcard</strong>: <code>*</code> — matches every value in the range</li>
+      <li><strong>Range</strong>: <code>1-5</code> — matches 1, 2, 3, 4, 5</li>
+      <li><strong>Step</strong>: <code>*/15</code> — matches every 15th value (0, 15, 30, 45 for minutes)</li>
+      <li><strong>List</strong>: <code>1,3,5</code> — matches 1, 3, and 5</li>
+    </ul>
+
+    <h2>Common Patterns and Examples</h2>
+
+    <h3>Basic Schedules</h3>
+    <pre><code># Every minute
+* * * * *
+
+# Every 5 minutes
+*/5 * * * *
+
+# Every hour (at minute 0)
+0 * * * *
+
+# Daily at midnight
+0 0 * * *
+
+# Daily at 2:30 AM
+30 2 * * *
+
+# Weekly on Sunday at midnight
+0 0 * * 0
+
+# Monthly on the 1st at midnight
+0 0 1 * *
+
+# Yearly on January 1st at midnight
+0 0 1 1 *</code></pre>
+
+    <h3>Business Hours Schedules</h3>
+    <pre><code># Weekdays at 9 AM
+0 9 * * 1-5
+
+# Every 30 minutes during business hours on weekdays
+*/30 9-17 * * 1-5
+
+# Monday and Friday at 8 AM
+0 8 * * 1,5
+
+# Weekdays at 9 AM and 5 PM
+0 9,17 * * 1-5</code></pre>
+
+    <h3>Operational Schedules</h3>
+    <pre><code># Database backup: daily at 3 AM
+0 3 * * *
+
+# Log rotation: every 6 hours
+0 */6 * * *
+
+# Health check: every 2 minutes
+*/2 * * * *
+
+# SSL certificate renewal check: 1st and 15th of each month at 4 AM
+0 4 1,15 * *
+
+# Quarterly report: 1st day of Jan, Apr, Jul, Oct at 6 AM
+0 6 1 1,4,7,10 *</code></pre>
+
+    <p>You can test any of these expressions with our <a href="https://epochpilot.com/">cron parser</a> to see the next execution times.</p>
+
+    <h2>Understanding Step Values</h2>
+
+    <p>The step operator (<code>/</code>) is the most misunderstood part of cron syntax. <code>*/n</code> means "every nth value starting from the minimum." But <code>m/n</code> means "every nth value starting from m."</p>
+
+    <pre><code># Every 15 minutes starting from minute 0: 0, 15, 30, 45
+*/15 * * * *
+
+# Every 15 minutes starting from minute 5: 5, 20, 35, 50
+5/15 * * * *
+
+# Every 3 hours starting from hour 2: 2, 5, 8, 11, 14, 17, 20, 23
+0 2/3 * * *</code></pre>
+
+    <p>A common mistake is writing <code>*/7 * * * *</code> expecting it to run every 7 minutes evenly. It runs at minutes 0, 7, 14, 21, 28, 35, 42, 49, 56 — and then at minute 0 again, only 4 minutes after the last run. The step resets each hour because the minute field has a range of 0-59.</p>
+
+    <h2>Day of Month vs Day of Week</h2>
+
+    <p>The interaction between field 3 (day of month) and field 5 (day of week) is the most confusing aspect of cron. In traditional Unix cron, if both are specified (not <code>*</code>), the job runs when <em>either</em> condition is true — it is an OR, not an AND.</p>
+
+    <pre><code># Runs on the 15th of each month AND every Friday
+0 0 15 * 5
+
+# This does NOT mean "the 15th if it falls on Friday"
+# It means "every 15th" OR "every Friday"</code></pre>
+
+    <p>This behavior surprises almost everyone. Some cron implementations (like Quartz in Java) change this to AND logic, but standard Unix cron uses OR. Always check which implementation you are using.</p>
+
+    <h2>Cron in Modern Infrastructure</h2>
+
+    <h3>Kubernetes CronJobs</h3>
+    <pre><code>apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-cleanup
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: my-cleanup:latest
+          restartPolicy: OnFailure</code></pre>
+
+    <p>Kubernetes CronJobs use standard 5-field cron syntax. The <code>concurrencyPolicy</code> field is critical — <code>Forbid</code> prevents a new job from starting if the previous one is still running. Without this, long-running jobs can pile up.</p>
+
+    <h3>GitHub Actions</h3>
+    <pre><code>name: Nightly Tests
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test</code></pre>
+
+    <p>GitHub Actions uses UTC for all cron schedules. There is no way to specify a timezone. If you need a job to run at "9 AM Pacific," you calculate the UTC equivalent (which changes with DST: 17:00 UTC in winter, 16:00 UTC in summer).</p>
+
+    <h3>AWS EventBridge (CloudWatch Events)</h3>
+    <pre><code># AWS uses a 6-field format (adds year) and different day-of-week values
+# Minutes Hours DayOfMonth Month DayOfWeek Year
+cron(0 3 * * ? *)
+
+# Note: AWS uses ? for "no specific value" in day fields
+# Day of week: SUN=1 (not 0 like Unix)</code></pre>
+
+    <p>AWS deviates from standard cron in several ways: six fields instead of five, day-of-week starting at 1 (SUN) instead of 0, and the <code>?</code> wildcard for the day-of-month/day-of-week ambiguity. Always check the documentation for your specific platform.</p>
+
+    <h2>Debugging Cron Jobs</h2>
+
+    <p>When a cron job fails silently (which they often do), here is a systematic debugging approach:</p>
+
+    <ol>
+      <li><strong>Check the expression</strong> — Use a <a href="https://epochpilot.com/">cron parser</a> to verify the next execution times match your expectations.</li>
+      <li><strong>Check the timezone</strong> — The cron daemon runs in the system timezone by default. If the server is UTC but you expected local time, your job runs at the wrong hour.</li>
+      <li><strong>Check the PATH</strong> — Cron runs with a minimal environment. Commands that work in your shell may fail in cron because the PATH is different. Use absolute paths.</li>
+      <li><strong>Check output capture</strong> — By default, cron sends output (stdout and stderr) via email. If email is not configured, output is silently discarded. Redirect to a log file: <code>0 3 * * * /usr/bin/my-script >> /var/log/my-script.log 2>&1</code></li>
+      <li><strong>Check permissions</strong> — The cron daemon runs your job as your user, but the environment differs from an interactive session. Files that need specific permissions or environment variables may fail.</li>
+    </ol>
+
+    <h2>Cron Alternatives</h2>
+
+    <p>While cron is reliable for simple periodic schedules, it has limitations:</p>
+    <ul>
+      <li><strong>No dependency management</strong> — Cron cannot say "run B after A completes." For that, use workflow orchestrators like Airflow or Dagster.</li>
+      <li><strong>No retry logic</strong> — If a cron job fails, it just fails. You need to build retry logic into the job itself.</li>
+      <li><strong>No distributed coordination</strong> — Running a cron job on multiple servers will run it on all of them. Use distributed locks or a centralized scheduler for single-execution semantics.</li>
+      <li><strong>No sub-minute scheduling</strong> — The minimum granularity is one minute. For more frequent execution, use a loop-based approach or a dedicated task queue.</li>
+    </ul>
+
+    <p>For machine learning workflows specifically, cron is often used for model retraining schedules and data pipeline orchestration. Platforms discussed on <a href="https://lockml.com">LockML</a> and <a href="https://zovo.one">Zovo</a> handle these schedules at scale, but the underlying scheduling language remains cron expressions.</p>
+
+    <h2>Quick Reference</h2>
+
+    <pre><code>Field        Range         Special Characters
+Minute       0-59          * , - /
+Hour         0-23          * , - /
+Day of Month 1-31          * , - /
+Month        1-12          * , - /
+Day of Week  0-6 (Sun=0)   * , - /
+
+10 Common Expressions:
+* * * * *       Every minute
+*/5 * * * *     Every 5 minutes
+0 * * * *       Hourly
+0 0 * * *       Daily midnight
+30 2 * * *      Daily 2:30 AM
+0 9 * * 1-5     Weekdays 9 AM
+0 0 * * 0       Weekly Sunday
+0 0 1 * *       Monthly 1st
+0 0 1 1 *       Yearly Jan 1
+0 */6 * * *     Every 6 hours</code></pre>
+
+    <h2>Conclusion</h2>
+
+    <p>Cron expressions are a compact, powerful scheduling language that has survived for fifty years because it solves a real problem well. The five-field syntax — minute, hour, day of month, month, day of week — covers the vast majority of scheduling needs. The gotchas (step value resets, OR logic for day fields, timezone confusion, PATH issues) are well-documented and avoidable with awareness.</p>
+
+    <p>Master cron expressions once, and you have a skill that works everywhere: Linux servers, Kubernetes, CI/CD pipelines, cloud schedulers, and monitoring systems. It is one of those rare pieces of technology where the time investment pays dividends for an entire career.</p>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+  </div>
+  <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://kappakit.com">KappaKit</a> &middot; <a href="https://ml3x.com">ML3X</a></p>
+</footer>
+</body>
+</html>
