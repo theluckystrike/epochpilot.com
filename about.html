@@ -23,35 +23,16 @@
     <h1>About EpochPilot</h1>
     <p>EpochPilot is a free, browser-based collection of time and timestamp tools built for developers, DevOps engineers, and anyone who works with Unix timestamps, timezones, or scheduled tasks.</p>
 
-    <h2>Why We Built This</h2>
-    <p>Time is deceptively complex. Unix timestamps look simple — just a number — but converting between formats, accounting for timezone offsets, handling daylight saving transitions, and parsing cron expressions all introduce subtle bugs that waste real engineering time.</p>
-    <p>EpochPilot puts six essential time tools in one page: epoch conversion, live clocks, timezone comparison, time difference calculation, cron expression parsing, and relative time display. Everything runs in your browser with no server-side processing.</p>
-
-    <h2>The Tools</h2>
-    <ul>
-      <li><strong>Epoch Converter</strong> — Convert Unix timestamps (seconds or milliseconds) to human-readable dates in ISO 8601, RFC 2822, and locale formats. Reverse conversion too.</li>
-      <li><strong>Live Clock</strong> — Real-time display of the current epoch, UTC time, local time, and ISO 8601.</li>
-      <li><strong>Timezone Converter</strong> — Convert between 35+ major timezones using the browser's native Intl API for accurate DST handling.</li>
-      <li><strong>Time Difference</strong> — Calculate the exact difference between two timestamps in days, hours, minutes, and seconds.</li>
-      <li><strong>Cron Parser</strong> — Parse standard 5-field cron expressions and see the next 5 execution times. Includes presets for common schedules.</li>
-      <li><strong>Relative Time</strong> — See how far in the past or future a given timestamp is, expressed naturally.</li>
-    </ul>
-
-    <h2>Part of the Zovo Ecosystem</h2>
-    <p>EpochPilot is built by <a href="https://zovo.one">zovo.one</a>, a network of focused developer utilities. Other tools include <a href="https://kappakit.com">KappaKit</a> for encoding, hashing, and regex testing, and <a href="https://ml3x.com">ML3X</a> for matrix math and linear algebra.</p>
+    <h2>About This Project</h2>
+    <p>EpochPilot is an independent timestamp converter and cron expression parser. Convert between formats, debug cron schedules, and compare timezones.</p>
 
     <h2>Technical Notes</h2>
     <p>Timezone conversions use the Intl.DateTimeFormat API, which delegates to the ICU timezone database maintained by the operating system. This means DST transitions are handled correctly without any custom timezone offset tables. The cron parser iterates minute-by-minute from the current time, matching against the five-field expression, bounded to one year of iteration.</p>
   </div>
 </main>
 
-<footer class="site-footer">
-  <div class="footer-links">
-    <a href="/">Tools</a>
-    <a href="/blog/">Blog</a>
-    <a href="/about.html">About</a>
-  </div>
-  <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://kappakit.com">KappaKit</a> &middot; <a href="https://ml3x.com">ML3X</a></p>
-</footer>
+<footer>
+    <p>&copy; 2025 EpochPilot</p>
+  </footer>
 </body>
 </html>

@@ -20,9 +20,7 @@ Enter a Unix timestamp (seconds or milliseconds) to see the corresponding date i
 
 - Vanilla JavaScript (no frameworks, no dependencies)
 - Client-side only — your data never leaves your browser
-- Part of the [Zovo Tools](https://zovo.one) open network
 
-## Related Tools
 
 - [Developer Toolkit](https://kappakit.com) — Base64, JWT, Hash, UUID, and more dev utilities
 - [A/B Test Calculator](https://abwex.com) — analyze experiment results with time-based cohorts
