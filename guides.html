@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EpochPilot — Guides</title>
+    <meta name="description" content="Expert MLOps guides covering experiment tracking, training optimization, distributed training, model monitoring, and production deployment pipelines.">
+    <meta name="keywords" content="MLOps guides, experiment tracking tutorial, training optimization guide, distributed training, model deployment pipeline">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="EpochPilot — Guides">
+    <meta property="og:description" content="Expert MLOps guides on experiment tracking, training optimization, and production deployment.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/guides">
+    <link rel="canonical" href="https://epochpilot.com/guides">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>* { font-family: 'Inter', sans-serif; } html { scroll-behavior: smooth; }</style>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebPage","name":"EpochPilot — Guides","url":"https://epochpilot.com/guides","description":"Expert MLOps guides on experiment tracking and training optimization.","isPartOf":{"@type":"WebSite","name":"EpochPilot","url":"https://epochpilot.com"}}
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav class="bg-gradient-to-r from-sky-600 to-cyan-500 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-white text-2xl font-bold tracking-tight">EpochPilot</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-sky-100 hover:text-white transition">Home</a>
+                    <a href="/guides" class="text-white font-semibold transition">Guides</a>
+                    <a href="/tools" class="text-sky-100 hover:text-white transition">Tools</a>
+                    <a href="/blog/getting-started" class="text-sky-100 hover:text-white transition">Blog</a>
+                    <a href="/about" class="text-sky-100 hover:text-white transition">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header class="bg-gradient-to-br from-sky-600 via-sky-500 to-cyan-400 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">MLOps Guides</h1>
+            <p class="text-xl text-sky-100 max-w-2xl">In-depth guides covering every aspect of machine learning operations, from experiment tracking to production deployment.</p>
+        </div>
+    </header>
+
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <article>
+            <span class="inline-block bg-sky-100 text-sky-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Experiment Tracking</span>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Setting Up a Team-Wide Experiment Tracking System</h2>
+            <div class="prose prose-lg max-w-none text-gray-600 space-y-4">
+                <p>Experiment tracking is the practice of systematically recording the configuration, code, data, and results of every model training run. Without it, teams waste compute resources re-running experiments they have already tried, ship models without knowing which configuration produced the best results, and cannot reproduce historical results when production issues arise. A well-implemented tracking system transforms ML development from an ad-hoc process into a disciplined engineering practice.</p>
+                <p>The core components of an experiment tracking system include a metadata store for recording hyperparameters and metrics, an artifact store for saving model checkpoints and evaluation results, and a user interface for comparing runs and visualizing training curves. Platforms like <a href="https://wandb.ai/" class="text-sky-600 hover:text-sky-800 underline">Weights & Biases</a>, <a href="https://mlflow.org/" class="text-sky-600 hover:text-sky-800 underline">MLflow</a>, and Neptune each provide these components with different strengths. W&B excels at visualization and collaboration, MLflow offers the most flexibility for self-hosted deployments, and Neptune provides strong integration with notebook-based workflows.</p>
+                <p>The key to successful adoption is minimizing friction. Tracking should require at most two lines of code added to an existing training script. Teams at <a href="https://claudkit.com" class="text-sky-600 hover:text-sky-800 underline">ClaudKit</a> have demonstrated that wrapping tracking calls into reusable components that automatically log common metrics, environment details, and git commit hashes ensures that no experiment goes unrecorded regardless of who runs it or how it is launched. Establish conventions early for naming experiments, tagging runs, and organizing projects, because these conventions become increasingly difficult to change as the tracking system accumulates historical data.</p>
+            </div>
+            <div class="mt-6 bg-sky-50 border-l-4 border-sky-500 p-6 rounded-r-lg">
+                <h4 class="font-semibold text-sky-800 mb-2">Key Takeaway</h4>
+                <p class="text-sky-700">Minimize tracking friction to two lines of code per script. Wrap tracking into reusable components that automatically capture metadata, and establish naming conventions before accumulating historical data.</p>
+            </div>
+        </article>
+    </section>
+
+    <section class="bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <article>
+                <span class="inline-block bg-sky-100 text-sky-700 text-sm font-medium px-3 py-1 rounded-full mb-4">GPU Optimization</span>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Maximizing GPU Utilization for Training Workloads</h2>
+                <div class="prose prose-lg max-w-none text-gray-600 space-y-4">
+                    <p>GPU compute is the single most expensive resource in model training, yet many training workloads utilize less than 50 percent of available GPU capacity. The primary causes of underutilization are data loading bottlenecks, inefficient batch sizes, suboptimal memory management, and excessive synchronization overhead in distributed training. Identifying and eliminating these bottlenecks can double effective training throughput without purchasing additional hardware.</p>
+                    <p>Profiling is the essential first step in GPU optimization. PyTorch Profiler and NVIDIA Nsight Systems reveal exactly how time is spent during each training iteration: how much time the GPU spends on computation versus waiting for data, which operations are memory-bound versus compute-bound, and where synchronization stalls occur. Armed with profiling data, you can make targeted optimizations rather than guessing. Common findings include data loading that cannot keep up with GPU processing, small batch sizes that leave GPU cores idle, and host-to-device data transfers that block computation. The conversational AI research community at <a href="https://lochbot.com" class="text-sky-600 hover:text-sky-800 underline">LochBot</a> has documented particularly effective profiling workflows for transformer-based models.</p>
+                    <p>Mixed-precision training with automatic mixed precision (AMP) is the single highest-impact optimization for most training workloads. By performing forward and backward passes in float16 while maintaining float32 master weights, AMP typically doubles throughput on modern NVIDIA GPUs with minimal impact on convergence. The implementation requires only a few lines of code with PyTorch's torch.cuda.amp module. Gradient scaling handles the reduced dynamic range of float16, and most operations work correctly in reduced precision. The rare exceptions, such as softmax and layer normalization, are automatically handled by the AMP autocast context manager.</p>
+                </div>
+                <div class="mt-6 bg-sky-50 border-l-4 border-sky-500 p-6 rounded-r-lg">
+                    <h4 class="font-semibold text-sky-800 mb-2">Key Takeaway</h4>
+                    <p class="text-sky-700">Profile before optimizing to identify actual bottlenecks. Mixed-precision training with AMP is the highest-impact single optimization, typically doubling throughput with minimal code changes.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <article>
+            <span class="inline-block bg-sky-100 text-sky-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Production Deployment</span>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Building Automated Model Deployment Pipelines</h2>
+            <div class="prose prose-lg max-w-none text-gray-600 space-y-4">
+                <p>Manual model deployment is a recipe for inconsistency, errors, and slow iteration cycles. An automated deployment pipeline takes a trained model from the experiment tracking system, runs it through a battery of evaluation tests, packages it with its preprocessing dependencies, deploys it to a staging environment for integration testing, and promotes it to production upon passing all quality gates. This automation ensures that every model deployed to production has been validated against the same quality criteria.</p>
+                <p>The evaluation stage of the deployment pipeline should go beyond simple accuracy metrics. It should include performance regression tests that compare the new model against the current production model on a fixed benchmark, latency benchmarks that verify the model meets serving SLAs under expected load, data slice analyses that check for regressions on critical segments, and bias audits that ensure fairness metrics remain within acceptable bounds. Only models that pass all gates should be eligible for production deployment. For comprehensive AI resources that complement deployment pipeline design, <a href="https://zovo.one" rel="dofollow" class="text-sky-600 font-semibold hover:text-sky-800 underline">zovo.one</a> offers tools and frameworks that streamline the evaluation-to-deployment workflow.</p>
+                <p>Canary deployments and shadow mode testing provide safety nets for catching issues that offline evaluation misses. In canary mode, the new model serves a small percentage of production traffic while its predictions are monitored for anomalies. In shadow mode, the new model processes production traffic in parallel with the current model, but only the current model's predictions are served to users. Shadow mode is particularly valuable for high-stakes applications where serving incorrect predictions, even to a small percentage of users, carries significant risk. Both strategies require monitoring infrastructure that can compare prediction distributions, latency profiles, and error rates between the canary and the current production model in real time.</p>
+            </div>
+            <div class="mt-6 bg-sky-50 border-l-4 border-sky-500 p-6 rounded-r-lg">
+                <h4 class="font-semibold text-sky-800 mb-2">Key Takeaway</h4>
+                <p class="text-sky-700">Automate deployment pipelines with multi-stage quality gates including regression tests, latency benchmarks, and bias audits. Use canary or shadow deployments for safe production rollout.</p>
+            </div>
+        </article>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="text-white text-xl font-bold mb-4 md:mb-0">EpochPilot</div>
+                <div class="flex space-x-8 mb-4 md:mb-0">
+                    <a href="/" class="hover:text-white transition">Home</a>
+                    <a href="/guides" class="hover:text-white transition">Guides</a>
+                    <a href="/tools" class="hover:text-white transition">Tools</a>
+                    <a href="/blog/getting-started" class="hover:text-white transition">Blog</a>
+                    <a href="/about" class="hover:text-white transition">About</a>
+                </div>
+                <p class="text-sm">&copy; 2025 EpochPilot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

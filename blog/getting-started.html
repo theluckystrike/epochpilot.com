@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started with MLOps — EpochPilot</title>
+    <meta name="description" content="A practical introduction to MLOps for teams transitioning from notebook-based ML development to production-ready machine learning operations.">
+    <meta name="keywords" content="MLOps getting started, machine learning operations beginner, production ML tutorial, experiment tracking setup">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Getting Started with MLOps — EpochPilot">
+    <meta property="og:description" content="A practical introduction to MLOps for teams transitioning to production ML.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://epochpilot.com/blog/getting-started">
+    <link rel="canonical" href="https://epochpilot.com/blog/getting-started">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>* { font-family: 'Inter', sans-serif; } html { scroll-behavior: smooth; }</style>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Article","headline":"Getting Started with MLOps","url":"https://epochpilot.com/blog/getting-started","publisher":{"@type":"Organization","name":"EpochPilot","url":"https://epochpilot.com"}}
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav class="bg-gradient-to-r from-sky-600 to-cyan-500 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-white text-2xl font-bold tracking-tight">EpochPilot</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-sky-100 hover:text-white transition">Home</a>
+                    <a href="/guides" class="text-sky-100 hover:text-white transition">Guides</a>
+                    <a href="/tools" class="text-sky-100 hover:text-white transition">Tools</a>
+                    <a href="/blog/getting-started" class="text-white font-semibold transition">Blog</a>
+                    <a href="/about" class="text-sky-100 hover:text-white transition">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <header class="mb-12">
+            <span class="inline-block bg-sky-100 text-sky-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Getting Started</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Getting Started with MLOps</h1>
+            <p class="text-xl text-gray-500">A practical roadmap for teams transitioning from notebook experiments to production-grade machine learning operations.</p>
+        </header>
+        <div class="prose prose-lg max-w-none text-gray-600">
+            <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">What is MLOps and Why Does It Matter?</h2>
+            <p>MLOps, short for Machine Learning Operations, is the set of practices that combines machine learning engineering with DevOps principles to automate and streamline the ML lifecycle. If your team has ever struggled to reproduce an experiment, spent days debugging a model that worked in a notebook but failed in production, or manually deployed models by copying files to a server, MLOps addresses all of these pain points. It brings the same reliability and automation that DevOps brought to software engineering into the world of machine learning.</p>
+            <p>The core problem MLOps solves is the gap between experimentation and production. Data scientists are excellent at exploring data, engineering features, and training models in notebooks. But notebooks are not production systems. They lack version control for data and models, they cannot be scheduled or monitored, they do not handle failures gracefully, and they do not scale beyond a single machine. MLOps provides the tools and practices to bridge this gap without requiring data scientists to become infrastructure engineers.</p>
+
+            <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Step 1: Version Everything</h2>
+            <p>The foundation of MLOps is versioning not just code but also data, models, and configuration. Git handles code versioning, but data and model files are too large for Git. Tools like DVC (Data Version Control) solve this by tracking large files with lightweight Git-compatible pointers while storing the actual data in cloud storage. This means you can checkout any historical commit and get exactly the code, data, and model configuration that was used at that point in time.</p>
+            <pre class="bg-gray-900 text-green-400 rounded-lg p-6 overflow-x-auto"><code># Initialize DVC in your ML project
+git init && dvc init
+
+# Track your training data
+dvc add data/training_dataset.parquet
+
+# Track your model
+dvc add models/production_model.pkl
+
+# Commit the tracking files to Git
+git add data/.gitignore data/training_dataset.parquet.dvc
+git add models/.gitignore models/production_model.pkl.dvc
+git commit -m "Track training data and model with DVC"</code></pre>
+
+            <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Step 2: Implement Experiment Tracking</h2>
+            <p>Every training run should be recorded with its hyperparameters, metrics, and artifacts. This is non-negotiable for reproducible ML. Choose a tracking platform and integrate it into your training scripts. Here is a minimal integration with Weights & Biases that logs everything automatically:</p>
+            <pre class="bg-gray-900 text-green-400 rounded-lg p-6 overflow-x-auto"><code>import wandb
+import torch
+
+# Initialize tracking for this run
+wandb.init(project="fraud-detection", config={
+    "learning_rate": 0.001,
+    "epochs": 50,
+    "batch_size": 256,
+    "model": "gradient_boosting"
+})
+
+# Training loop with automatic metric logging
+for epoch in range(wandb.config.epochs):
+    train_loss = train_one_epoch(model, train_loader)
+    val_metrics = evaluate(model, val_loader)
+    wandb.log({
+        "train_loss": train_loss,
+        "val_accuracy": val_metrics["accuracy"],
+        "val_f1": val_metrics["f1"],
+        "epoch": epoch
+    })
+
+# Save the model as a tracked artifact
+wandb.save("model_checkpoint.pt")</code></pre>
+
+            <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Step 3: Automate Your Training Pipeline</h2>
+            <p>Once experiment tracking is in place, the next step is automating the full training pipeline so it can run without manual intervention. A training pipeline typically includes data validation, feature engineering, model training, evaluation, and artifact storage. Each step should be a distinct stage that can be run independently or as part of the full pipeline. This modularity makes it easy to re-run individual stages when debugging and to parallelize stages that are independent.</p>
+            <p>Start with a simple pipeline defined in a Python script or Makefile before adopting a full orchestration framework. The goal at this stage is consistency: every team member should be able to reproduce a training run by executing a single command. As your pipeline matures and requires scheduling, distributed execution, and advanced dependency management, graduate to frameworks like Kubeflow Pipelines, Airflow, or Prefect. For teams interested in the deep learning side of the training pipeline, <a href="https://heytensor.com" class="text-sky-600 hover:text-sky-800 underline">HeyTensor</a> provides excellent tutorials on neural network training optimization that complement the operational focus here.</p>
+
+            <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Step 4: Monitor in Production</h2>
+            <p>Deploying a model is not the finish line; it is the starting line of ongoing operations. Production models degrade over time as the data they encounter diverges from the data they were trained on. Implement monitoring that tracks prediction distributions, feature distributions, and business metrics continuously. Set up alerts that trigger when drift is detected or when model performance drops below a threshold. The most mature MLOps teams automate the full feedback loop: drift detection triggers retraining, which triggers evaluation, which triggers deployment if the new model outperforms the current one.</p>
+            <p>Start simple with monitoring. Log predictions, input features, and ground truth labels when they become available. Compute basic statistics daily: mean prediction, prediction variance, and the distribution of predicted classes. Compare these against baseline statistics from the training data. Significant deviations indicate that the model's operating conditions have changed and investigation is warranted. Over time, add more sophisticated drift detection methods and automated retraining triggers as your confidence in the system grows.</p>
+        </div>
+    </article>
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="text-white text-xl font-bold mb-4 md:mb-0">EpochPilot</div>
+                <div class="flex space-x-8 mb-4 md:mb-0"><a href="/" class="hover:text-white transition">Home</a><a href="/guides" class="hover:text-white transition">Guides</a><a href="/tools" class="hover:text-white transition">Tools</a><a href="/blog/getting-started" class="hover:text-white transition">Blog</a><a href="/about" class="hover:text-white transition">About</a></div>
+                <p class="text-sm">&copy; 2025 EpochPilot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

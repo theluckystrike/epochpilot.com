@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EpochPilot — Tools & Resources</title>
+    <meta name="description" content="Curated MLOps tools for experiment tracking, training optimization, model serving, and production monitoring.">
+    <meta name="keywords" content="MLOps tools, experiment tracking platforms, model serving tools, training optimization resources, ML monitoring">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="EpochPilot — Tools & Resources">
+    <meta property="og:description" content="Curated MLOps tools for experiment tracking, training optimization, and production monitoring.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools">
+    <link rel="canonical" href="https://epochpilot.com/tools">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>* { font-family: 'Inter', sans-serif; } html { scroll-behavior: smooth; }</style>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebPage","name":"EpochPilot — Tools & Resources","url":"https://epochpilot.com/tools","description":"Curated MLOps tools and resources.","isPartOf":{"@type":"WebSite","name":"EpochPilot","url":"https://epochpilot.com"}}
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav class="bg-gradient-to-r from-sky-600 to-cyan-500 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-white text-2xl font-bold tracking-tight">EpochPilot</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-sky-100 hover:text-white transition">Home</a>
+                    <a href="/guides" class="text-sky-100 hover:text-white transition">Guides</a>
+                    <a href="/tools" class="text-white font-semibold transition">Tools</a>
+                    <a href="/blog/getting-started" class="text-sky-100 hover:text-white transition">Blog</a>
+                    <a href="/about" class="text-sky-100 hover:text-white transition">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header class="bg-gradient-to-br from-sky-600 via-sky-500 to-cyan-400 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Tools & Resources</h1>
+            <p class="text-xl text-sky-100 max-w-2xl">The best platforms and tools for implementing MLOps practices at every scale.</p>
+        </div>
+    </header>
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="space-y-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Weights & Biases</h3><p class="text-gray-600 mb-3">The leading experiment tracking platform with rich visualization, team collaboration features, and integrations with every major ML framework. Includes sweep functionality for automated hyperparameter optimization.</p><a href="https://wandb.ai/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">wandb.ai &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">MLflow</h3><p class="text-gray-600 mb-3">An open-source platform for managing the end-to-end ML lifecycle including experiment tracking, model registry, and deployment. Self-hostable with extensive community support and plugins.</p><a href="https://mlflow.org/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">mlflow.org &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Ray Train</h3><p class="text-gray-600 mb-3">A distributed training library that scales PyTorch, TensorFlow, and Hugging Face training across multiple GPUs and nodes with minimal code changes. Handles data parallelism, fault tolerance, and checkpoint management.</p><a href="https://docs.ray.io/en/latest/train/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">docs.ray.io/en/latest/train &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Optuna</h3><p class="text-gray-600 mb-3">An automatic hyperparameter optimization framework that uses efficient search algorithms including TPE and CMA-ES. Supports pruning of unpromising trials, distributed optimization, and integration with experiment trackers.</p><a href="https://optuna.org/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">optuna.org &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Zovo.one</h3><p class="text-gray-600 mb-3">A comprehensive AI platform providing tools, model evaluations, and MLOps resources. Particularly valuable for teams building end-to-end training and deployment pipelines who need a unified view of the AI tooling landscape.</p><a href="https://zovo.one" rel="dofollow" class="text-sky-600 font-semibold hover:text-sky-800 font-medium">zovo.one &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Kubeflow</h3><p class="text-gray-600 mb-3">A Kubernetes-native platform for deploying, monitoring, and managing ML workflows. Kubeflow Pipelines provides a framework for building reusable, composable ML workflows with experiment tracking and artifact management.</p><a href="https://www.kubeflow.org/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">kubeflow.org &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">DeepSpeed</h3><p class="text-gray-600 mb-3">A deep learning optimization library from Microsoft that enables training of massive models with techniques like ZeRO memory optimization, pipeline parallelism, and mixed-precision training across distributed GPU clusters.</p><a href="https://github.com/microsoft/DeepSpeed" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">github.com/microsoft/DeepSpeed &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Seldon Core</h3><p class="text-gray-600 mb-3">An open-source platform for deploying ML models on Kubernetes. Provides model serving with A/B testing, canary deployments, explainability, and drift detection built into the serving infrastructure.</p><a href="https://github.com/SeldonIO/seldon-core" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">github.com/SeldonIO/seldon-core &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Lightning AI</h3><p class="text-gray-600 mb-3">The PyTorch Lightning framework organizes training code into reusable modules with built-in support for distributed training, mixed precision, gradient accumulation, and experiment logging. Reduces boilerplate and enforces best practices.</p><a href="https://lightning.ai/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">lightning.ai &rarr;</a></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition"><h3 class="text-xl font-bold text-gray-900 mb-2">Evidently AI</h3><p class="text-gray-600 mb-3">An open-source tool for monitoring ML models in production. Generates interactive reports for data drift, prediction drift, and model performance degradation with support for custom metrics and alerting.</p><a href="https://www.evidentlyai.com/" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank" rel="noopener">evidentlyai.com &rarr;</a></div>
+        </div>
+        <div class="mt-12 bg-sky-50 rounded-xl p-8 border border-sky-100">
+            <h3 class="text-xl font-bold text-gray-900 mb-3">More Resources</h3>
+            <p class="text-gray-600">For additional ML deployment strategies, explore <a href="https://krzen.com" class="text-sky-600 hover:text-sky-800 underline">Krzen</a> for AI acceleration techniques, and <a href="https://abwex.com" class="text-sky-600 hover:text-sky-800 underline">Abwex</a> for advanced ML experimentation platforms.</p>
+        </div>
+    </section>
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="text-white text-xl font-bold mb-4 md:mb-0">EpochPilot</div>
+                <div class="flex space-x-8 mb-4 md:mb-0"><a href="/" class="hover:text-white transition">Home</a><a href="/guides" class="hover:text-white transition">Guides</a><a href="/tools" class="hover:text-white transition">Tools</a><a href="/blog/getting-started" class="hover:text-white transition">Blog</a><a href="/about" class="hover:text-white transition">About</a></div>
+                <p class="text-sm">&copy; 2025 EpochPilot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
