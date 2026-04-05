@@ -33,6 +33,8 @@
     <h2>Technical Notes</h2>
     <p>Timezone conversions use the Intl.DateTimeFormat API, which delegates to the ICU timezone database maintained by the operating system. This means DST transitions are handled correctly without any custom timezone offset tables. The cron parser iterates minute-by-minute from the current time, matching against the five-field expression, bounded to one year of iteration.</p>
   </div>
+
+      <p class="references">Learn more about the underlying standards at <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">Unix time on Wikipedia</a> and <a href="https://www.iana.org/time-zones" target="_blank">the IANA Time Zone Database</a>.</p>
 </main>
 
 <footer>
