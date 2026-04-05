@@ -347,6 +347,7 @@ function fieldMatches(field, value, min, max) {
     if (part.indexOf('/') !== -1) {
       var stepParts = part.split('/');
       var step = parseInt(stepParts[1]);
+      if (isNaN(step) || step <= 0) return false;
       var rangeStart = stepParts[0] === '*' ? min : parseInt(stepParts[0]);
       if ((value - rangeStart) >= 0 && (value - rangeStart) % step === 0) return true;
       continue;
