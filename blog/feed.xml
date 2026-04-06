@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>EpochPilot — Epoch &amp; Timestamp Converter Blog</title>
+  <link href="http://epochpilot.com/blog/" rel="alternate"/>
+  <link href="http://epochpilot.com/blog/feed.xml" rel="self"/>
+  <id>http://epochpilot.com/blog/</id>
+  <updated>2026-04-06T00:00:00Z</updated>
+  <author><name>EpochPilot — Epoch &amp; Timestamp Converter</name></author>
+  <entry>
+    <title>Unix Timestamps Explained: Why Epoch Matters in 2025 — EpochPilot</title>
+    <link href="https://epochpilot.com/blog/post-1.html" rel="alternate"/>
+    <id>https://epochpilot.com/blog/post-1.html</id>
+    <updated>2026-04-06T00:00:00Z</updated>
+    <summary>A comprehensive guide to Unix epoch time: its origin, how it works across programming languages and systems, the Y2038 problem, and best practices for timestamp handling.</summary>
+  </entry>
+  <entry>
+    <title>Cron Expressions: The Complete Guide with Examples — EpochPilot</title>
+    <link href="https://epochpilot.com/blog/post-2.html" rel="alternate"/>
+    <id>https://epochpilot.com/blog/post-2.html</id>
+    <updated>2026-04-06T00:00:00Z</updated>
+    <summary>A comprehensive guide to cron expressions: syntax, fields, operators, real-world scheduling examples, and common mistakes to avoid in crontab and CI/CD pipelines.</summary>
+  </entry>
+</feed>

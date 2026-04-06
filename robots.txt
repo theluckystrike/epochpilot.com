@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://epochpilot.com/sitemap.xml
+Sitemap: http://epochpilot.com/sitemap.xml
