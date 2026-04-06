@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>EpochPilot — Epoch &amp; Timestamp Converter Blog</title>
+  <title>EpochPilot Blog</title>
   <link href="http://epochpilot.com/blog/" rel="alternate"/>
   <link href="http://epochpilot.com/blog/feed.xml" rel="self"/>
   <id>http://epochpilot.com/blog/</id>
   <updated>2026-04-06T00:00:00Z</updated>
-  <author><name>EpochPilot — Epoch &amp; Timestamp Converter</name></author>
+  <author><name>EpochPilot</name></author>
   <entry>
     <title>Unix Timestamps Explained: Why Epoch Matters in 2025 — EpochPilot</title>
     <link href="https://epochpilot.com/blog/post-1.html" rel="alternate"/>
