@@ -4,11 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About — EpochPilot Timestamp Converter</title>
-<meta name="description" content="EpochPilot is a free browser-based suite of time tools: epoch converter, timezone comparison, cron parser, and time difference calculator.">
-<meta property="og:description" content="EpochPilot is a free browser-based suite of time tools: epoch converter, timezone comparison, cron parser, and time difference calculator.">
+<meta name="description" content="EpochPilot is a free browser-based suite of time tools built by Michael Lip: epoch converter, timezone comparison, cron parser, and time difference calculator.">
 <link rel="canonical" href="https://epochpilot.com/about.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/about.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/about.html">
 <link rel="alternate" type="application/atom+xml" title="EpochPilot — Epoch &amp; Timestamp Converter Blog Feed" href="/blog/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About — EpochPilot Timestamp Converter">
+<meta property="og:description" content="EpochPilot is a free browser-based suite of time tools: epoch converter, timezone comparison, cron parser, and time difference calculator.">
+<meta property="og:url" content="https://epochpilot.com/about.html">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — EpochPilot Timestamp Converter">
+<meta name="twitter:description" content="EpochPilot is a free browser-based suite of time tools: epoch converter, timezone comparison, cron parser, and time difference calculator.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
 <link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Michael Lip",
+  "url": "https://zovo.one",
+  "sameAs": ["https://github.com/theluckystrike"],
+  "jobTitle": "Software Developer"
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -29,11 +50,19 @@
     <h1>About EpochPilot</h1>
     <p>EpochPilot is a free, browser-based collection of time and timestamp tools built for developers, DevOps engineers, and anyone who works with Unix timestamps, timezones, or scheduled tasks.</p>
 
+    <h2>About the Author</h2>
+    <p>Built by <strong>Michael Lip</strong> — Solo developer with 10+ years experience. 140+ PRs merged into open source projects including Google Chrome and Axios. $400K+ earned on Upwork with 100% Job Success. Creator of 20+ Chrome extensions.</p>
+
     <h2>About This Project</h2>
     <p>EpochPilot is an independent timestamp converter and cron expression parser. Convert between formats, debug cron schedules, and compare timezones.</p>
 
     <h2>Technical Notes</h2>
     <p>Timezone conversions use the Intl.DateTimeFormat API, which delegates to the ICU timezone database maintained by the operating system. This means DST transitions are handled correctly without any custom timezone offset tables. The cron parser iterates minute-by-minute from the current time, matching against the five-field expression, bounded to one year of iteration.</p>
+
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:michael@zovo.one">michael@zovo.one</a></p>
+    <p>GitHub: <a href="https://github.com/theluckystrike/epochpilot.com">github.com/theluckystrike/epochpilot.com</a></p>
+    <p>More tools: <a href="https://zovo.one">zovo.one</a></p>
   </div>
 
       <p class="references">Learn more about the underlying standards at <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">Unix time on Wikipedia</a> and <a href="https://www.iana.org/time-zones" target="_blank">the IANA Time Zone Database</a>.</p>
