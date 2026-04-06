@@ -1,0 +1,826 @@
+[
+  {
+    "slug": "epoch-converter",
+    "title": "Epoch Converter \u2014 Unix Timestamp to Date",
+    "h1": "Epoch Converter",
+    "description": "Convert Unix epoch timestamps to human-readable dates and back. Supports seconds, milliseconds, ISO 8601, RFC 2822, and local time formats.",
+    "keyword": "epoch converter",
+    "component": "epoch-basic",
+    "config": {},
+    "faq": [
+      {
+        "q": "What is a Unix epoch timestamp?",
+        "a": "A Unix epoch timestamp is the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC. It is widely used in programming, databases, and APIs to represent points in time as a single integer."
+      },
+      {
+        "q": "How do I convert an epoch timestamp to a date?",
+        "a": "Paste your epoch value into the input field and click Convert. The tool auto-detects whether your value is in seconds (10 digits) or milliseconds (13 digits) and displays the result in UTC, local time, ISO 8601, and RFC 2822 formats."
+      },
+      {
+        "q": "What is the difference between seconds and milliseconds timestamps?",
+        "a": "Seconds timestamps have 10 digits (e.g., 1712000000) while milliseconds timestamps have 13 digits (e.g., 1712000000000). JavaScript uses milliseconds, Python and most Unix systems use seconds."
+      },
+      {
+        "q": "Can this tool handle negative epoch values?",
+        "a": "Yes. Negative epoch values represent dates before January 1, 1970. For example, -86400 corresponds to December 31, 1969. The converter handles these correctly."
+      }
+    ],
+    "related": ["unix-timestamp-converter", "date-to-epoch", "epoch-to-date"]
+  },
+  {
+    "slug": "unix-timestamp-converter",
+    "title": "Unix Timestamp Converter Online",
+    "h1": "Unix Timestamp Converter",
+    "description": "Free online Unix timestamp converter. Convert between epoch time and human-readable dates instantly. Supports seconds and milliseconds.",
+    "keyword": "unix timestamp converter",
+    "component": "epoch-basic",
+    "config": {},
+    "faq": [
+      {
+        "q": "What is a Unix timestamp?",
+        "a": "A Unix timestamp (also called POSIX time or epoch time) counts the number of seconds since the Unix Epoch, January 1, 1970 00:00:00 UTC. It provides a timezone-independent way to track time."
+      },
+      {
+        "q": "How do I get the current Unix timestamp?",
+        "a": "Click the Now button to instantly see the current Unix timestamp. In code: JavaScript uses Math.floor(Date.now()/1000), Python uses int(time.time()), and PHP uses time()."
+      },
+      {
+        "q": "Why do developers use Unix timestamps?",
+        "a": "Unix timestamps are timezone-independent, easy to store as integers, simple to compare and sort, and universally supported across programming languages and databases."
+      },
+      {
+        "q": "Will Unix timestamps break in 2038?",
+        "a": "The Y2038 problem affects 32-bit systems where signed integers overflow on January 19, 2038. Modern 64-bit systems are unaffected. This tool uses JavaScript 64-bit numbers and works far beyond 2038."
+      }
+    ],
+    "related": ["epoch-converter", "python-timestamp", "javascript-timestamp"]
+  },
+  {
+    "slug": "date-to-epoch",
+    "title": "Date to Epoch Converter",
+    "h1": "Date to Epoch Converter",
+    "description": "Convert any human-readable date to a Unix epoch timestamp in seconds and milliseconds. Supports ISO 8601, RFC 2822, and natural date strings.",
+    "keyword": "date to epoch",
+    "component": "epoch-basic",
+    "config": {},
+    "faq": [
+      {
+        "q": "How do I convert a date string to epoch?",
+        "a": "Enter any date string like '2025-04-02T12:00:00Z', 'April 2, 2025 12:00 PM', or '2025-04-02' and click Convert. The tool returns both seconds and milliseconds epoch values."
+      },
+      {
+        "q": "What date formats are supported?",
+        "a": "The converter accepts ISO 8601 (2025-04-02T12:00:00Z), RFC 2822 (Wed, 02 Apr 2025 12:00:00 GMT), and most natural date strings that JavaScript's Date constructor can parse."
+      },
+      {
+        "q": "Does the converter handle timezones?",
+        "a": "Yes. If your input includes a timezone offset (like +05:30 or Z for UTC), it is respected. If no timezone is specified, the date is interpreted in your browser's local timezone."
+      },
+      {
+        "q": "How accurate is the conversion?",
+        "a": "The conversion is accurate to the millisecond. The tool uses the browser's built-in Date API, which follows the ECMAScript specification for date parsing and is reliable for dates between years 1970 and 9999."
+      }
+    ],
+    "related": ["epoch-converter", "epoch-to-date", "milliseconds-converter"]
+  },
+  {
+    "slug": "epoch-to-date",
+    "title": "Epoch to Date Converter",
+    "h1": "Epoch to Date Converter",
+    "description": "Convert Unix epoch timestamps to human-readable dates. Shows UTC, local time, ISO 8601, and RFC 2822 formats with one-click copy.",
+    "keyword": "epoch to date",
+    "component": "epoch-basic",
+    "config": {},
+    "faq": [
+      {
+        "q": "How do I convert epoch to a readable date?",
+        "a": "Paste your epoch timestamp into the input field and click Convert. The tool displays the date in multiple formats: UTC, your local timezone, ISO 8601, and RFC 2822."
+      },
+      {
+        "q": "Does the tool auto-detect seconds vs milliseconds?",
+        "a": "Yes. If the value has 13 or more digits, it is treated as milliseconds. Values with 10 or fewer digits are treated as seconds. This matches how most systems generate timestamps."
+      },
+      {
+        "q": "What epoch value represents January 1, 2000?",
+        "a": "January 1, 2000 00:00:00 UTC is epoch 946684800 in seconds, or 946684800000 in milliseconds."
+      },
+      {
+        "q": "Can I see the day of the week from an epoch?",
+        "a": "Yes. The converter shows the full day of week (Monday, Tuesday, etc.) and the ISO week number alongside the standard date formats."
+      }
+    ],
+    "related": ["epoch-converter", "date-to-epoch", "unix-timestamp-converter"]
+  },
+  {
+    "slug": "milliseconds-converter",
+    "title": "Milliseconds to Date Converter",
+    "h1": "Milliseconds to Date Converter",
+    "description": "Convert millisecond timestamps to human-readable dates. Perfect for JavaScript Date.now() values, Java System.currentTimeMillis(), and API responses.",
+    "keyword": "milliseconds to date",
+    "component": "epoch-basic",
+    "config": {},
+    "faq": [
+      {
+        "q": "What is a millisecond timestamp?",
+        "a": "A millisecond timestamp is the number of milliseconds since January 1, 1970 UTC. It has 13 digits (e.g., 1712000000000). JavaScript's Date.now() and Java's System.currentTimeMillis() return this format."
+      },
+      {
+        "q": "How do I convert milliseconds to seconds?",
+        "a": "Divide by 1000. For example, 1712000000000 milliseconds equals 1712000000 seconds. This converter handles both formats automatically."
+      },
+      {
+        "q": "Which languages use millisecond timestamps?",
+        "a": "JavaScript (Date.now()), Java (System.currentTimeMillis()), C# (DateTimeOffset.ToUnixTimeMilliseconds()), and many REST APIs return timestamps in milliseconds."
+      },
+      {
+        "q": "How do I get the current time in milliseconds?",
+        "a": "In JavaScript: Date.now(). In Java: System.currentTimeMillis(). In Python: int(time.time() * 1000). Click the Now button in this tool to see the current value."
+      }
+    ],
+    "related": ["epoch-converter", "javascript-timestamp", "java-timestamp"]
+  },
+  {
+    "slug": "timezone-converter",
+    "title": "Timezone Converter \u2014 Convert Between Timezones",
+    "h1": "Timezone Converter",
+    "description": "Convert time between any two timezones instantly. Uses the IANA timezone database with automatic DST handling. Free and runs in your browser.",
+    "keyword": "timezone converter",
+    "component": "timezone-pair",
+    "config": {"from": "America/New_York", "to": "UTC"},
+    "faq": [
+      {
+        "q": "How does the timezone converter handle Daylight Saving Time?",
+        "a": "The converter uses the browser's Intl.DateTimeFormat API backed by the IANA timezone database. DST transitions are handled automatically by the operating system's ICU data, giving you correct results year-round."
+      },
+      {
+        "q": "How many timezones are supported?",
+        "a": "All IANA timezone database entries are supported, covering over 400 timezones worldwide. This includes standard zones like America/New_York, Europe/London, and Asia/Tokyo."
+      },
+      {
+        "q": "Can I convert a specific date and time, not just the current time?",
+        "a": "Yes. Enter any date and time in the input field (e.g., '2025-04-02 14:30' or just '14:30' for today) to convert it between the selected timezones."
+      },
+      {
+        "q": "What is the IANA timezone database?",
+        "a": "The IANA timezone database (also called tz or zoneinfo) is the definitive source for timezone rules including DST changes. It is maintained by a community of volunteers and used by virtually all operating systems and programming languages."
+      }
+    ],
+    "related": ["utc-converter", "pst-to-utc", "est-to-utc"]
+  },
+  {
+    "slug": "utc-converter",
+    "title": "UTC Time Converter",
+    "h1": "UTC Time Converter",
+    "description": "Convert UTC time to any local timezone and back. See the current UTC time and compare it with your local clock. Handles DST automatically.",
+    "keyword": "utc converter",
+    "component": "timezone-pair",
+    "config": {"from": "UTC", "to": "America/New_York"},
+    "faq": [
+      {
+        "q": "What is UTC time?",
+        "a": "UTC (Coordinated Universal Time) is the primary time standard by which the world regulates clocks. It does not observe Daylight Saving Time and serves as the reference point for all other timezones."
+      },
+      {
+        "q": "How is UTC different from GMT?",
+        "a": "UTC and GMT show the same time in practice, but UTC is a time standard defined by atomic clocks, while GMT is a timezone. UTC is used in computing and aviation; GMT is the civil time in the UK during winter."
+      },
+      {
+        "q": "Why do developers use UTC?",
+        "a": "UTC is timezone-neutral, never changes for DST, and provides a single unambiguous reference time. Storing timestamps in UTC and converting to local time for display is a widely accepted best practice."
+      },
+      {
+        "q": "How do I convert UTC to my local time?",
+        "a": "Select UTC as the source timezone, enter a time, and select your local timezone as the target. The converter shows the equivalent time accounting for your timezone offset and any DST rules."
+      }
+    ],
+    "related": ["timezone-converter", "gmt-converter", "pst-to-utc"]
+  },
+  {
+    "slug": "pst-to-utc",
+    "title": "PST to UTC Converter",
+    "h1": "PST to UTC Converter",
+    "description": "Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.",
+    "keyword": "pst to utc",
+    "component": "timezone-pair",
+    "config": {"from": "America/Los_Angeles", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the time difference between PST and UTC?",
+        "a": "PST (Pacific Standard Time) is UTC-8. During Daylight Saving Time (mid-March to early November), the Pacific timezone switches to PDT (UTC-7). This converter handles the switch automatically."
+      },
+      {
+        "q": "When does Pacific Daylight Time (PDT) start and end?",
+        "a": "PDT begins on the second Sunday in March at 2:00 AM (clocks spring forward to 3:00 AM) and ends on the first Sunday in November at 2:00 AM (clocks fall back to 1:00 AM)."
+      },
+      {
+        "q": "Which cities use PST/PDT?",
+        "a": "Major cities in the Pacific timezone include Los Angeles, San Francisco, Seattle, Portland, Vancouver, and Tijuana."
+      }
+    ],
+    "related": ["utc-to-pst", "est-to-utc", "timezone-converter"]
+  },
+  {
+    "slug": "est-to-utc",
+    "title": "EST to UTC Converter",
+    "h1": "EST to UTC Converter",
+    "description": "Convert Eastern Standard Time (EST/EDT) to UTC. Shows live clocks for both timezones with automatic daylight saving time handling.",
+    "keyword": "est to utc",
+    "component": "timezone-pair",
+    "config": {"from": "America/New_York", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the time difference between EST and UTC?",
+        "a": "EST (Eastern Standard Time) is UTC-5. During Daylight Saving Time (mid-March to early November), the Eastern timezone switches to EDT (UTC-4)."
+      },
+      {
+        "q": "Which cities use EST/EDT?",
+        "a": "Major Eastern timezone cities include New York, Washington D.C., Miami, Toronto, Atlanta, Boston, Philadelphia, and Detroit."
+      },
+      {
+        "q": "How do I convert 9 AM EST to UTC?",
+        "a": "9 AM EST is 2 PM UTC (add 5 hours). During EDT, 9 AM EDT is 1 PM UTC (add 4 hours). This converter accounts for DST automatically based on the date."
+      }
+    ],
+    "related": ["pst-to-utc", "utc-converter", "timezone-converter"]
+  },
+  {
+    "slug": "cet-to-utc",
+    "title": "CET to UTC Converter",
+    "h1": "CET to UTC Converter",
+    "description": "Convert Central European Time (CET/CEST) to UTC. Covers Berlin, Paris, Rome, Madrid, Amsterdam, and Warsaw with DST handling.",
+    "keyword": "cet to utc",
+    "component": "timezone-pair",
+    "config": {"from": "Europe/Berlin", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the CET to UTC offset?",
+        "a": "CET (Central European Time) is UTC+1. During summer, CEST (Central European Summer Time) is UTC+2. The switch occurs on the last Sunday of March and October."
+      },
+      {
+        "q": "Which countries use CET?",
+        "a": "CET is used across most of Western and Central Europe including Germany, France, Italy, Spain, Netherlands, Belgium, Switzerland, Austria, Poland, Czech Republic, Sweden, Norway, and Denmark."
+      },
+      {
+        "q": "When does Central European Summer Time (CEST) apply?",
+        "a": "CEST runs from the last Sunday in March (clocks move forward at 2:00 AM to 3:00 AM) until the last Sunday in October (clocks move back at 3:00 AM to 2:00 AM)."
+      }
+    ],
+    "related": ["est-to-utc", "utc-converter", "gmt-converter"]
+  },
+  {
+    "slug": "ist-to-utc",
+    "title": "IST to UTC Converter (India)",
+    "h1": "IST to UTC Converter",
+    "description": "Convert Indian Standard Time (IST) to UTC and back. IST is UTC+5:30 year-round with no daylight saving changes.",
+    "keyword": "ist to utc",
+    "component": "timezone-pair",
+    "config": {"from": "Asia/Kolkata", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the IST to UTC offset?",
+        "a": "Indian Standard Time (IST) is UTC+5:30 year-round. India does not observe Daylight Saving Time, so the offset never changes."
+      },
+      {
+        "q": "Why is India's timezone offset 30 minutes?",
+        "a": "India chose UTC+5:30 as a compromise to serve the entire country with a single timezone. The half-hour offset better centers the timezone across India's geographic span from Gujarat to Arunachal Pradesh."
+      },
+      {
+        "q": "How do I convert IST to EST?",
+        "a": "IST is 10.5 hours ahead of EST (or 9.5 hours ahead of EDT during summer). For example, 9 PM IST is 10:30 AM EST. Use this converter to get exact results for any date."
+      }
+    ],
+    "related": ["jst-to-utc", "utc-converter", "timezone-converter"]
+  },
+  {
+    "slug": "jst-to-utc",
+    "title": "JST to UTC Converter (Japan)",
+    "h1": "JST to UTC Converter",
+    "description": "Convert Japan Standard Time (JST) to UTC. JST is UTC+9 with no daylight saving time. Covers Tokyo, Osaka, and all of Japan.",
+    "keyword": "jst to utc",
+    "component": "timezone-pair",
+    "config": {"from": "Asia/Tokyo", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the JST to UTC offset?",
+        "a": "Japan Standard Time (JST) is UTC+9 year-round. Japan does not observe Daylight Saving Time."
+      },
+      {
+        "q": "How do I convert JST to EST?",
+        "a": "JST is 14 hours ahead of EST (13 hours ahead of EDT). For example, 9 AM JST is 7 PM EST the previous day. Use this tool for exact conversions on any date."
+      },
+      {
+        "q": "Does Japan observe Daylight Saving Time?",
+        "a": "No. Japan has not observed DST since 1951. JST remains at UTC+9 throughout the entire year, making timezone calculations simpler."
+      }
+    ],
+    "related": ["ist-to-utc", "aest-to-utc", "utc-converter"]
+  },
+  {
+    "slug": "gmt-converter",
+    "title": "GMT to Local Time Converter",
+    "h1": "GMT to Local Time Converter",
+    "description": "Convert Greenwich Mean Time (GMT) to your local timezone. See the current GMT time and its equivalent in any timezone worldwide.",
+    "keyword": "gmt converter",
+    "component": "timezone-pair",
+    "config": {"from": "Europe/London", "to": "America/New_York"},
+    "faq": [
+      {
+        "q": "What is GMT?",
+        "a": "Greenwich Mean Time (GMT) is the mean solar time at the Royal Observatory in Greenwich, London. In practice, GMT and UTC are the same time, though UTC is the modern technical standard."
+      },
+      {
+        "q": "Is GMT the same as UTC?",
+        "a": "For practical purposes, yes. GMT and UTC show the same time. The difference is that UTC is defined by atomic clocks and is the international standard, while GMT is a timezone historically defined by astronomy."
+      },
+      {
+        "q": "Does GMT change for Daylight Saving Time?",
+        "a": "GMT itself does not change. However, the UK switches to BST (British Summer Time, UTC+1) during summer. When people say 'GMT' in summer, they often mean BST. This converter uses Europe/London which accounts for BST."
+      }
+    ],
+    "related": ["utc-converter", "cet-to-utc", "timezone-converter"]
+  },
+  {
+    "slug": "aest-to-utc",
+    "title": "AEST to UTC Converter (Australia)",
+    "h1": "AEST to UTC Converter",
+    "description": "Convert Australian Eastern Standard Time (AEST/AEDT) to UTC. Covers Sydney, Melbourne, and Canberra with DST handling.",
+    "keyword": "aest to utc",
+    "component": "timezone-pair",
+    "config": {"from": "Australia/Sydney", "to": "UTC"},
+    "faq": [
+      {
+        "q": "What is the AEST to UTC offset?",
+        "a": "AEST (Australian Eastern Standard Time) is UTC+10. During summer (October to April), Sydney and Melbourne switch to AEDT (UTC+11). Queensland does not observe DST."
+      },
+      {
+        "q": "When does Australian Daylight Saving Time start?",
+        "a": "AEDT begins on the first Sunday in October (clocks move forward at 2:00 AM to 3:00 AM) and ends on the first Sunday in April (clocks move back at 3:00 AM to 2:00 AM). Note that Queensland, NT, and WA do not observe DST."
+      },
+      {
+        "q": "How do I convert AEST to PST?",
+        "a": "AEST is 18 hours ahead of PST (17 hours ahead of PDT). For example, 9 AM Monday AEST is 3 PM Sunday PST. Use this converter for exact results accounting for both timezones' DST rules."
+      }
+    ],
+    "related": ["jst-to-utc", "utc-converter", "timezone-converter"]
+  },
+  {
+    "slug": "utc-to-pst",
+    "title": "UTC to PST Converter",
+    "h1": "UTC to PST Converter",
+    "description": "Convert UTC to Pacific Standard Time (PST/PDT). See current time in both zones with automatic daylight saving time adjustment.",
+    "keyword": "utc to pst",
+    "component": "timezone-pair",
+    "config": {"from": "UTC", "to": "America/Los_Angeles"},
+    "faq": [
+      {
+        "q": "How do I convert UTC to PST?",
+        "a": "Subtract 8 hours from UTC to get PST, or 7 hours during PDT (mid-March to early November). This converter handles the calculation automatically for any date."
+      },
+      {
+        "q": "What is the current time in PST?",
+        "a": "This converter shows the current time in both UTC and PST/PDT at the top of the page, updating in real-time."
+      },
+      {
+        "q": "When is UTC midnight in PST?",
+        "a": "UTC midnight (00:00) is 4 PM PST the previous day (or 5 PM PDT during summer). This is useful for understanding API timestamp boundaries."
+      }
+    ],
+    "related": ["pst-to-utc", "utc-converter", "est-to-utc"]
+  },
+  {
+    "slug": "cron-expression-builder",
+    "title": "Cron Expression Builder & Generator",
+    "h1": "Cron Expression Builder",
+    "description": "Build cron expressions visually with an interactive editor. See human-readable descriptions and next 5 scheduled run times instantly.",
+    "keyword": "cron expression builder",
+    "component": "cron-builder",
+    "config": {},
+    "faq": [
+      {
+        "q": "What is a cron expression?",
+        "a": "A cron expression is a string of five fields (minute, hour, day of month, month, day of week) that defines a recurring schedule. It is used by cron daemons on Unix/Linux systems and by task schedulers in many frameworks."
+      },
+      {
+        "q": "What do the five cron fields mean?",
+        "a": "Field 1: Minute (0-59). Field 2: Hour (0-23). Field 3: Day of month (1-31). Field 4: Month (1-12). Field 5: Day of week (0-6, where 0 is Sunday). An asterisk (*) means 'every' value in that field."
+      },
+      {
+        "q": "How do I schedule a cron job every 5 minutes?",
+        "a": "Use the expression */5 * * * *. The */5 in the minute field means every 5th minute. Click the 'Every 5 min' preset button in this tool to set it automatically."
+      },
+      {
+        "q": "What does the slash (/) mean in cron?",
+        "a": "The slash defines a step value. For example, */5 in the minute field means every 5 minutes (0, 5, 10, 15...). 1-30/2 means every 2nd value from 1 to 30 (1, 3, 5, 7...)."
+      },
+      {
+        "q": "Can I use cron for seconds-level scheduling?",
+        "a": "Standard cron uses 5 fields and its minimum granularity is one minute. Some systems (like Spring and Quartz) support a 6th field for seconds, but this tool focuses on the standard 5-field format."
+      }
+    ],
+    "related": ["cron-to-english", "cron-next-runs", "crontab-guru"]
+  },
+  {
+    "slug": "cron-to-english",
+    "title": "Cron Expression to English Translator",
+    "h1": "Cron to English Translator",
+    "description": "Translate any cron expression into plain English. Understand complex schedules instantly with human-readable descriptions and next run times.",
+    "keyword": "cron to english",
+    "component": "cron-builder",
+    "config": {},
+    "faq": [
+      {
+        "q": "How do I read a cron expression?",
+        "a": "Enter any 5-field cron expression and this tool translates it into plain English. For example, '0 9 * * 1-5' becomes 'At 09:00, on Monday through Friday'."
+      },
+      {
+        "q": "What does '0 0 * * *' mean in cron?",
+        "a": "This expression means 'At 00:00 (midnight) every day'. The first 0 is the minute, the second 0 is the hour, and the three asterisks mean every day, every month, every weekday."
+      },
+      {
+        "q": "What does '*/15 * * * *' mean?",
+        "a": "This means 'Every 15 minutes'. The cron job runs at minute 0, 15, 30, and 45 of every hour, every day."
+      },
+      {
+        "q": "How do I express 'twice a day' in cron?",
+        "a": "Use '0 9,17 * * *' to run at 9 AM and 5 PM every day. The comma separates multiple values in the hour field."
+      }
+    ],
+    "related": ["cron-expression-builder", "cron-next-runs", "cron-job-generator"]
+  },
+  {
+    "slug": "cron-next-runs",
+    "title": "Cron Next Run Calculator",
+    "h1": "Cron Next Run Calculator",
+    "description": "Calculate the next 5 execution times for any cron expression. Verify your cron schedule is correct before deploying to production.",
+    "keyword": "cron next run",
+    "component": "cron-builder",
+    "config": {},
+    "faq": [
+      {
+        "q": "How do I check when my cron job will run next?",
+        "a": "Enter your cron expression and this tool computes the next 5 scheduled run times from the current moment, showing both UTC and your local timezone."
+      },
+      {
+        "q": "Why should I test my cron expression before deploying?",
+        "a": "Cron syntax can be tricky. A misplaced asterisk can cause a job to run every minute instead of once a day. Testing with this calculator prevents accidental resource consumption and billing surprises."
+      },
+      {
+        "q": "How far ahead does the calculator look?",
+        "a": "The calculator searches up to one year ahead to find the next 5 matching times. For expressions that run rarely (like once a year), it will still find the next occurrences."
+      },
+      {
+        "q": "Does the calculator account for my timezone?",
+        "a": "The calculator shows times in both UTC and your local timezone. Note that actual cron daemons typically use the server's timezone, so verify which timezone your server uses."
+      }
+    ],
+    "related": ["cron-expression-builder", "cron-to-english", "crontab-guru"]
+  },
+  {
+    "slug": "crontab-guru",
+    "title": "Crontab Syntax Reference & Tester",
+    "h1": "Crontab Syntax Reference",
+    "description": "Complete crontab syntax reference with interactive testing. Learn cron field ranges, special characters, and common patterns with live examples.",
+    "keyword": "crontab guru",
+    "component": "cron-builder",
+    "config": {},
+    "faq": [
+      {
+        "q": "What are the special characters in crontab?",
+        "a": "Asterisk (*) matches all values. Comma (,) separates multiple values (1,3,5). Hyphen (-) defines ranges (1-5). Slash (/) defines steps (*/5 means every 5th value)."
+      },
+      {
+        "q": "How do I edit my crontab on Linux?",
+        "a": "Run 'crontab -e' to open your user's crontab in the default editor. Each line is a cron expression followed by the command to run. Save and exit to install the new schedule."
+      },
+      {
+        "q": "What is the difference between crontab and cron?",
+        "a": "Cron is the daemon (background process) that runs scheduled tasks. Crontab is the file that lists the tasks and their schedules. 'crontab -e' edits your crontab file, and the cron daemon reads it."
+      },
+      {
+        "q": "How do I log cron job output?",
+        "a": "Append '>> /var/log/myjob.log 2>&1' to your cron command to redirect both stdout and stderr to a log file. Without this, cron typically emails output to the user."
+      }
+    ],
+    "related": ["cron-expression-builder", "cron-job-generator", "cron-to-english"]
+  },
+  {
+    "slug": "cron-job-generator",
+    "title": "Cron Job Generator for Linux",
+    "h1": "Cron Job Generator",
+    "description": "Generate ready-to-use cron job entries for Linux. Build expressions interactively and copy the complete crontab line for your server.",
+    "keyword": "cron job generator",
+    "component": "cron-builder",
+    "config": {},
+    "faq": [
+      {
+        "q": "How do I create a cron job on Linux?",
+        "a": "Run 'crontab -e', add a line with your cron expression followed by the command (e.g., '0 2 * * * /usr/bin/backup.sh'), save, and exit. The cron daemon picks up changes automatically."
+      },
+      {
+        "q": "How do I run a cron job every hour?",
+        "a": "Use '0 * * * * /path/to/command'. The 0 in the minute field means the job runs at the start of every hour. Without the 0 (using * * * * *), it would run every minute."
+      },
+      {
+        "q": "How do I run a cron job on weekdays only?",
+        "a": "Use '0 9 * * 1-5 /path/to/command'. The 1-5 in the day-of-week field means Monday through Friday. This example runs at 9 AM on weekdays."
+      },
+      {
+        "q": "How do I see existing cron jobs?",
+        "a": "Run 'crontab -l' to list your user's cron jobs. For system cron jobs, check /etc/crontab and files in /etc/cron.d/."
+      }
+    ],
+    "related": ["cron-expression-builder", "crontab-guru", "cron-next-runs"]
+  },
+  {
+    "slug": "days-between-dates",
+    "title": "Days Between Two Dates Calculator",
+    "h1": "Days Between Dates Calculator",
+    "description": "Calculate the exact number of days, weeks, months, and years between any two dates. Shows business days and calendar days separately.",
+    "keyword": "days between dates",
+    "component": "date-calculator",
+    "config": {"mode": "diff"},
+    "faq": [
+      {
+        "q": "How do I calculate days between two dates?",
+        "a": "Enter your start date and end date, then click Calculate. The tool shows the exact number of calendar days, weeks, months, and years between the two dates."
+      },
+      {
+        "q": "Does the calculator include the end date?",
+        "a": "The calculator counts the number of days from the start date up to but not including the end date. This is the standard mathematical difference. Add 1 if you want to include both endpoints."
+      },
+      {
+        "q": "Can I calculate business days between dates?",
+        "a": "Yes. The result shows both calendar days and an approximate business day count (excluding weekends). For exact business day calculations including holidays, note that holidays vary by country."
+      },
+      {
+        "q": "How do I enter dates?",
+        "a": "Enter dates in any common format: YYYY-MM-DD (2025-04-02), MM/DD/YYYY (04/02/2025), or natural language (April 2, 2025). The date picker also lets you select dates visually."
+      }
+    ],
+    "related": ["weeks-between-dates", "business-days-calculator", "date-add-subtract"]
+  },
+  {
+    "slug": "age-calculator",
+    "title": "Age Calculator \u2014 How Old Am I?",
+    "h1": "Age Calculator",
+    "description": "Calculate your exact age in years, months, and days from your birthdate. Also shows total days lived, weeks, hours, and minutes.",
+    "keyword": "age calculator",
+    "component": "date-calculator",
+    "config": {"mode": "diff"},
+    "faq": [
+      {
+        "q": "How do I calculate my exact age?",
+        "a": "Enter your birthdate as the start date and leave the end date as today (or enter a specific date). The calculator shows your age in years, months, days, and also total days, weeks, and hours lived."
+      },
+      {
+        "q": "Does the calculator account for leap years?",
+        "a": "Yes. The calculation uses actual calendar dates, so February 29 in leap years is handled correctly. Someone born on Feb 29 will see accurate age calculations."
+      },
+      {
+        "q": "How many days have I been alive?",
+        "a": "Enter your birthdate and the tool shows the total number of days between your birth and today, along with equivalent weeks, hours, and minutes."
+      },
+      {
+        "q": "Can I calculate age at a future date?",
+        "a": "Yes. Set the end date to any future date to calculate how old you will be on that date. This is useful for milestone planning."
+      }
+    ],
+    "related": ["days-between-dates", "date-add-subtract", "weeks-between-dates"]
+  },
+  {
+    "slug": "date-add-subtract",
+    "title": "Add or Subtract Days from Date",
+    "h1": "Add or Subtract Days from Date",
+    "description": "Add or subtract days, weeks, or months from any date. Find out what date it will be in 30 days, 6 weeks, or 3 months from now.",
+    "keyword": "add days to date",
+    "component": "date-calculator",
+    "config": {"mode": "add"},
+    "faq": [
+      {
+        "q": "How do I add days to a date?",
+        "a": "Enter your starting date, specify the number of days to add (or subtract with a negative number), and click Calculate. The tool shows the resulting date with day of week."
+      },
+      {
+        "q": "Can I add weeks or months instead of days?",
+        "a": "Yes. Select the unit (days, weeks, or months) from the dropdown before calculating. Adding 2 weeks is equivalent to adding 14 days, while adding months accounts for varying month lengths."
+      },
+      {
+        "q": "What date is 90 days from today?",
+        "a": "Enter today's date and add 90 days. The tool computes the exact result including month and year boundaries. Click the 'Today' button to quickly set the start date."
+      },
+      {
+        "q": "How does adding months work for the 31st?",
+        "a": "When adding months would land on a date that does not exist (e.g., adding 1 month to January 31 gives February 31), the result rolls to the last valid day of that month (February 28 or 29)."
+      }
+    ],
+    "related": ["days-between-dates", "business-days-calculator", "age-calculator"]
+  },
+  {
+    "slug": "business-days-calculator",
+    "title": "Business Days Calculator",
+    "h1": "Business Days Calculator",
+    "description": "Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.",
+    "keyword": "business days calculator",
+    "component": "date-calculator",
+    "config": {"mode": "diff"},
+    "faq": [
+      {
+        "q": "What counts as a business day?",
+        "a": "A business day is any day from Monday through Friday. Weekends (Saturday and Sunday) are excluded. This calculator does not account for public holidays, which vary by country."
+      },
+      {
+        "q": "How do I calculate business days between two dates?",
+        "a": "Enter your start and end dates, then click Calculate. The result shows both total calendar days and the number of weekdays (business days) between the two dates."
+      },
+      {
+        "q": "Does the calculator account for holidays?",
+        "a": "This calculator excludes weekends but does not exclude public holidays, since holidays vary by country and region. For precise business day counts, manually subtract any holidays that fall on weekdays."
+      },
+      {
+        "q": "What is 10 business days from today?",
+        "a": "10 business days is typically 14 calendar days (2 weeks), assuming no holidays fall on weekdays. Enter today's date and the tool calculates the exact result."
+      }
+    ],
+    "related": ["days-between-dates", "date-add-subtract", "weeks-between-dates"]
+  },
+  {
+    "slug": "weeks-between-dates",
+    "title": "Weeks Between Two Dates",
+    "h1": "Weeks Between Dates Calculator",
+    "description": "Calculate the number of weeks between two dates. Shows full weeks, remaining days, and equivalent months for project planning.",
+    "keyword": "weeks between dates",
+    "component": "date-calculator",
+    "config": {"mode": "diff"},
+    "faq": [
+      {
+        "q": "How do I calculate weeks between two dates?",
+        "a": "Enter your start and end dates. The calculator divides the total days by 7 to give you the number of complete weeks plus any remaining days."
+      },
+      {
+        "q": "How many weeks are in a year?",
+        "a": "A regular year has 52 weeks and 1 day (365 days). A leap year has 52 weeks and 2 days (366 days). So there are always 52 full weeks."
+      },
+      {
+        "q": "How many weeks until a specific date?",
+        "a": "Enter today as the start date and your target date as the end date. The tool shows the exact number of weeks and remaining days until that date."
+      }
+    ],
+    "related": ["days-between-dates", "business-days-calculator", "date-add-subtract"]
+  },
+  {
+    "slug": "python-timestamp",
+    "title": "Python Timestamp \u2014 Get & Convert Unix Time",
+    "h1": "Python Timestamp Guide",
+    "description": "Python code examples for Unix timestamps. Get current time, convert between datetime and epoch, format dates, and parse strings with time module.",
+    "keyword": "python timestamp",
+    "component": "language-reference",
+    "config": {"language": "python"},
+    "faq": [
+      {
+        "q": "How do I get the current Unix timestamp in Python?",
+        "a": "Use import time; timestamp = int(time.time()). This returns the current epoch in seconds. For milliseconds, use int(time.time() * 1000)."
+      },
+      {
+        "q": "How do I convert a timestamp to a datetime in Python?",
+        "a": "Use from datetime import datetime; dt = datetime.fromtimestamp(1712000000). For UTC, use datetime.utcfromtimestamp() or datetime.fromtimestamp(ts, tz=timezone.utc)."
+      },
+      {
+        "q": "How do I convert a datetime to a timestamp in Python?",
+        "a": "Use dt.timestamp() on a datetime object to get epoch seconds. For example: from datetime import datetime; ts = int(datetime(2025, 4, 2).timestamp())."
+      },
+      {
+        "q": "How do I format a date in Python?",
+        "a": "Use strftime: dt.strftime('%Y-%m-%d %H:%M:%S'). Common codes: %Y (4-digit year), %m (month), %d (day), %H (24h hour), %M (minute), %S (second)."
+      },
+      {
+        "q": "What is the difference between time.time() and datetime.now()?",
+        "a": "time.time() returns a float of epoch seconds. datetime.now() returns a datetime object. Use time.time() for simple timestamps and datetime for date arithmetic and formatting."
+      }
+    ],
+    "related": ["javascript-timestamp", "java-timestamp", "epoch-converter"]
+  },
+  {
+    "slug": "javascript-timestamp",
+    "title": "JavaScript Timestamp \u2014 Date.now() Guide",
+    "h1": "JavaScript Timestamp Guide",
+    "description": "JavaScript code examples for Unix timestamps. Use Date.now(), new Date(), toISOString(), and convert between epoch milliseconds and dates.",
+    "keyword": "javascript timestamp",
+    "component": "language-reference",
+    "config": {"language": "javascript"},
+    "faq": [
+      {
+        "q": "How do I get the current timestamp in JavaScript?",
+        "a": "Use Date.now() for milliseconds, or Math.floor(Date.now() / 1000) for seconds. Both are the most efficient approaches with no object allocation."
+      },
+      {
+        "q": "How do I convert a timestamp to a date in JavaScript?",
+        "a": "Use new Date(timestamp). If your timestamp is in seconds, multiply by 1000 first: new Date(1712000000 * 1000). JavaScript Date always works in milliseconds."
+      },
+      {
+        "q": "How do I format a date in JavaScript?",
+        "a": "Use toISOString() for ISO 8601, toLocaleString() for locale-aware formatting, or Intl.DateTimeFormat for full control over timezone, locale, and format options."
+      },
+      {
+        "q": "Does JavaScript use seconds or milliseconds?",
+        "a": "JavaScript uses milliseconds everywhere. Date.now() returns ms, new Date().getTime() returns ms, and the Date constructor expects ms. Divide by 1000 to get seconds."
+      },
+      {
+        "q": "How do I parse a date string in JavaScript?",
+        "a": "Use new Date('2025-04-02T12:00:00Z') for ISO 8601 strings. For other formats, use Date.parse() but be aware that non-ISO formats may behave differently across browsers."
+      }
+    ],
+    "related": ["python-timestamp", "epoch-converter", "milliseconds-converter"]
+  },
+  {
+    "slug": "java-timestamp",
+    "title": "Java Timestamp \u2014 Instant & Epoch Guide",
+    "h1": "Java Timestamp Guide",
+    "description": "Java code examples for Unix timestamps using java.time.Instant, System.currentTimeMillis(), and LocalDateTime conversions with timezone handling.",
+    "keyword": "java timestamp",
+    "component": "language-reference",
+    "config": {"language": "java"},
+    "faq": [
+      {
+        "q": "How do I get the current timestamp in Java?",
+        "a": "Use System.currentTimeMillis() for milliseconds, or Instant.now().getEpochSecond() for seconds. The java.time API (Java 8+) is preferred over the legacy Date class."
+      },
+      {
+        "q": "How do I convert an epoch to a date in Java?",
+        "a": "Use Instant.ofEpochSecond(1712000000) for seconds or Instant.ofEpochMilli(1712000000000L) for milliseconds. Convert to LocalDateTime with LocalDateTime.ofInstant(instant, ZoneId.of(\"UTC\"))."
+      },
+      {
+        "q": "What is the difference between Instant and LocalDateTime?",
+        "a": "Instant represents a point on the UTC timeline (like an epoch). LocalDateTime represents a date and time without timezone information. Use Instant for timestamps and LocalDateTime for display."
+      },
+      {
+        "q": "How do I format a date in Java?",
+        "a": "Use DateTimeFormatter: LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm:ss\")). The java.time formatters are thread-safe unlike the old SimpleDateFormat."
+      }
+    ],
+    "related": ["python-timestamp", "javascript-timestamp", "epoch-converter"]
+  },
+  {
+    "slug": "php-timestamp",
+    "title": "PHP Timestamp \u2014 time() & strtotime()",
+    "h1": "PHP Timestamp Guide",
+    "description": "PHP code examples for Unix timestamps. Use time(), strtotime(), date(), DateTime class, and convert between epoch and formatted dates.",
+    "keyword": "php timestamp",
+    "component": "language-reference",
+    "config": {"language": "php"},
+    "faq": [
+      {
+        "q": "How do I get the current timestamp in PHP?",
+        "a": "Use time() for the current epoch in seconds. For milliseconds, use (int)(microtime(true) * 1000). The time() function is the most common approach."
+      },
+      {
+        "q": "How do I convert a timestamp to a date in PHP?",
+        "a": "Use date('Y-m-d H:i:s', 1712000000) to format an epoch as a readable string. The date() function accepts a format string and an optional timestamp."
+      },
+      {
+        "q": "How do I convert a date string to a timestamp in PHP?",
+        "a": "Use strtotime('2025-04-02 12:00:00') to parse a date string into an epoch. strtotime() understands many formats including relative dates like '+1 week' and 'next Monday'."
+      },
+      {
+        "q": "What is the difference between time() and strtotime()?",
+        "a": "time() returns the current epoch timestamp. strtotime() parses a date string into a timestamp. Use time() for 'now' and strtotime() for converting date strings."
+      },
+      {
+        "q": "How do I use the DateTime class in PHP?",
+        "a": "Use new DateTime() for current time, or new DateTime('@1712000000') from an epoch. Format with $dt->format('Y-m-d H:i:s'). DateTime supports timezone handling and date arithmetic."
+      }
+    ],
+    "related": ["python-timestamp", "javascript-timestamp", "epoch-converter"]
+  },
+  {
+    "slug": "golang-timestamp",
+    "title": "Go Timestamp \u2014 time.Now().Unix()",
+    "h1": "Go Timestamp Guide",
+    "description": "Go (Golang) code examples for Unix timestamps. Use time.Now().Unix(), time.Parse(), and format dates with Go's reference time layout system.",
+    "keyword": "go timestamp",
+    "component": "language-reference",
+    "config": {"language": "go"},
+    "faq": [
+      {
+        "q": "How do I get the current timestamp in Go?",
+        "a": "Use time.Now().Unix() for seconds or time.Now().UnixMilli() for milliseconds. The time package is part of Go's standard library."
+      },
+      {
+        "q": "How do I convert an epoch to a time in Go?",
+        "a": "Use time.Unix(1712000000, 0) to create a time.Time from epoch seconds. The second argument is nanoseconds for sub-second precision."
+      },
+      {
+        "q": "How does Go's time formatting work?",
+        "a": "Go uses a reference time (Mon Jan 2 15:04:05 MST 2006) as the format template. For example, t.Format(\"2006-01-02 15:04:05\") produces a date string. Each number in the reference time is unique."
+      },
+      {
+        "q": "How do I parse a date string in Go?",
+        "a": "Use time.Parse(\"2006-01-02\", \"2025-04-02\"). The first argument is the layout using Go's reference time, and the second is the string to parse."
+      },
+      {
+        "q": "Why does Go use '2006-01-02' as the reference time?",
+        "a": "Go's reference time is Mon Jan 2 15:04:05 MST 2006, where each component is a unique number: 01 (month), 02 (day), 03/15 (hour), 04 (minute), 05 (second), 06/2006 (year). This avoids ambiguity."
+      }
+    ],
+    "related": ["python-timestamp", "java-timestamp", "epoch-converter"]
+  }
+]

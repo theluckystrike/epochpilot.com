@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Days Calculator | EpochPilot</title>
+<meta name="description" content="Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.">
+<meta name="keywords" content="business days calculator, epoch converter, unix timestamp, time tools">
+<link rel="canonical" href="https://epochpilot.com/tools/business-days-calculator.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/business-days-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/business-days-calculator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Business Days Calculator | EpochPilot">
+<meta property="og:description" content="Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.">
+<meta property="og:url" content="https://epochpilot.com/tools/business-days-calculator.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Business Days Calculator | EpochPilot">
+<meta name="twitter:description" content="Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Business Days Calculator",
+  "url": "https://epochpilot.com/tools/business-days-calculator.html",
+  "description": "Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-06",
+  "dateModified": "2026-04-06"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What counts as a business day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A business day is any day from Monday through Friday. Weekends (Saturday and Sunday) are excluded. This calculator does not account for public holidays, which vary by country."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate business days between two dates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter your start and end dates, then click Calculate. The result shows both total calendar days and the number of weekdays (business days) between the two dates."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the calculator account for holidays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This calculator excludes weekends but does not exclude public holidays, since holidays vary by country and region. For precise business day counts, manually subtract any holidays that fall on weekdays."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is 10 business days from today?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "10 business days is typically 14 calendar days (2 weeks), assuming no holidays fall on weekdays. Enter today's date and the tool calculates the exact result."
+      }
+    }]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Business Days Calculator</h1>
+    <p>Calculate business days (weekdays) between two dates excluding weekends. Useful for shipping estimates, project planning, and deadlines.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="date-calculator" data-config='{&quot;mode&quot;:&quot;diff&quot;}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    
+    <details>
+      <summary>What counts as a business day?</summary>
+      <p>A business day is any day from Monday through Friday. Weekends (Saturday and Sunday) are excluded. This calculator does not account for public holidays, which vary by country.</p>
+    </details>
+
+    <details>
+      <summary>How do I calculate business days between two dates?</summary>
+      <p>Enter your start and end dates, then click Calculate. The result shows both total calendar days and the number of weekdays (business days) between the two dates.</p>
+    </details>
+
+    <details>
+      <summary>Does the calculator account for holidays?</summary>
+      <p>This calculator excludes weekends but does not exclude public holidays, since holidays vary by country and region. For precise business day counts, manually subtract any holidays that fall on weekdays.</p>
+    </details>
+
+    <details>
+      <summary>What is 10 business days from today?</summary>
+      <p>10 business days is typically 14 calendar days (2 weeks), assuming no holidays fall on weekdays. Enter today's date and the tool calculates the exact result.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This tool runs entirely in your browser using vanilla JavaScript. No data is sent to any server. All conversions and calculations happen locally on your device, ensuring complete privacy.</p>
+    <p>EpochPilot uses the browser's built-in <code>Intl.DateTimeFormat</code> API and the IANA timezone database provided by your operating system. This means timezone conversions are always accurate, including Daylight Saving Time transitions.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/days-between-dates.html" class="btn btn-outline" style="font-size:0.85rem;">Days Between Two Dates Calculator</a>
+      <a href="/tools/date-add-subtract.html" class="btn btn-outline" style="font-size:0.85rem;">Add or Subtract Days from Date</a>
+      <a href="/tools/weeks-between-dates.html" class="btn btn-outline" style="font-size:0.85rem;">Weeks Between Two Dates</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No timestamps, dates, or personal data are transmitted to any server. The source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="https://zovo.one/tools">Zovo Tools</a>
+      <span>Free developer tools by a solo dev. No tracking.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://ml3x.com">ML3X</a>
+      <a href="https://abwex.com">ABWex</a>
+      <a href="https://claudflow.com">ClaudFlow</a>
+    </div>
+    <div class="footer-pro">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/app.js" type="module"></script>
+</body>
+</html>

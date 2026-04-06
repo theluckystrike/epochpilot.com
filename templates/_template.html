@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} | EpochPilot</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<meta name="keywords" content="{{KEYWORD}}, epoch converter, unix timestamp, time tools">
+<link rel="canonical" href="{{CANONICAL}}">
+<link rel="alternate" hreflang="en" href="{{CANONICAL}}">
+<link rel="alternate" hreflang="x-default" href="{{CANONICAL}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{TITLE}} | EpochPilot">
+<meta property="og:description" content="{{DESCRIPTION}}">
+<meta property="og:url" content="{{CANONICAL}}">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://{{DOMAIN}}/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}} | EpochPilot">
+<meta name="twitter:description" content="{{DESCRIPTION}}">
+<meta name="twitter:image" content="https://{{DOMAIN}}/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "{{TITLE}}",
+  "url": "{{CANONICAL}}",
+  "description": "{{DESCRIPTION}}",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "{{DATE}}",
+  "dateModified": "{{DATE}}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{{FAQ_SCHEMA}}]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>{{H1}}</h1>
+    <p>{{DESCRIPTION}}</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="{{COMPONENT}}" data-config='{{CONFIG}}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    {{FAQ_HTML}}
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This tool runs entirely in your browser using vanilla JavaScript. No data is sent to any server. All conversions and calculations happen locally on your device, ensuring complete privacy.</p>
+    <p>EpochPilot uses the browser's built-in <code>Intl.DateTimeFormat</code> API and the IANA timezone database provided by your operating system. This means timezone conversions are always accurate, including Daylight Saving Time transitions.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      {{RELATED_LINKS}}
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No timestamps, dates, or personal data are transmitted to any server. The source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="https://zovo.one/tools">Zovo Tools</a>
+      <span>Free developer tools by a solo dev. No tracking.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://ml3x.com">ML3X</a>
+      <a href="https://abwex.com">ABWex</a>
+      <a href="https://claudflow.com">ClaudFlow</a>
+    </div>
+    <div class="footer-pro">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/app.js" type="module"></script>
+</body>
+</html>

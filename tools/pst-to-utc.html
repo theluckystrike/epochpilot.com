@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PST to UTC Converter | EpochPilot</title>
+<meta name="description" content="Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.">
+<meta name="keywords" content="pst to utc, epoch converter, unix timestamp, time tools">
+<link rel="canonical" href="https://epochpilot.com/tools/pst-to-utc.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/pst-to-utc.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/pst-to-utc.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PST to UTC Converter | EpochPilot">
+<meta property="og:description" content="Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.">
+<meta property="og:url" content="https://epochpilot.com/tools/pst-to-utc.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PST to UTC Converter | EpochPilot">
+<meta name="twitter:description" content="Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PST to UTC Converter",
+  "url": "https://epochpilot.com/tools/pst-to-utc.html",
+  "description": "Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-06",
+  "dateModified": "2026-04-06"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the time difference between PST and UTC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PST (Pacific Standard Time) is UTC-8. During Daylight Saving Time (mid-March to early November), the Pacific timezone switches to PDT (UTC-7). This converter handles the switch automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does Pacific Daylight Time (PDT) start and end?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDT begins on the second Sunday in March at 2:00 AM (clocks spring forward to 3:00 AM) and ends on the first Sunday in November at 2:00 AM (clocks fall back to 1:00 AM)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which cities use PST/PDT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Major cities in the Pacific timezone include Los Angeles, San Francisco, Seattle, Portland, Vancouver, and Tijuana."
+      }
+    }]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>PST to UTC Converter</h1>
+    <p>Convert Pacific Standard Time (PST/PDT) to UTC instantly. Shows current time in both zones with automatic daylight saving adjustment.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="timezone-pair" data-config='{&quot;from&quot;:&quot;America/Los_Angeles&quot;,&quot;to&quot;:&quot;UTC&quot;}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    
+    <details>
+      <summary>What is the time difference between PST and UTC?</summary>
+      <p>PST (Pacific Standard Time) is UTC-8. During Daylight Saving Time (mid-March to early November), the Pacific timezone switches to PDT (UTC-7). This converter handles the switch automatically.</p>
+    </details>
+
+    <details>
+      <summary>When does Pacific Daylight Time (PDT) start and end?</summary>
+      <p>PDT begins on the second Sunday in March at 2:00 AM (clocks spring forward to 3:00 AM) and ends on the first Sunday in November at 2:00 AM (clocks fall back to 1:00 AM).</p>
+    </details>
+
+    <details>
+      <summary>Which cities use PST/PDT?</summary>
+      <p>Major cities in the Pacific timezone include Los Angeles, San Francisco, Seattle, Portland, Vancouver, and Tijuana.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This tool runs entirely in your browser using vanilla JavaScript. No data is sent to any server. All conversions and calculations happen locally on your device, ensuring complete privacy.</p>
+    <p>EpochPilot uses the browser's built-in <code>Intl.DateTimeFormat</code> API and the IANA timezone database provided by your operating system. This means timezone conversions are always accurate, including Daylight Saving Time transitions.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/utc-to-pst.html" class="btn btn-outline" style="font-size:0.85rem;">UTC to PST Converter</a>
+      <a href="/tools/est-to-utc.html" class="btn btn-outline" style="font-size:0.85rem;">EST to UTC Converter</a>
+      <a href="/tools/timezone-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Timezone Converter — Convert Between Timezones</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No timestamps, dates, or personal data are transmitted to any server. The source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="https://zovo.one/tools">Zovo Tools</a>
+      <span>Free developer tools by a solo dev. No tracking.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://ml3x.com">ML3X</a>
+      <a href="https://abwex.com">ABWex</a>
+      <a href="https://claudflow.com">ClaudFlow</a>
+    </div>
+    <div class="footer-pro">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/app.js" type="module"></script>
+</body>
+</html>
