@@ -1450,5 +1450,31 @@ await slack.chat.update({ channel: "C123", ts, text: "updated" });</pre>
     </div>
   </div>
 </footer>
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('.gotcha-entry, .gotcha-card, tr[data-cat], [data-gotcha]');
+  var data = Array.from(entries).map(function(el) {
+    var title = (el.querySelector('h3, h4, .gotcha-title, td:first-child') || {}).textContent || '';
+    var cat = el.dataset.cat || (el.querySelector('.tag, .category, td:nth-child(2)') || {}).textContent || '';
+    var desc = (el.querySelector('p, .description, td:nth-child(3)') || {}).textContent || '';
+    return {title: title.trim(), category: cat.trim(), description: desc.trim().substring(0, 200)};
+  }).filter(function(d) { return d.title; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'title,category,description\n' + data.map(function(d) {
+      return '"' + d.title.replace(/"/g,'""') + '","' + d.category.replace(/"/g,'""') + '","' + d.description.replace(/"/g,'""') + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.' + ext;
+  a.click();
+}
+</script>
 </body>
 </html>
