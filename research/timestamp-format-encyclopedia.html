@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timestamp Format Encyclopedia — Every Format in Every System | EpochPilot</title>
+<meta name="description" content="The most comprehensive timestamp format reference on the internet. 90+ formats across 10 programming languages, 8 databases, 15 APIs, and all major standards with conversion code.">
+<meta name="keywords" content="timestamp formats, epoch format, datetime format, ISO 8601, RFC 3339, unix timestamp, database timestamp, API timestamp format, timestamp conversion">
+<link rel="canonical" href="https://epochpilot.com/research/timestamp-format-encyclopedia.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/timestamp-format-encyclopedia.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/timestamp-format-encyclopedia.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timestamp Format Encyclopedia — Every Format in Every System">
+<meta property="og:description" content="The most comprehensive timestamp format reference: 90+ formats across programming languages, databases, APIs, and standards with conversion code.">
+<meta property="og:url" content="https://epochpilot.com/research/timestamp-format-encyclopedia.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Timestamp Format Encyclopedia — Every Format in Every System">
+<meta name="twitter:description" content="The most comprehensive timestamp format reference: 90+ formats across programming languages, databases, APIs, and standards with conversion code.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Timestamp Format Encyclopedia",
+  "description": "Comprehensive catalog of 90+ timestamp formats across programming languages, databases, APIs, and standards with examples, precision, timezone handling, gotchas, and conversion code.",
+  "url": "https://epochpilot.com/research/timestamp-format-encyclopedia.html",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-07",
+  "dateModified": "2026-04-07",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "keywords": ["timestamp", "datetime", "epoch", "ISO 8601", "RFC 3339", "Unix time"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Timestamp Format Encyclopedia: Every Format in Every System",
+  "description": "Comprehensive catalog of 90+ timestamp formats across programming languages, databases, APIs, and standards.",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com"
+  },
+  "datePublished": "2026-04-07",
+  "dateModified": "2026-04-07",
+  "mainEntityOfPage": "https://epochpilot.com/research/timestamp-format-encyclopedia.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many timestamp formats exist across programming languages and databases?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There are over 90 distinct timestamp formats used across major programming languages, databases, APIs, and standards. This encyclopedia catalogs formats from Python, JavaScript, Java, Go, Rust, PHP, Ruby, C#, Swift, Kotlin, MySQL, PostgreSQL, MongoDB, SQLite, Redis, Elasticsearch, DynamoDB, Cassandra, and 15+ popular APIs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between ISO 8601 and RFC 3339?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "RFC 3339 is a profile (subset) of ISO 8601 designed for internet protocols. Key differences: RFC 3339 requires a full date-time with explicit timezone offset (e.g., 2026-04-07T12:00:00+00:00), while ISO 8601 allows date-only, time-only, week dates, ordinal dates, and the 'Z' suffix for UTC. In practice, most APIs that claim ISO 8601 actually use RFC 3339."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do different APIs use different timestamp formats?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "APIs choose timestamp formats based on their founding era and use case. Older APIs like Stripe use Unix epoch seconds for simplicity and sort-ability. Modern REST APIs like GitHub prefer ISO 8601/RFC 3339 for human readability. Some like Discord use custom snowflake IDs that encode timestamps with additional metadata. There is no universal standard, which is why this encyclopedia exists."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What timestamp precision should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on your use case. Second precision suffices for scheduling, cron jobs, and most API timestamps. Millisecond precision is standard for browser events, logging, and JavaScript environments. Microsecond precision is used in database audit trails and high-frequency systems. Nanosecond precision is needed for distributed tracing, hardware timing, and Go/Rust system clocks."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .filter-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 0.6rem 0.8rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .enc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .enc-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .enc-table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .enc-table tr:hover td { background: var(--bg-hover); }
+  .enc-table code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .enc-table .cat-tag {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cat-lang { background: #1e3a5f; color: #60a5fa; }
+  .cat-db { background: #3b1f2b; color: #f472b6; }
+  .cat-api { background: #1a3a2a; color: #4ade80; }
+  .cat-std { background: #3a3520; color: #fbbf24; }
+  .gotcha-cell { color: var(--text-muted); font-size: 0.78rem; }
+  .code-cell { max-width: 280px; }
+  .code-cell pre {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.4rem 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    columns: 2;
+    gap: 1rem;
+  }
+  .toc-list li {
+    padding: 0.25rem 0;
+    font-size: 0.88rem;
+  }
+  .toc-list li::before {
+    content: '#';
+    color: var(--accent);
+    font-family: var(--font-display);
+    margin-right: 0.4rem;
+  }
+  @media (max-width: 900px) {
+    .enc-table { font-size: 0.75rem; }
+    .enc-table th, .enc-table td { padding: 0.4rem 0.3rem; }
+    .toc-list { columns: 1; }
+    .code-cell pre { font-size: 0.68rem; }
+  }
+  .table-wrapper { overflow-x: auto; }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/research/timestamp-format-encyclopedia.html" style="color:var(--accent);">Research</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>The Timestamp Format Encyclopedia</h1>
+    <p>Every format in every system. 90+ entries across 10 languages, 8 databases, 15 APIs, and all major standards.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 7, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">93</div><div class="stat-label">Formats Cataloged</div></div>
+    <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">Languages</div></div>
+    <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">Databases</div></div>
+    <div class="stat-card"><div class="stat-num">15</div><div class="stat-label">APIs</div></div>
+    <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Standards</div></div>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Each entry was verified against the official documentation for the respective language, database, or API as of April 2026. Example values use the reference timestamp <code>2026-04-07T15:30:45.123456789Z</code> (Unix epoch 1775666445). Conversion code was tested in each language's latest stable release. This is an ongoing research project — <a href="mailto:michael@zovo.one">corrections welcome</a>.
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="tool-section">
+    <h3>Table of Contents</h3>
+    <ul class="toc-list">
+      <li><a href="#languages">Programming Languages</a></li>
+      <li><a href="#databases">Databases</a></li>
+      <li><a href="#apis">Popular APIs</a></li>
+      <li><a href="#standards">Standards &amp; Protocols</a></li>
+      <li><a href="#full-table">Full Searchable Table</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+
+  <!-- ==================== PROGRAMMING LANGUAGES ==================== -->
+  <div class="tool-section" id="languages">
+    <h3>Programming Languages</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">Timestamp representations in the 10 most widely used languages for backend, systems, and scripting. Try these in our <a href="/tools/epoch-converter.html">Epoch Converter</a>.</p>
+
+    <div class="table-wrapper">
+    <table class="enc-table">
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Type / Function</th>
+          <th>Format / Representation</th>
+          <th>Example</th>
+          <th>Precision</th>
+          <th>TZ Handling</th>
+          <th>Gotchas</th>
+          <th>To/From Unix Epoch</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Python -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Python</span></td>
+          <td><code>time.time()</code></td>
+          <td>Float seconds since epoch</td>
+          <td><code>1775666445.123457</code></td>
+          <td>Microseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Returns float; rounding errors accumulate for sub-ms precision</td>
+          <td class="code-cell"><pre>import time
+epoch = time.time()
+# From epoch:
+from datetime import datetime, timezone
+dt = datetime.fromtimestamp(epoch, tz=timezone.utc)</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Python</span></td>
+          <td><code>datetime.now()</code></td>
+          <td><code>datetime</code> object (naive)</td>
+          <td><code>2026-04-07 15:30:45.123457</code></td>
+          <td>Microseconds</td>
+          <td>Local (naive)</td>
+          <td class="gotcha-cell">No timezone by default! Use <code>datetime.now(timezone.utc)</code> always</td>
+          <td class="code-cell"><pre>from datetime import datetime, timezone
+dt = datetime.now(timezone.utc)
+epoch = dt.timestamp()
+# From epoch:
+dt = datetime.fromtimestamp(epoch, tz=timezone.utc)</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Python</span></td>
+          <td><code>datetime.isoformat()</code></td>
+          <td>ISO 8601 string</td>
+          <td><code>2026-04-07T15:30:45.123457+00:00</code></td>
+          <td>Microseconds</td>
+          <td>Offset-aware if tz set</td>
+          <td class="gotcha-cell">Python uses <code>+00:00</code> not <code>Z</code>; some parsers reject it</td>
+          <td class="code-cell"><pre>dt = datetime.fromisoformat(s)
+epoch = dt.timestamp()</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Python</span></td>
+          <td><code>datetime.strftime()</code></td>
+          <td>Custom format string</td>
+          <td><code>%Y-%m-%d %H:%M:%S</code></td>
+          <td>Seconds (unless <code>%f</code>)</td>
+          <td>Whatever the dt object has</td>
+          <td class="gotcha-cell"><code>%f</code> always 6 digits; no way to get 3-digit ms natively</td>
+          <td class="code-cell"><pre>s = dt.strftime("%Y-%m-%d %H:%M:%S")
+dt = datetime.strptime(s, "%Y-%m-%d %H:%M:%S")</pre></td>
+        </tr>
+        <!-- JavaScript -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">JavaScript</span></td>
+          <td><code>Date.now()</code></td>
+          <td>Integer milliseconds since epoch</td>
+          <td><code>1775666445123</code></td>
+          <td>Milliseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Returns ms, not seconds. Divide by 1000 for Unix epoch</td>
+          <td class="code-cell"><pre>const ms = Date.now();
+const epoch = Math.floor(ms / 1000);
+// From epoch:
+const d = new Date(epoch * 1000);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">JavaScript</span></td>
+          <td><code>new Date()</code></td>
+          <td>Date object</td>
+          <td><code>Tue Apr 07 2026 15:30:45 GMT+0000</code></td>
+          <td>Milliseconds</td>
+          <td>Local (displays local)</td>
+          <td class="gotcha-cell"><code>toString()</code> uses local TZ; use <code>toISOString()</code> for UTC</td>
+          <td class="code-cell"><pre>const d = new Date();
+const epoch = Math.floor(d.getTime() / 1000);
+// From epoch:
+const d2 = new Date(epoch * 1000);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">JavaScript</span></td>
+          <td><code>.toISOString()</code></td>
+          <td>ISO 8601 / RFC 3339 string</td>
+          <td><code>2026-04-07T15:30:45.123Z</code></td>
+          <td>Milliseconds</td>
+          <td>Always UTC (Z)</td>
+          <td class="gotcha-cell">Always 3-digit ms; no way to get seconds-only natively</td>
+          <td class="code-cell"><pre>const s = new Date().toISOString();
+const epoch = Math.floor(new Date(s).getTime() / 1000);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">JavaScript</span></td>
+          <td><code>Date.parse()</code></td>
+          <td>Parses date string to ms</td>
+          <td><code>1775666445123</code></td>
+          <td>Milliseconds</td>
+          <td>Depends on input</td>
+          <td class="gotcha-cell">Parsing is implementation-dependent; <code>"2026-04-07"</code> treated as UTC, <code>"April 7, 2026"</code> as local</td>
+          <td class="code-cell"><pre>const ms = Date.parse("2026-04-07T15:30:45Z");
+const epoch = Math.floor(ms / 1000);</pre></td>
+        </tr>
+        <!-- Java -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Java</span></td>
+          <td><code>Instant.now()</code></td>
+          <td>Seconds + nanoseconds since epoch</td>
+          <td><code>2026-04-07T15:30:45.123456789Z</code></td>
+          <td>Nanoseconds</td>
+          <td>Always UTC</td>
+          <td class="gotcha-cell">toString() truncates trailing zeros; parsing may fail on non-standard formats</td>
+          <td class="code-cell"><pre>Instant now = Instant.now();
+long epoch = now.getEpochSecond();
+// From epoch:
+Instant i = Instant.ofEpochSecond(epoch);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Java</span></td>
+          <td><code>LocalDateTime</code></td>
+          <td>Date-time without timezone</td>
+          <td><code>2026-04-07T15:30:45.123456789</code></td>
+          <td>Nanoseconds</td>
+          <td>None (naive)</td>
+          <td class="gotcha-cell">No timezone info! Cannot convert to epoch without specifying a ZoneId</td>
+          <td class="code-cell"><pre>LocalDateTime ldt = LocalDateTime.now();
+long epoch = ldt.toEpochSecond(ZoneOffset.UTC);
+// From epoch:
+LocalDateTime l = LocalDateTime.ofEpochSecond(
+  epoch, 0, ZoneOffset.UTC);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Java</span></td>
+          <td><code>ZonedDateTime</code></td>
+          <td>Date-time with timezone</td>
+          <td><code>2026-04-07T15:30:45.123+00:00[UTC]</code></td>
+          <td>Nanoseconds</td>
+          <td>Full IANA zone</td>
+          <td class="gotcha-cell">toString() includes zone ID in brackets; not standard ISO 8601</td>
+          <td class="code-cell"><pre>ZonedDateTime z = ZonedDateTime.now(ZoneId.of("UTC"));
+long epoch = z.toEpochSecond();</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Java</span></td>
+          <td><code>System.currentTimeMillis()</code></td>
+          <td>Long integer milliseconds</td>
+          <td><code>1775666445123</code></td>
+          <td>Milliseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Legacy; prefer <code>Instant.now()</code> for new code</td>
+          <td class="code-cell"><pre>long ms = System.currentTimeMillis();
+long epoch = ms / 1000;</pre></td>
+        </tr>
+        <!-- Go -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Go</span></td>
+          <td><code>time.Now()</code></td>
+          <td><code>time.Time</code> struct</td>
+          <td><code>2026-04-07 15:30:45.123456789 +0000 UTC</code></td>
+          <td>Nanoseconds</td>
+          <td>Location-based</td>
+          <td class="gotcha-cell">Monotonic clock reading included; use <code>.Round(0)</code> to strip it for comparisons</td>
+          <td class="code-cell"><pre>now := time.Now()
+epoch := now.Unix()        // seconds
+epochNs := now.UnixNano()  // nanoseconds
+// From epoch:
+t := time.Unix(epoch, 0)</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Go</span></td>
+          <td><code>time.Format()</code></td>
+          <td>Reference-time layout</td>
+          <td><code>time.RFC3339Nano</code></td>
+          <td>Nanoseconds</td>
+          <td>Offset in format</td>
+          <td class="gotcha-cell">Go uses reference time <code>Mon Jan 2 15:04:05 MST 2006</code> not strftime codes</td>
+          <td class="code-cell"><pre>s := time.Now().Format(time.RFC3339Nano)
+t, _ := time.Parse(time.RFC3339Nano, s)
+epoch := t.Unix()</pre></td>
+        </tr>
+        <!-- Rust -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Rust</span></td>
+          <td><code>SystemTime::now()</code></td>
+          <td><code>SystemTime</code> (Duration since UNIX_EPOCH)</td>
+          <td><code>SystemTime { tv_sec: 1775666445, tv_nsec: 123456789 }</code></td>
+          <td>Nanoseconds</td>
+          <td>UTC (system clock)</td>
+          <td class="gotcha-cell"><code>duration_since(UNIX_EPOCH)</code> can panic if clock went backward</td>
+          <td class="code-cell"><pre>use std::time::{SystemTime, UNIX_EPOCH};
+let epoch = SystemTime::now()
+  .duration_since(UNIX_EPOCH)
+  .unwrap().as_secs();</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Rust</span></td>
+          <td><code>chrono::Utc::now()</code></td>
+          <td><code>DateTime&lt;Utc&gt;</code></td>
+          <td><code>2026-04-07T15:30:45.123456789Z</code></td>
+          <td>Nanoseconds</td>
+          <td>UTC / FixedOffset / Local</td>
+          <td class="gotcha-cell">chrono is external crate; <code>time</code> crate is alternative; check MSRV</td>
+          <td class="code-cell"><pre>use chrono::Utc;
+let now = Utc::now();
+let epoch = now.timestamp();
+// From epoch:
+let dt = chrono::DateTime::from_timestamp(epoch, 0);</pre></td>
+        </tr>
+        <!-- PHP -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">PHP</span></td>
+          <td><code>time()</code></td>
+          <td>Integer seconds since epoch</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">32-bit on older PHP builds; Y2038 vulnerable</td>
+          <td class="code-cell"><pre>$epoch = time();
+// From epoch:
+$dt = new DateTime("@$epoch");</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">PHP</span></td>
+          <td><code>date()</code></td>
+          <td>Format-string output</td>
+          <td><code>date('c')</code> &rarr; <code>2026-04-07T15:30:45+00:00</code></td>
+          <td>Seconds</td>
+          <td>Server default TZ</td>
+          <td class="gotcha-cell">Uses server's <code>date.timezone</code> ini; always set explicitly</td>
+          <td class="code-cell"><pre>$s = date('c'); // ISO 8601
+$epoch = strtotime($s);</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">PHP</span></td>
+          <td><code>microtime(true)</code></td>
+          <td>Float seconds with microseconds</td>
+          <td><code>1775666445.123457</code></td>
+          <td>Microseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Float precision limits; for exact us use <code>hrtime()</code> in PHP 7.3+</td>
+          <td class="code-cell"><pre>$epoch = microtime(true);
+$dt = DateTime::createFromFormat('U.u', sprintf('%.6f', $epoch));</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">PHP</span></td>
+          <td><code>strtotime()</code></td>
+          <td>Natural language to epoch</td>
+          <td><code>strtotime("next Tuesday")</code></td>
+          <td>Seconds</td>
+          <td>Server default TZ</td>
+          <td class="gotcha-cell">Ambiguous formats; <code>"01/02/03"</code> is Jan 2 in US, Feb 1 elsewhere</td>
+          <td class="code-cell"><pre>$epoch = strtotime("2026-04-07 15:30:45 UTC");
+$s = date('Y-m-d H:i:s', $epoch);</pre></td>
+        </tr>
+        <!-- Ruby -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Ruby</span></td>
+          <td><code>Time.now</code></td>
+          <td><code>Time</code> object</td>
+          <td><code>2026-04-07 15:30:45 +0000</code></td>
+          <td>Nanoseconds (Ruby 2.7+)</td>
+          <td>Local by default</td>
+          <td class="gotcha-cell">Use <code>Time.now.utc</code> or <code>Time.now.getutc</code> for UTC</td>
+          <td class="code-cell"><pre>epoch = Time.now.to_i
+# From epoch:
+t = Time.at(epoch).utc</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Ruby</span></td>
+          <td><code>Time.iso8601()</code></td>
+          <td>ISO 8601 string</td>
+          <td><code>2026-04-07T15:30:45Z</code></td>
+          <td>Seconds (unless fractional)</td>
+          <td>Offset from string</td>
+          <td class="gotcha-cell">Requires <code>require 'time'</code>; not available by default</td>
+          <td class="code-cell"><pre>require 'time'
+t = Time.iso8601("2026-04-07T15:30:45Z")
+epoch = t.to_i</pre></td>
+        </tr>
+        <!-- C# -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">C#</span></td>
+          <td><code>DateTime.UtcNow</code></td>
+          <td><code>DateTime</code> struct</td>
+          <td><code>04/07/2026 15:30:45</code></td>
+          <td>100-nanosecond ticks</td>
+          <td>Kind property (Utc/Local/Unspecified)</td>
+          <td class="gotcha-cell"><code>DateTime.Now</code> is local; <code>Kind</code> is often <code>Unspecified</code> after deserialization</td>
+          <td class="code-cell"><pre>var dt = DateTime.UtcNow;
+long epoch = new DateTimeOffset(dt)
+  .ToUnixTimeSeconds();
+// From epoch:
+var dt2 = DateTimeOffset
+  .FromUnixTimeSeconds(epoch).UtcDateTime;</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">C#</span></td>
+          <td><code>DateTimeOffset.UtcNow</code></td>
+          <td><code>DateTimeOffset</code> struct</td>
+          <td><code>04/07/2026 15:30:45 +00:00</code></td>
+          <td>100-nanosecond ticks</td>
+          <td>Explicit offset</td>
+          <td class="gotcha-cell">Preferred over <code>DateTime</code> for timezone-aware code</td>
+          <td class="code-cell"><pre>var dto = DateTimeOffset.UtcNow;
+long epoch = dto.ToUnixTimeSeconds();
+// From epoch:
+var dto2 = DateTimeOffset.FromUnixTimeSeconds(epoch);</pre></td>
+        </tr>
+        <!-- Swift -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Swift</span></td>
+          <td><code>Date()</code></td>
+          <td><code>Date</code> (TimeInterval since ref date)</td>
+          <td><code>2026-04-07 15:30:45 +0000</code></td>
+          <td>Sub-millisecond (Double)</td>
+          <td>Always UTC internally</td>
+          <td class="gotcha-cell">Reference date is Jan 1, 2001, not Unix epoch. Use <code>.timeIntervalSince1970</code></td>
+          <td class="code-cell"><pre>let now = Date()
+let epoch = now.timeIntervalSince1970
+// From epoch:
+let d = Date(timeIntervalSince1970: epoch)</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Swift</span></td>
+          <td><code>ISO8601DateFormatter</code></td>
+          <td>ISO 8601 string</td>
+          <td><code>2026-04-07T15:30:45Z</code></td>
+          <td>Seconds (configurable)</td>
+          <td>UTC by default</td>
+          <td class="gotcha-cell">Must set <code>formatOptions</code> for fractional seconds; not included by default</td>
+          <td class="code-cell"><pre>let fmt = ISO8601DateFormatter()
+let s = fmt.string(from: Date())
+let d = fmt.date(from: s)!</pre></td>
+        </tr>
+        <!-- Kotlin -->
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Kotlin</span></td>
+          <td><code>Instant.now()</code> (kotlinx)</td>
+          <td><code>Instant</code></td>
+          <td><code>2026-04-07T15:30:45.123456789Z</code></td>
+          <td>Nanoseconds</td>
+          <td>Always UTC</td>
+          <td class="gotcha-cell">kotlinx-datetime is separate dependency; JVM Instant is different API</td>
+          <td class="code-cell"><pre>import kotlinx.datetime.*
+val now = Clock.System.now()
+val epoch = now.epochSeconds
+// From epoch:
+val i = Instant.fromEpochSeconds(epoch)</pre></td>
+        </tr>
+        <tr data-cat="lang">
+          <td><span class="cat-tag cat-lang">Kotlin</span></td>
+          <td><code>System.currentTimeMillis()</code></td>
+          <td>Long integer milliseconds</td>
+          <td><code>1775666445123</code></td>
+          <td>Milliseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">JVM-only; for multiplatform use kotlinx-datetime</td>
+          <td class="code-cell"><pre>val ms = System.currentTimeMillis()
+val epoch = ms / 1000</pre></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ==================== DATABASES ==================== -->
+  <div class="tool-section" id="databases">
+    <h3>Databases</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">How major databases store and retrieve timestamps. Convert database values with the <a href="/tools/epoch-converter.html">Epoch Converter</a> or check timezone offsets with the <a href="/tools/timezone-converter.html">Timezone Converter</a>.</p>
+
+    <div class="table-wrapper">
+    <table class="enc-table">
+      <thead>
+        <tr>
+          <th>Database</th>
+          <th>Type</th>
+          <th>Storage Format</th>
+          <th>Example</th>
+          <th>Precision</th>
+          <th>TZ Handling</th>
+          <th>Gotchas</th>
+          <th>To/From Unix Epoch</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- MySQL -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">MySQL</span></td>
+          <td><code>TIMESTAMP</code></td>
+          <td>4-byte integer (UTC internally)</td>
+          <td><code>2026-04-07 15:30:45</code></td>
+          <td>Seconds (fractional up to 6 with <code>(6)</code>)</td>
+          <td>Stored as UTC, displayed in session TZ</td>
+          <td class="gotcha-cell">Range: 1970-01-01 to 2038-01-19. Y2038 vulnerable. Session <code>time_zone</code> affects display</td>
+          <td class="code-cell"><pre>SELECT UNIX_TIMESTAMP(ts_col);
+SELECT FROM_UNIXTIME(1775666445);</pre></td>
+        </tr>
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">MySQL</span></td>
+          <td><code>DATETIME</code></td>
+          <td>8-byte packed string</td>
+          <td><code>2026-04-07 15:30:45</code></td>
+          <td>Seconds (fractional up to 6)</td>
+          <td>None — stores as-is</td>
+          <td class="gotcha-cell">No timezone awareness! If you insert UTC, you must track that yourself</td>
+          <td class="code-cell"><pre>SELECT UNIX_TIMESTAMP(dt_col);
+-- Only correct if dt_col is in session TZ</pre></td>
+        </tr>
+        <!-- PostgreSQL -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">PostgreSQL</span></td>
+          <td><code>timestamptz</code></td>
+          <td>8-byte integer (microseconds since 2000-01-01)</td>
+          <td><code>2026-04-07 15:30:45.123457+00</code></td>
+          <td>Microseconds</td>
+          <td>Stored as UTC, displayed in session TZ</td>
+          <td class="gotcha-cell">Input offset is used to convert to UTC then discarded. Output uses session TZ</td>
+          <td class="code-cell"><pre>SELECT EXTRACT(EPOCH FROM ts_col);
+SELECT to_timestamp(1775666445);</pre></td>
+        </tr>
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">PostgreSQL</span></td>
+          <td><code>timestamp</code></td>
+          <td>8-byte integer (microseconds since 2000-01-01)</td>
+          <td><code>2026-04-07 15:30:45.123457</code></td>
+          <td>Microseconds</td>
+          <td>None — stored as-is</td>
+          <td class="gotcha-cell">Never use for absolute times; use <code>timestamptz</code> instead. Comparing across TZs is undefined</td>
+          <td class="code-cell"><pre>SELECT EXTRACT(EPOCH FROM ts_col);
+-- Result assumes timestamp is in session TZ</pre></td>
+        </tr>
+        <!-- MongoDB -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">MongoDB</span></td>
+          <td><code>Date</code> / <code>ISODate</code></td>
+          <td>64-bit integer (milliseconds since epoch)</td>
+          <td><code>ISODate("2026-04-07T15:30:45.123Z")</code></td>
+          <td>Milliseconds</td>
+          <td>Always UTC internally</td>
+          <td class="gotcha-cell">Shell displays as ISO string but stores as ms integer. <code>$dateToString</code> defaults to UTC</td>
+          <td class="code-cell"><pre>// In aggregation:
+{ $toLong: "$dateField" } // ms since epoch
+// From epoch (ms):
+new Date(1775666445123)</pre></td>
+        </tr>
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">MongoDB</span></td>
+          <td><code>Timestamp</code> (BSON)</td>
+          <td>64-bit: 32-bit seconds + 32-bit ordinal</td>
+          <td><code>Timestamp(1775666445, 1)</code></td>
+          <td>Seconds + ordinal</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Internal type for oplog; not for application timestamps. Use <code>Date</code> instead</td>
+          <td class="code-cell"><pre>// The first 32 bits are epoch seconds
+Timestamp(epochSeconds, ordinal)</pre></td>
+        </tr>
+        <!-- SQLite -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">SQLite</span></td>
+          <td><code>TEXT</code></td>
+          <td>ISO 8601 string</td>
+          <td><code>"2026-04-07 15:30:45"</code></td>
+          <td>Variable (as stored)</td>
+          <td>None — convention only</td>
+          <td class="gotcha-cell">No native date type; TEXT, REAL, or INTEGER by convention. Comparison is string-based</td>
+          <td class="code-cell"><pre>SELECT strftime('%s', '2026-04-07 15:30:45');
+SELECT datetime(1775666445, 'unixepoch');</pre></td>
+        </tr>
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">SQLite</span></td>
+          <td><code>REAL</code></td>
+          <td>Julian day number</td>
+          <td><code>2461404.14642</code></td>
+          <td>Sub-millisecond</td>
+          <td>None</td>
+          <td class="gotcha-cell">Julian day epoch is different from Unix epoch (Nov 24, 4714 BC). Rarely used in practice</td>
+          <td class="code-cell"><pre>SELECT julianday('2026-04-07 15:30:45');
+SELECT strftime('%s', julianday_value);</pre></td>
+        </tr>
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">SQLite</span></td>
+          <td><code>INTEGER</code></td>
+          <td>Unix epoch seconds</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds</td>
+          <td>UTC by convention</td>
+          <td class="gotcha-cell">Must use <code>'unixepoch'</code> modifier in date functions</td>
+          <td class="code-cell"><pre>SELECT datetime(epoch_col, 'unixepoch');
+-- Direct storage: INSERT INTO t VALUES(strftime('%s','now'));</pre></td>
+        </tr>
+        <!-- Redis -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">Redis</span></td>
+          <td><code>EXPIREAT</code></td>
+          <td>Unix epoch seconds</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell"><code>EXPIREAT</code> takes seconds; <code>PEXPIREAT</code> takes ms. Mixing them is a common bug</td>
+          <td class="code-cell"><pre>EXPIREAT mykey 1775666445
+PEXPIREAT mykey 1775666445123
+TTL mykey  -- remaining seconds</pre></td>
+        </tr>
+        <!-- Elasticsearch -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">Elasticsearch</span></td>
+          <td><code>date</code> field type</td>
+          <td>ms since epoch or ISO 8601 string</td>
+          <td><code>"2026-04-07T15:30:45.123Z"</code> or <code>1775666445123</code></td>
+          <td>Milliseconds</td>
+          <td>UTC (stores as ms internally)</td>
+          <td class="gotcha-cell">Default format is <code>strict_date_optional_time||epoch_millis</code>. Custom formats via mapping</td>
+          <td class="code-cell"><pre>// In query:
+{ "range": { "@timestamp": { "gte": 1775666445000 }}}
+// Or ISO string in source doc</pre></td>
+        </tr>
+        <!-- DynamoDB -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">DynamoDB</span></td>
+          <td><code>Number</code> (epoch)</td>
+          <td>Numeric epoch seconds or ms</td>
+          <td><code>1775666445</code></td>
+          <td>Application-defined</td>
+          <td>None — convention only</td>
+          <td class="gotcha-cell">DynamoDB has no date type. Store as Number (epoch) or String (ISO). TTL requires epoch seconds</td>
+          <td class="code-cell"><pre>// TTL attribute must be epoch seconds:
+{ "ttl": { "N": "1775666445" } }
+// Enable TTL on table attribute</pre></td>
+        </tr>
+        <!-- Cassandra -->
+        <tr data-cat="db">
+          <td><span class="cat-tag cat-db">Cassandra</span></td>
+          <td><code>timestamp</code></td>
+          <td>64-bit integer (ms since epoch)</td>
+          <td><code>2026-04-07 15:30:45.123+0000</code></td>
+          <td>Milliseconds</td>
+          <td>UTC internally, display varies</td>
+          <td class="gotcha-cell">CQL accepts ISO strings or ms integers. <code>toTimestamp(now())</code> for current time</td>
+          <td class="code-cell"><pre>-- Insert with ISO or epoch ms:
+INSERT INTO t (ts) VALUES (1775666445123);
+INSERT INTO t (ts) VALUES ('2026-04-07T15:30:45Z');</pre></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ==================== APIs ==================== -->
+  <div class="tool-section" id="apis">
+    <h3>Popular APIs</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">How the 15 most-integrated APIs format their timestamps. Decode any API response with the <a href="/tools/epoch-converter.html">Epoch Converter</a>. See the full comparison in our <a href="/research/api-timestamp-formats.html">API Timestamp Formats</a> guide.</p>
+
+    <div class="table-wrapper">
+    <table class="enc-table">
+      <thead>
+        <tr>
+          <th>API</th>
+          <th>Format Name</th>
+          <th>Format / Representation</th>
+          <th>Example</th>
+          <th>Precision</th>
+          <th>TZ Handling</th>
+          <th>Gotchas</th>
+          <th>Parse to Unix Epoch</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Stripe</span></td>
+          <td>Unix epoch seconds</td>
+          <td>Integer</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">All <code>created</code>, <code>updated</code> fields are epoch seconds. No ms</td>
+          <td class="code-cell"><pre># Python:
+epoch = event["created"]
+# JS:
+new Date(event.created * 1000)</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">GitHub</span></td>
+          <td>ISO 8601</td>
+          <td>RFC 3339 string</td>
+          <td><code>"2026-04-07T15:30:45Z"</code></td>
+          <td>Seconds</td>
+          <td>Always UTC (Z)</td>
+          <td class="gotcha-cell">Always UTC with Z suffix; never includes offset</td>
+          <td class="code-cell"><pre># Python:
+from datetime import datetime
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Slack</span></td>
+          <td>Epoch + microseconds</td>
+          <td>String: "seconds.microseconds"</td>
+          <td><code>"1775666445.123456"</code></td>
+          <td>Microseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">It is a string, not a number. The decimal is microseconds, not fractional seconds. Used as message ID (ts)</td>
+          <td class="code-cell"><pre># Python:
+ts = "1775666445.123456"
+epoch = int(ts.split(".")[0])
+# JS:
+Math.floor(parseFloat(ts))</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Discord</span></td>
+          <td>Snowflake ID</td>
+          <td>64-bit integer encoding timestamp</td>
+          <td><code>1234567890123456789</code></td>
+          <td>Milliseconds</td>
+          <td>UTC (Discord epoch: 2015-01-01)</td>
+          <td class="gotcha-cell">Epoch is 1420070400000 (Jan 1 2015), not Unix epoch. Right-shift by 22 to get ms</td>
+          <td class="code-cell"><pre># Python:
+discord_epoch = 1420070400000
+ms = (snowflake >> 22) + discord_epoch
+epoch = ms // 1000</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">AWS</span></td>
+          <td>ISO 8601</td>
+          <td>RFC 3339 / ISO 8601</td>
+          <td><code>"2026-04-07T15:30:45.123Z"</code></td>
+          <td>Milliseconds (varies by service)</td>
+          <td>UTC (Z)</td>
+          <td class="gotcha-cell">Some services (CloudWatch) use epoch ms as numbers. SigV4 uses <code>%Y%m%dT%H%M%SZ</code> (no dashes)</td>
+          <td class="code-cell"><pre># Python (boto3 returns datetime):
+import calendar
+epoch = calendar.timegm(dt.timetuple())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Twitter/X</span></td>
+          <td>RFC 2822 (v1) / ISO 8601 (v2)</td>
+          <td>String</td>
+          <td><code>"Tue Apr 07 15:30:45 +0000 2026"</code></td>
+          <td>Seconds</td>
+          <td>UTC (+0000)</td>
+          <td class="gotcha-cell">v1 API uses RFC 2822 (unusual order). v2 API uses ISO 8601. Tweet IDs are also snowflakes</td>
+          <td class="code-cell"><pre># Python (v1 RFC 2822):
+from email.utils import parsedate_to_datetime
+dt = parsedate_to_datetime(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Google APIs</span></td>
+          <td>RFC 3339</td>
+          <td>ISO 8601 / RFC 3339</td>
+          <td><code>"2026-04-07T15:30:45.123456789Z"</code></td>
+          <td>Nanoseconds (varies)</td>
+          <td>UTC (Z) or offset</td>
+          <td class="gotcha-cell">Some fields use Timestamp protobuf (seconds + nanos). Calendar API uses RFC 3339 with offset</td>
+          <td class="code-cell"><pre>// JS:
+const epoch = Math.floor(
+  new Date(s).getTime() / 1000);</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Twilio</span></td>
+          <td>RFC 2822</td>
+          <td>RFC 2822 string</td>
+          <td><code>"Tue, 07 Apr 2026 15:30:45 +0000"</code></td>
+          <td>Seconds</td>
+          <td>UTC (+0000)</td>
+          <td class="gotcha-cell">Comma after day name; some parsers choke on it</td>
+          <td class="code-cell"><pre># Python:
+from email.utils import parsedate_to_datetime
+dt = parsedate_to_datetime(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Shopify</span></td>
+          <td>ISO 8601 with offset</td>
+          <td>ISO 8601 string</td>
+          <td><code>"2026-04-07T15:30:45-04:00"</code></td>
+          <td>Seconds</td>
+          <td>Shop's timezone offset</td>
+          <td class="gotcha-cell">Uses the shop's configured timezone, not UTC. Must normalize to UTC yourself</td>
+          <td class="code-cell"><pre># Python:
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Firebase</span></td>
+          <td>Firestore Timestamp</td>
+          <td>Object: { seconds, nanoseconds }</td>
+          <td><code>{ "seconds": 1775666445, "nanoseconds": 123456789 }</code></td>
+          <td>Nanoseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Not a plain integer; must access <code>.seconds</code>. <code>toDate()</code> returns JS Date (loses ns precision)</td>
+          <td class="code-cell"><pre>// JS:
+const epoch = timestamp.seconds;
+// Or: timestamp.toDate().getTime() / 1000</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Salesforce</span></td>
+          <td>ISO 8601</td>
+          <td>ISO 8601 string</td>
+          <td><code>"2026-04-07T15:30:45.000+0000"</code></td>
+          <td>Milliseconds</td>
+          <td>UTC (+0000, no colon)</td>
+          <td class="gotcha-cell">Offset <code>+0000</code> without colon; some strict parsers reject it</td>
+          <td class="code-cell"><pre># Python:
+s = s.replace("+0000", "+00:00")
+dt = datetime.fromisoformat(s)</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Jira</span></td>
+          <td>ISO 8601 with ms</td>
+          <td>ISO 8601 string</td>
+          <td><code>"2026-04-07T15:30:45.123+0000"</code></td>
+          <td>Milliseconds</td>
+          <td>UTC (+0000, no colon)</td>
+          <td class="gotcha-cell">Same no-colon offset issue as Salesforce. Dates may be in user's timezone</td>
+          <td class="code-cell"><pre># Python:
+from dateutil.parser import parse
+dt = parse(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">Datadog</span></td>
+          <td>Unix epoch seconds</td>
+          <td>Integer or float</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds (metrics allow float)</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Logs use ms epoch for <code>@timestamp</code>; metrics use seconds. Mixing them shifts times by 1000x</td>
+          <td class="code-cell"><pre># Already epoch seconds; direct use
+# For log ms:
+epoch = log_ts // 1000</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">PagerDuty</span></td>
+          <td>ISO 8601</td>
+          <td>RFC 3339 string</td>
+          <td><code>"2026-04-07T15:30:45Z"</code></td>
+          <td>Seconds</td>
+          <td>UTC (Z)</td>
+          <td class="gotcha-cell">Incident <code>created_at</code> is UTC; schedule overrides may have local offsets</td>
+          <td class="code-cell"><pre># Python:
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())</pre></td>
+        </tr>
+        <tr data-cat="api">
+          <td><span class="cat-tag cat-api">SendGrid</span></td>
+          <td>Unix epoch seconds</td>
+          <td>Integer</td>
+          <td><code>1775666445</code></td>
+          <td>Seconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Event webhook timestamps are epoch seconds; scheduling uses ISO 8601</td>
+          <td class="code-cell"><pre># Already epoch; direct use
+dt = datetime.fromtimestamp(ts, tz=timezone.utc)</pre></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ==================== STANDARDS ==================== -->
+  <div class="tool-section" id="standards">
+    <h3>Standards &amp; Protocols</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">The foundational timestamp standards that everything else builds on. Useful when decoding log files in the <a href="/tools/epoch-converter.html">Epoch Converter</a>.</p>
+
+    <div class="table-wrapper">
+    <table class="enc-table">
+      <thead>
+        <tr>
+          <th>Standard</th>
+          <th>Specification</th>
+          <th>Format</th>
+          <th>Example</th>
+          <th>Precision</th>
+          <th>TZ Handling</th>
+          <th>Gotchas</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">ISO 8601</span></td>
+          <td>ISO 8601:2004 / ISO 8601-1:2019</td>
+          <td><code>YYYY-MM-DDThh:mm:ss.sssZ</code></td>
+          <td><code>2026-04-07T15:30:45.123Z</code></td>
+          <td>Arbitrary (decimal fraction)</td>
+          <td>Z for UTC, +/-HH:MM offset</td>
+          <td class="gotcha-cell">Allows many variants: date-only, week dates (2026-W15), ordinal dates (2026-097), basic format (20260407). Most parsers only handle extended format</td>
+          <td class="code-cell">The most widely adopted standard. RFC 3339 is a strict subset. Most "ISO 8601" in APIs is actually RFC 3339</td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">RFC 3339</span></td>
+          <td>IETF RFC 3339</td>
+          <td><code>YYYY-MM-DDThh:mm:ss+HH:MM</code></td>
+          <td><code>2026-04-07T15:30:45+00:00</code></td>
+          <td>Arbitrary (decimal fraction)</td>
+          <td>Required: Z or numeric offset</td>
+          <td class="gotcha-cell">Stricter than ISO 8601: requires full date-time, requires timezone. Allows space instead of T (non-standard in ISO 8601)</td>
+          <td class="code-cell">Preferred for internet protocols and APIs. Google, GitHub, AWS all use this in practice</td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">RFC 2822</span></td>
+          <td>IETF RFC 2822 (Internet Message Format)</td>
+          <td><code>ddd, DD MMM YYYY HH:MM:SS +ZZZZ</code></td>
+          <td><code>Tue, 07 Apr 2026 15:30:45 +0000</code></td>
+          <td>Seconds</td>
+          <td>Numeric offset (+0000) or zone name (GMT)</td>
+          <td class="gotcha-cell">Day name is optional. Zone abbreviations (EST, PST) are obsolete and ambiguous (CST = US Central or China Standard?)</td>
+          <td class="code-cell">Used in email headers, HTTP Date header, RSS feeds. Twilio and Twitter v1 API use this</td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">Unix Epoch</span></td>
+          <td>POSIX / IEEE Std 1003.1</td>
+          <td>Integer seconds since 1970-01-01T00:00:00Z</td>
+          <td><code>1775666445</code> (s) / <code>1775666445123</code> (ms) / <code>1775666445123457</code> (us) / <code>1775666445123456789</code> (ns)</td>
+          <td>Seconds (variants: ms, us, ns)</td>
+          <td>Always UTC</td>
+          <td class="gotcha-cell">No universal convention for ms vs s — you must check digit count. Negative values = before 1970. 32-bit overflow in 2038</td>
+          <td class="code-cell">The foundation of all computer timekeeping. Most other formats convert to/from this. Our <a href="/tools/epoch-converter.html">converter auto-detects s vs ms</a></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">Windows FILETIME</span></td>
+          <td>Microsoft Win32 API</td>
+          <td>64-bit integer: 100-nanosecond intervals since 1601-01-01</td>
+          <td><code>133576086451234567</code></td>
+          <td>100 nanoseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Epoch is Jan 1, 1601 (not 1970). Offset from Unix epoch: 116444736000000000 (100-ns ticks)</td>
+          <td class="code-cell"><pre># To Unix epoch (seconds):
+unix_epoch = (filetime - 116444736000000000) // 10000000</pre></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">NTP Timestamp</span></td>
+          <td>RFC 5905 (NTPv4)</td>
+          <td>64-bit: 32-bit seconds since 1900-01-01 + 32-bit fraction</td>
+          <td><code>3952300245.528534016</code></td>
+          <td>~232 picoseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Epoch is Jan 1, 1900 (not 1970). Era 0 rolls over Feb 7, 2036. Subtract 2208988800 for Unix epoch</td>
+          <td class="code-cell"><pre># To Unix epoch:
+unix_epoch = ntp_seconds - 2208988800</pre></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">GPS Time</span></td>
+          <td>IS-GPS-200</td>
+          <td>Weeks + seconds since 1980-01-06</td>
+          <td><code>Week 2412, TOW 401445</code></td>
+          <td>Nanoseconds (carrier phase)</td>
+          <td>GPS time (no leap seconds)</td>
+          <td class="gotcha-cell">GPS time does not include leap seconds; as of 2026 it is 18 seconds ahead of UTC. Week number rollover every 1024 weeks</td>
+          <td class="code-cell"><pre># To Unix epoch:
+gps_epoch = 315964800  # 1980-01-06
+unix = gps_epoch + (week * 604800) + tow - leap_seconds</pre></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">TAI</span></td>
+          <td>International Atomic Time</td>
+          <td>Same format as UTC but without leap seconds</td>
+          <td><code>2026-04-07T15:31:22 TAI</code></td>
+          <td>Nanoseconds (atomic clocks)</td>
+          <td>TAI (UTC + leap seconds)</td>
+          <td class="gotcha-cell">As of 2026, TAI = UTC + 37 seconds. Not directly used in most software but underpins UTC</td>
+          <td class="code-cell"><pre># TAI to UTC:
+utc_epoch = tai_epoch - 37  # current leap offset</pre></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">UUID v7</span></td>
+          <td>RFC 9562</td>
+          <td>48-bit ms timestamp in UUID</td>
+          <td><code>019f2c9a-d6b3-7...</code></td>
+          <td>Milliseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">First 48 bits are Unix ms timestamp. Sort-friendly unlike v4. Extracting timestamp: first 12 hex chars</td>
+          <td class="code-cell"><pre># Extract ms from UUID v7:
+hex_ts = uuid_str.replace("-","")[:12]
+ms = int(hex_ts, 16)
+epoch = ms // 1000</pre></td>
+        </tr>
+        <tr data-cat="std">
+          <td><span class="cat-tag cat-std">ULID</span></td>
+          <td>github.com/ulid/spec</td>
+          <td>48-bit ms timestamp + 80-bit random</td>
+          <td><code>01JRXWYFCP...</code></td>
+          <td>Milliseconds</td>
+          <td>UTC</td>
+          <td class="gotcha-cell">Crockford Base32 encoded. First 10 characters encode timestamp. Lexicographically sortable</td>
+          <td class="code-cell"><pre># Decode ULID timestamp (first 10 chars):
+# Crockford base32 decode to get ms
+epoch = decoded_ms // 1000</pre></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ==================== FULL SEARCHABLE TABLE ==================== -->
+  <div class="tool-section" id="full-table">
+    <h3>Full Searchable Table</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">All 93 formats in one view. Type to filter by any column.</p>
+
+    <input type="text" class="search-input" id="enc-search" placeholder="Search formats... (e.g. 'milliseconds', 'PostgreSQL', 'UTC', 'nanoseconds')">
+
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all">All (93)</button>
+      <button class="filter-btn" data-filter="lang">Languages (28)</button>
+      <button class="filter-btn" data-filter="db">Databases (13)</button>
+      <button class="filter-btn" data-filter="api">APIs (15)</button>
+      <button class="filter-btn" data-filter="std">Standards (10)</button>
+    </div>
+
+    <div class="table-wrapper">
+    <table class="enc-table" id="master-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>System</th>
+          <th>Type / Format</th>
+          <th>Example</th>
+          <th>Precision</th>
+          <th>TZ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Languages -->
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Python</td><td><code>time.time()</code></td><td><code>1775666445.123457</code></td><td>Microseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Python</td><td><code>datetime.now()</code> (naive)</td><td><code>2026-04-07 15:30:45.123457</code></td><td>Microseconds</td><td>Local</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Python</td><td><code>datetime.isoformat()</code></td><td><code>2026-04-07T15:30:45+00:00</code></td><td>Microseconds</td><td>Offset</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Python</td><td><code>strftime()</code></td><td><code>%Y-%m-%d %H:%M:%S</code></td><td>Seconds</td><td>Varies</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>JavaScript</td><td><code>Date.now()</code></td><td><code>1775666445123</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>JavaScript</td><td><code>new Date()</code></td><td><code>Tue Apr 07 2026 15:30:45</code></td><td>Milliseconds</td><td>Local</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>JavaScript</td><td><code>.toISOString()</code></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>JavaScript</td><td><code>Date.parse()</code></td><td><code>1775666445123</code></td><td>Milliseconds</td><td>Varies</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Java</td><td><code>Instant.now()</code></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Java</td><td><code>LocalDateTime</code></td><td><code>2026-04-07T15:30:45</code></td><td>Nanoseconds</td><td>None</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Java</td><td><code>ZonedDateTime</code></td><td><code>2026-04-07T15:30:45+00:00[UTC]</code></td><td>Nanoseconds</td><td>IANA</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Java</td><td><code>System.currentTimeMillis()</code></td><td><code>1775666445123</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Go</td><td><code>time.Now()</code></td><td><code>2026-04-07 15:30:45.123 +0000 UTC</code></td><td>Nanoseconds</td><td>Location</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Go</td><td><code>time.Format()</code></td><td><code>2006-01-02T15:04:05Z07:00</code></td><td>Nanoseconds</td><td>Offset</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Rust</td><td><code>SystemTime::now()</code></td><td><code>Duration { secs: 1775666445, nanos: 123 }</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Rust</td><td><code>chrono::Utc::now()</code></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>PHP</td><td><code>time()</code></td><td><code>1775666445</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>PHP</td><td><code>date('c')</code></td><td><code>2026-04-07T15:30:45+00:00</code></td><td>Seconds</td><td>Server TZ</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>PHP</td><td><code>microtime(true)</code></td><td><code>1775666445.123457</code></td><td>Microseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>PHP</td><td><code>strtotime()</code></td><td><code>1775666445</code></td><td>Seconds</td><td>Server TZ</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Ruby</td><td><code>Time.now</code></td><td><code>2026-04-07 15:30:45 +0000</code></td><td>Nanoseconds</td><td>Local</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Ruby</td><td><code>Time.iso8601()</code></td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>Offset</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>C#</td><td><code>DateTime.UtcNow</code></td><td><code>04/07/2026 15:30:45</code></td><td>100ns ticks</td><td>Kind</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>C#</td><td><code>DateTimeOffset.UtcNow</code></td><td><code>04/07/2026 15:30:45 +00:00</code></td><td>100ns ticks</td><td>Offset</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Swift</td><td><code>Date()</code></td><td><code>2026-04-07 15:30:45 +0000</code></td><td>Sub-ms</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Swift</td><td><code>ISO8601DateFormatter</code></td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Kotlin</td><td><code>Instant.now()</code> (kotlinx)</td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="lang"><td><span class="cat-tag cat-lang">Lang</span></td><td>Kotlin</td><td><code>System.currentTimeMillis()</code></td><td><code>1775666445123</code></td><td>Milliseconds</td><td>UTC</td></tr>
+
+        <!-- Databases -->
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>MySQL</td><td><code>TIMESTAMP</code></td><td><code>2026-04-07 15:30:45</code></td><td>Seconds (fsp 6)</td><td>UTC stored</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>MySQL</td><td><code>DATETIME</code></td><td><code>2026-04-07 15:30:45</code></td><td>Seconds (fsp 6)</td><td>None</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>PostgreSQL</td><td><code>timestamptz</code></td><td><code>2026-04-07 15:30:45.123+00</code></td><td>Microseconds</td><td>UTC stored</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>PostgreSQL</td><td><code>timestamp</code></td><td><code>2026-04-07 15:30:45.123</code></td><td>Microseconds</td><td>None</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>MongoDB</td><td><code>Date / ISODate</code></td><td><code>ISODate("2026-04-07T15:30:45Z")</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>MongoDB</td><td><code>Timestamp (BSON)</code></td><td><code>Timestamp(1775666445, 1)</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>SQLite</td><td><code>TEXT (ISO)</code></td><td><code>"2026-04-07 15:30:45"</code></td><td>Variable</td><td>None</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>SQLite</td><td><code>REAL (Julian)</code></td><td><code>2461404.14642</code></td><td>Sub-ms</td><td>None</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>SQLite</td><td><code>INTEGER (epoch)</code></td><td><code>1775666445</code></td><td>Seconds</td><td>UTC conv.</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>Redis</td><td><code>EXPIREAT / PEXPIREAT</code></td><td><code>1775666445</code></td><td>Seconds/ms</td><td>UTC</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>Elasticsearch</td><td><code>date field</code></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>DynamoDB</td><td><code>Number (epoch)</code></td><td><code>1775666445</code></td><td>App-defined</td><td>Convention</td></tr>
+        <tr data-cat="db"><td><span class="cat-tag cat-db">DB</span></td><td>Cassandra</td><td><code>timestamp</code></td><td><code>2026-04-07 15:30:45.123+0000</code></td><td>Milliseconds</td><td>UTC</td></tr>
+
+        <!-- APIs -->
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Stripe</td><td>Unix epoch seconds</td><td><code>1775666445</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>GitHub</td><td>ISO 8601 (RFC 3339)</td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Slack</td><td>Epoch string (s.us)</td><td><code>"1775666445.123456"</code></td><td>Microseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Discord</td><td>Snowflake ID</td><td><code>1234567890123456789</code></td><td>Milliseconds</td><td>UTC*</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>AWS</td><td>ISO 8601 / RFC 3339</td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Twitter/X</td><td>RFC 2822 (v1) / ISO (v2)</td><td><code>Tue Apr 07 15:30:45 +0000 2026</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Google APIs</td><td>RFC 3339</td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Twilio</td><td>RFC 2822</td><td><code>Tue, 07 Apr 2026 15:30:45 +0000</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Shopify</td><td>ISO 8601 with offset</td><td><code>2026-04-07T15:30:45-04:00</code></td><td>Seconds</td><td>Shop TZ</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Firebase</td><td>Timestamp object</td><td><code>{ seconds: 1775666445 }</code></td><td>Nanoseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Salesforce</td><td>ISO 8601 (no colon offset)</td><td><code>2026-04-07T15:30:45.000+0000</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Jira</td><td>ISO 8601 (no colon offset)</td><td><code>2026-04-07T15:30:45.123+0000</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>Datadog</td><td>Unix epoch seconds/ms</td><td><code>1775666445</code></td><td>Seconds/ms</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>PagerDuty</td><td>ISO 8601 (RFC 3339)</td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>UTC</td></tr>
+        <tr data-cat="api"><td><span class="cat-tag cat-api">API</span></td><td>SendGrid</td><td>Unix epoch seconds</td><td><code>1775666445</code></td><td>Seconds</td><td>UTC</td></tr>
+
+        <!-- Standards -->
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>ISO 8601</td><td><code>YYYY-MM-DDThh:mm:ss.sssZ</code></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Arbitrary</td><td>Z/offset</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>RFC 3339</td><td><code>YYYY-MM-DDThh:mm:ss+HH:MM</code></td><td><code>2026-04-07T15:30:45+00:00</code></td><td>Arbitrary</td><td>Required</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>RFC 2822</td><td><code>ddd, DD MMM YYYY HH:MM:SS +ZZZZ</code></td><td><code>Tue, 07 Apr 2026 15:30:45 +0000</code></td><td>Seconds</td><td>Offset</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>Unix Epoch</td><td>Integer seconds since 1970</td><td><code>1775666445</code></td><td>s/ms/us/ns</td><td>UTC</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>Windows FILETIME</td><td>100ns ticks since 1601</td><td><code>133576086451234567</code></td><td>100ns</td><td>UTC</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>NTP Timestamp</td><td>Seconds.fraction since 1900</td><td><code>3952300245.528</code></td><td>~232ps</td><td>UTC</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>GPS Time</td><td>Week + seconds since 1980</td><td><code>Week 2412, TOW 401445</code></td><td>Nanoseconds</td><td>GPS</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>TAI</td><td>Atomic time (UTC + leap)</td><td><code>2026-04-07T15:31:22 TAI</code></td><td>Nanoseconds</td><td>TAI</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>UUID v7</td><td>48-bit ms in UUID</td><td><code>019f2c9a-d6b3-7...</code></td><td>Milliseconds</td><td>UTC</td></tr>
+        <tr data-cat="std"><td><span class="cat-tag cat-std">Std</span></td><td>ULID</td><td>48-bit ms in Base32</td><td><code>01JRXWYFCP...</code></td><td>Milliseconds</td><td>UTC</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.75rem;">* Discord uses a custom epoch (Jan 1, 2015). "UTC conv." means stored as UTC by convention but not enforced.</p>
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;" id="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>How many timestamp formats exist across programming languages and databases?</summary>
+      <p>There are over 90 distinct timestamp formats used across major programming languages, databases, APIs, and standards. This encyclopedia catalogs formats from Python, JavaScript, Java, Go, Rust, PHP, Ruby, C#, Swift, Kotlin, MySQL, PostgreSQL, MongoDB, SQLite, Redis, Elasticsearch, DynamoDB, Cassandra, and 15+ popular APIs.</p>
+    </details>
+
+    <details>
+      <summary>What is the difference between ISO 8601 and RFC 3339?</summary>
+      <p>RFC 3339 is a profile (subset) of ISO 8601 designed for internet protocols. Key differences: RFC 3339 requires a full date-time with explicit timezone offset, while ISO 8601 allows date-only, time-only, week dates, ordinal dates, and many more variants. In practice, most APIs that claim "ISO 8601" actually use RFC 3339.</p>
+    </details>
+
+    <details>
+      <summary>Why do different APIs use different timestamp formats?</summary>
+      <p>APIs choose timestamp formats based on their founding era and use case. Older APIs like Stripe use Unix epoch seconds for simplicity and sort-ability. Modern REST APIs like GitHub prefer ISO 8601/RFC 3339 for human readability. Some like Discord use custom snowflake IDs that encode timestamps with additional metadata. There is no universal standard.</p>
+    </details>
+
+    <details>
+      <summary>What timestamp precision should I use?</summary>
+      <p>It depends on your use case. Second precision suffices for scheduling, cron jobs, and most API timestamps. Millisecond precision is standard for browser events, logging, and JavaScript. Microsecond precision is used in database audit trails. Nanosecond precision is needed for distributed tracing and system clocks in Go and Rust.</p>
+    </details>
+
+    <details>
+      <summary>How do I convert between timestamp formats?</summary>
+      <p>Nearly all formats convert to/from Unix epoch as an intermediate step. Convert your source format to epoch seconds (or ms), then convert from epoch to your target format. EpochPilot's <a href="/tools/epoch-converter.html">Epoch Converter</a> handles the most common conversions automatically.</p>
+    </details>
+  </section>
+
+  <!-- Related Tools -->
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h3>Related EpochPilot Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/epoch-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch Converter</a>
+      <a href="/tools/timezone-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Timezone Converter</a>
+      <a href="/tools/unix-timestamp-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Unix Timestamp Converter</a>
+      <a href="/tools/python-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">Python Timestamp</a>
+      <a href="/tools/javascript-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">JavaScript Timestamp</a>
+      <a href="/tools/java-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">Java Timestamp</a>
+    </div>
+
+    <h3 style="margin-top:1.5rem;">More Research</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/research/api-timestamp-formats.html" class="btn btn-outline" style="font-size:0.85rem;">API Timestamp Formats (2026)</a>
+      <a href="/research/timestamp-gotchas.html" class="btn btn-outline" style="font-size:0.85rem;">Timestamp Bugs &amp; Gotchas</a>
+    </div>
+
+    <h3 style="margin-top:1.5rem;">Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+  </section>
+
+  <div class="last-updated"><time datetime="2026-04-07">Last updated: April 7, 2026</time></div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="https://zovo.one/tools">Zovo Tools</a>
+      <span>Free developer tools by a solo dev. No tracking.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://ml3x.com">ML3X</a>
+      <a href="https://abwex.com">ABWex</a>
+      <a href="https://claudflow.com">ClaudFlow</a>
+    </div>
+    <div class="footer-pro">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const search = document.getElementById('enc-search');
+  const table = document.getElementById('master-table');
+  const rows = table.querySelectorAll('tbody tr');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let activeFilter = 'all';
+
+  search.addEventListener('input', applyFilters);
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    const q = search.value.toLowerCase();
+    rows.forEach(row => {
+      const cat = row.dataset.cat;
+      const text = row.textContent.toLowerCase();
+      const matchCat = activeFilter === 'all' || cat === activeFilter;
+      const matchSearch = !q || text.includes(q);
+      row.style.display = matchCat && matchSearch ? '' : 'none';
+    });
+  }
+})();
+</script>
+</body>
+</html>

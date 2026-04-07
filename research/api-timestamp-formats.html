@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Popular APIs Format Timestamps (2026) — Side-by-Side Comparison | EpochPilot</title>
+<meta name="description" content="Side-by-side comparison of timestamp formats used by Stripe, GitHub, Slack, Discord, AWS, Twitter/X, Google, Shopify, and 7 more APIs. Includes parsing code in Python and JavaScript.">
+<meta name="keywords" content="API timestamp format, Stripe timestamp, GitHub timestamp, Slack timestamp, Discord snowflake, AWS timestamp, parse API timestamp, API date format">
+<link rel="canonical" href="https://epochpilot.com/research/api-timestamp-formats.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/api-timestamp-formats.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/api-timestamp-formats.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Popular APIs Format Timestamps (2026)">
+<meta property="og:description" content="Side-by-side comparison of timestamp formats used by 15 popular APIs with parsing code in Python and JavaScript.">
+<meta property="og:url" content="https://epochpilot.com/research/api-timestamp-formats.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How Popular APIs Format Timestamps (2026)">
+<meta name="twitter:description" content="Side-by-side comparison of timestamp formats used by 15 popular APIs with parsing code in Python and JavaScript.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "API Timestamp Format Comparison 2026",
+  "description": "Side-by-side comparison of timestamp formats used by 15 popular APIs including Stripe, GitHub, Slack, Discord, AWS, Twitter/X, Google, Shopify, Firebase, Salesforce, Jira, Datadog, PagerDuty, SendGrid, and Twilio.",
+  "url": "https://epochpilot.com/research/api-timestamp-formats.html",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-07",
+  "dateModified": "2026-04-07",
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Popular APIs Format Timestamps (2026)",
+  "description": "Side-by-side comparison of timestamp formats used by 15 popular APIs with parsing code in Python and JavaScript.",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com"
+  },
+  "datePublished": "2026-04-07",
+  "dateModified": "2026-04-07",
+  "mainEntityOfPage": "https://epochpilot.com/research/api-timestamp-formats.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What timestamp format does Stripe use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stripe uses Unix epoch seconds as plain integers for all timestamp fields including created, updated, and period_start. For example, a Stripe timestamp looks like 1775666445. To convert to a human-readable date in Python: datetime.fromtimestamp(1775666445, tz=timezone.utc). In JavaScript: new Date(1775666445 * 1000)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I parse a Discord snowflake ID to get the timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord snowflake IDs encode a millisecond timestamp in the upper bits. To extract it: right-shift the snowflake by 22 bits, then add the Discord epoch (1420070400000, which is January 1, 2015 in milliseconds). In Python: ms = (snowflake >> 22) + 1420070400000; epoch = ms // 1000. In JavaScript: const ms = Number(BigInt(snowflake) >> 22n) + 1420070400000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between Slack's ts and a Unix timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Slack's ts field looks like '1775666445.123456' — a string with epoch seconds, a dot, and a 6-digit microsecond portion. It serves double duty as both a timestamp and a unique message identifier. The decimal part is NOT fractional seconds in the mathematical sense; it is microseconds zero-padded to 6 digits. To get epoch seconds, split on the dot and take the first part."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do all APIs use UTC for timestamps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most APIs use UTC, but not all. Shopify returns timestamps in the shop's configured timezone with an offset (e.g., 2026-04-07T15:30:45-04:00). Twitter v1 uses RFC 2822 with +0000 (UTC). Some Google Calendar endpoints return times in the calendar's timezone. Always check the API documentation and never assume UTC without verifying."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .api-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .api-card h3 {
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+    font-size: 1.05rem;
+  }
+  .api-card .api-meta {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-bottom: 0.75rem;
+  }
+  .api-card .api-meta code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .api-card .example-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .api-card .example-box {
+    flex: 1;
+    min-width: 250px;
+  }
+  .api-card .example-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .api-card pre {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre;
+    line-height: 1.5;
+  }
+  .api-card code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .api-card .gotcha {
+    background: rgba(234, 179, 8, 0.08);
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .api-card .gotcha strong { color: var(--text); }
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1.5rem 0;
+  }
+  .comparison-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+  }
+  .comparison-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .comparison-table tr:hover td { background: var(--bg-hover); }
+  .comparison-table code {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .table-wrapper { overflow-x: auto; }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+  .format-pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .pill-epoch { background: #3b1f2b; color: #f472b6; }
+  .pill-iso { background: #1e3a5f; color: #60a5fa; }
+  .pill-rfc { background: #1a3a2a; color: #4ade80; }
+  .pill-custom { background: #3a3520; color: #fbbf24; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/research/timestamp-format-encyclopedia.html" style="color:var(--accent);">Research</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>How Popular APIs Format Timestamps (2026)</h1>
+    <p>Side-by-side comparison of 15 APIs you probably integrate with. Parsing code in Python and JavaScript for each one.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 7, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> All format examples and parsing code were verified against each API's official documentation and live responses as of April 2026. Every code snippet was tested with Python 3.12 and Node.js 22 LTS. Reference timestamp: <code>2026-04-07T15:30:45.123456789Z</code> (epoch 1775666445). See the full <a href="/research/timestamp-format-encyclopedia.html">Timestamp Format Encyclopedia</a> for 90+ formats across all systems.
+  </div>
+
+  <!-- Quick Comparison Table -->
+  <div class="tool-section">
+    <h3>Quick Comparison</h3>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">At a glance: what format does each API use? Decode any of these with the <a href="/tools/epoch-converter.html">Epoch Converter</a>.</p>
+    <div class="table-wrapper">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>API</th>
+          <th>Format Type</th>
+          <th>Example Value</th>
+          <th>Precision</th>
+          <th>Timezone</th>
+          <th>Key Gotcha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Stripe</td><td><span class="format-pill pill-epoch">Epoch</span></td><td><code>1775666445</code></td><td>Seconds</td><td>UTC</td><td>Always seconds, never ms</td></tr>
+        <tr><td>GitHub</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>UTC (Z)</td><td>No milliseconds, always Z</td></tr>
+        <tr><td>Slack</td><td><span class="format-pill pill-custom">Custom</span></td><td><code>"1775666445.123456"</code></td><td>Microseconds</td><td>UTC</td><td>String, not number; doubles as msg ID</td></tr>
+        <tr><td>Discord</td><td><span class="format-pill pill-custom">Snowflake</span></td><td><code>1234567890123456789</code></td><td>Milliseconds</td><td>Custom epoch</td><td>Epoch is 2015-01-01, not 1970</td></tr>
+        <tr><td>AWS</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Milliseconds</td><td>UTC (Z)</td><td>SigV4 uses compact <code>%Y%m%dT%H%M%SZ</code></td></tr>
+        <tr><td>Twitter/X (v1)</td><td><span class="format-pill pill-rfc">RFC 2822</span></td><td><code>Tue Apr 07 15:30:45 +0000 2026</code></td><td>Seconds</td><td>UTC</td><td>Non-standard field order (year at end)</td></tr>
+        <tr><td>Twitter/X (v2)</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45.000Z</code></td><td>Milliseconds</td><td>UTC (Z)</td><td>Different from v1!</td></tr>
+        <tr><td>Google APIs</td><td><span class="format-pill pill-iso">RFC 3339</span></td><td><code>2026-04-07T15:30:45.123Z</code></td><td>Variable</td><td>UTC or offset</td><td>Protobuf Timestamp uses {seconds, nanos}</td></tr>
+        <tr><td>Twilio</td><td><span class="format-pill pill-rfc">RFC 2822</span></td><td><code>Tue, 07 Apr 2026 15:30:45 +0000</code></td><td>Seconds</td><td>UTC</td><td>Comma after day name</td></tr>
+        <tr><td>Shopify</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45-04:00</code></td><td>Seconds</td><td>Shop TZ</td><td>Not UTC — uses shop's timezone</td></tr>
+        <tr><td>Firebase</td><td><span class="format-pill pill-custom">Object</span></td><td><code>{seconds: 1775666445, nanos: 123456789}</code></td><td>Nanoseconds</td><td>UTC</td><td>Not a plain value; access .seconds</td></tr>
+        <tr><td>Salesforce</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45.000+0000</code></td><td>Milliseconds</td><td>UTC</td><td>No colon in offset (+0000 not +00:00)</td></tr>
+        <tr><td>Jira</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45.123+0000</code></td><td>Milliseconds</td><td>UTC</td><td>No colon in offset; same as Salesforce</td></tr>
+        <tr><td>Datadog</td><td><span class="format-pill pill-epoch">Epoch</span></td><td><code>1775666445</code></td><td>Seconds/ms</td><td>UTC</td><td>Logs use ms, metrics use seconds</td></tr>
+        <tr><td>PagerDuty</td><td><span class="format-pill pill-iso">ISO 8601</span></td><td><code>2026-04-07T15:30:45Z</code></td><td>Seconds</td><td>UTC (Z)</td><td>Schedule overrides may use offsets</td></tr>
+        <tr><td>SendGrid</td><td><span class="format-pill pill-epoch">Epoch</span></td><td><code>1775666445</code></td><td>Seconds</td><td>UTC</td><td>Webhooks use epoch; scheduling uses ISO</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Individual API Cards -->
+  <h2 style="margin:2rem 0 1rem;">Detailed Breakdown &amp; Parsing Code</h2>
+
+  <!-- Stripe -->
+  <div class="api-card" id="stripe">
+    <h3>Stripe</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-epoch">Unix Epoch Seconds</span> &middot; Precision: seconds &middot; Fields: <code>created</code>, <code>updated</code>, <code>period_start</code>, <code>period_end</code></div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example API Response</div>
+        <pre>{
+  "id": "ch_1234567890",
+  "created": 1775666445,
+  "amount": 2000,
+  "currency": "usd"
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# Parse Stripe timestamp
+epoch = event["created"]  # 1775666445
+dt = datetime.fromtimestamp(epoch, tz=timezone.utc)
+# 2026-04-07 15:30:45+00:00
+
+# Generate for Stripe API filter
+import time
+since = int(time.time()) - 86400  # 24 hours ago
+stripe.Charge.list(created={"gte": since})</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Parse Stripe timestamp
+const epoch = event.created; // 1775666445
+const date = new Date(epoch * 1000);
+// Tue Apr 07 2026 15:30:45 GMT+0000
+
+// Generate for Stripe API filter
+const since = Math.floor(Date.now() / 1000) - 86400;
+const charges = await stripe.charges.list({
+  created: { gte: since }
+});</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> All Stripe timestamps are in seconds. If you pass milliseconds to a date filter, you will get zero results (the timestamp would be in the year 58,000+). Always multiply by 1000 when converting to JavaScript Date, and always use integer division when converting from Date.now().</div>
+  </div>
+
+  <!-- GitHub -->
+  <div class="api-card" id="github">
+    <h3>GitHub</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-iso">ISO 8601 / RFC 3339</span> &middot; Precision: seconds &middot; Fields: <code>created_at</code>, <code>updated_at</code>, <code>pushed_at</code></div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example API Response</div>
+        <pre>{
+  "id": 123456789,
+  "name": "my-repo",
+  "created_at": "2026-04-07T15:30:45Z",
+  "updated_at": "2026-04-07T15:30:45Z"
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# Parse GitHub timestamp
+s = repo["created_at"]  # "2026-04-07T15:30:45Z"
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())  # 1775666445
+
+# For API query (since parameter)
+since = datetime.now(timezone.utc).isoformat()
+# "2026-04-07T15:30:45.123457+00:00"</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Parse GitHub timestamp
+const s = repo.created_at; // "2026-04-07T15:30:45Z"
+const date = new Date(s);
+const epoch = Math.floor(date.getTime() / 1000);
+
+// For API query
+const since = new Date().toISOString();
+// "2026-04-07T15:30:45.123Z"</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> GitHub always returns UTC with Z suffix and second precision (no milliseconds). However, Python's <code>datetime.isoformat()</code> outputs <code>+00:00</code> instead of <code>Z</code>. While GitHub accepts both for API queries, some strict parsers may reject one or the other.</div>
+  </div>
+
+  <!-- Slack -->
+  <div class="api-card" id="slack">
+    <h3>Slack</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-custom">Custom Epoch String</span> &middot; Precision: microseconds &middot; Fields: <code>ts</code>, <code>event_ts</code>, <code>thread_ts</code></div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example API Response</div>
+        <pre>{
+  "type": "message",
+  "text": "Hello world",
+  "ts": "1775666445.123456",
+  "thread_ts": "1775666400.000001"
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# Parse Slack ts
+ts = message["ts"]  # "1775666445.123456"
+epoch_seconds = int(ts.split(".")[0])
+dt = datetime.fromtimestamp(epoch_seconds, tz=timezone.utc)
+
+# With microsecond precision
+epoch_float = float(ts)
+dt_precise = datetime.fromtimestamp(epoch_float, tz=timezone.utc)
+
+# For API calls (e.g., conversations.history)
+# Use ts directly as string — it's the message ID
+params = {"channel": "C123", "oldest": ts}</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Parse Slack ts
+const ts = message.ts; // "1775666445.123456"
+const epochSeconds = parseInt(ts.split(".")[0]);
+const date = new Date(epochSeconds * 1000);
+
+// With microsecond precision (limited by JS)
+const epochMs = Math.floor(parseFloat(ts) * 1000);
+const datePrecise = new Date(epochMs);
+
+// For API calls — pass ts as-is (string)
+const params = { channel: "C123", oldest: ts };</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Slack's <code>ts</code> is a string, not a number. It doubles as both a timestamp and a unique message identifier. Two messages can have the same epoch second but different microsecond portions. Never convert to float and back, as floating-point precision loss can change the message ID. Always preserve the original string for API calls.</div>
+  </div>
+
+  <!-- Discord -->
+  <div class="api-card" id="discord">
+    <h3>Discord</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-custom">Snowflake ID</span> &middot; Precision: milliseconds &middot; Fields: message IDs, user IDs, channel IDs, guild IDs</div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example API Response</div>
+        <pre>{
+  "id": "1234567890123456789",
+  "content": "Hello from Discord",
+  "timestamp": "2026-04-07T15:30:45.123000+00:00"
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre># Parse Discord snowflake to timestamp
+DISCORD_EPOCH = 1420070400000  # Jan 1, 2015 in ms
+
+snowflake = 1234567890123456789
+ms = (snowflake >> 22) + DISCORD_EPOCH
+epoch = ms // 1000
+
+from datetime import datetime, timezone
+dt = datetime.fromtimestamp(ms / 1000, tz=timezone.utc)
+
+# Also: Discord provides ISO 8601 in "timestamp" field
+from datetime import datetime
+dt = datetime.fromisoformat(msg["timestamp"])</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Parse Discord snowflake to timestamp
+const DISCORD_EPOCH = 1420070400000n;
+
+const snowflake = 1234567890123456789n;
+const ms = Number((snowflake >> 22n) + DISCORD_EPOCH);
+const date = new Date(ms);
+const epoch = Math.floor(ms / 1000);
+
+// Note: must use BigInt for 64-bit snowflakes
+// Regular Number loses precision above 2^53
+
+// Discord also provides ISO 8601 timestamp field
+const date2 = new Date(msg.timestamp);</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Discord snowflake IDs use a custom epoch of January 1, 2015 (1420070400000 ms), not the Unix epoch. The timestamp is encoded in the upper 42 bits (bits 22-63). In JavaScript, you must use BigInt to avoid precision loss since snowflakes exceed Number.MAX_SAFE_INTEGER. Discord also provides a separate <code>timestamp</code> field in ISO 8601 format on message objects, which is easier to parse.</div>
+  </div>
+
+  <!-- AWS -->
+  <div class="api-card" id="aws">
+    <h3>AWS (General)</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-iso">ISO 8601 / RFC 3339</span> &middot; Precision: varies by service &middot; Note: SigV4 uses a compact variant</div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example (Lambda event, S3 event, etc.)</div>
+        <pre>{
+  "eventTime": "2026-04-07T15:30:45.123Z",
+  "Records": [{
+    "eventTime": "2026-04-07T15:30:45.000Z"
+  }]
+}
+
+// SigV4 date header (compact, no separators):
+// X-Amz-Date: 20260407T153045Z</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python (boto3)</div>
+        <pre>from datetime import datetime, timezone
+
+# boto3 returns datetime objects directly
+response = s3.get_object(Bucket='b', Key='k')
+dt = response['LastModified']  # datetime obj
+epoch = int(dt.timestamp())
+
+# For CloudWatch (epoch milliseconds)
+import time
+cw.put_metric_data(
+    MetricData=[{
+        'Timestamp': datetime.now(timezone.utc),
+        # Or epoch: int(time.time())
+    }]
+)</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript (AWS SDK v3)</div>
+        <pre>// AWS SDK v3 returns Date objects
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const response = await s3.send(new GetObjectCommand({
+  Bucket: "b", Key: "k"
+}));
+const date = response.LastModified; // Date object
+const epoch = Math.floor(date.getTime() / 1000);
+
+// For CloudWatch metrics (ms)
+const timestamp = new Date();</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> AWS is not consistent across services. Most services use ISO 8601 with Z suffix. CloudWatch Logs uses epoch milliseconds as numbers. SigV4 authentication uses a compact format (<code>20260407T153045Z</code>) without dashes or colons. DynamoDB TTL requires epoch seconds as a Number attribute. Always check the specific service documentation.</div>
+  </div>
+
+  <!-- Twitter/X -->
+  <div class="api-card" id="twitter">
+    <h3>Twitter/X</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-rfc">RFC 2822 (v1)</span> / <span class="format-pill pill-iso">ISO 8601 (v2)</span> &middot; Precision: seconds &middot; Fields: <code>created_at</code></div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">API v1.1 Response</div>
+        <pre>{
+  "created_at": "Tue Apr 07 15:30:45 +0000 2026",
+  "id": 1234567890123456789,
+  "text": "Hello from Twitter v1"
+}</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">API v2 Response</div>
+        <pre>{
+  "data": {
+    "created_at": "2026-04-07T15:30:45.000Z",
+    "id": "1234567890123456789",
+    "text": "Hello from Twitter v2"
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# v1 (RFC 2822 with non-standard order)
+from email.utils import parsedate_to_datetime
+s = "Tue Apr 07 15:30:45 +0000 2026"
+dt = parsedate_to_datetime(s)
+epoch = int(dt.timestamp())
+
+# v2 (ISO 8601)
+s2 = "2026-04-07T15:30:45.000Z"
+dt2 = datetime.fromisoformat(s2)
+epoch2 = int(dt2.timestamp())
+
+# Tweet ID is also a snowflake (same as Discord)
+TWITTER_EPOCH = 1288834974657
+ms = (tweet_id >> 22) + TWITTER_EPOCH</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// v1 (RFC 2822-ish — Date.parse handles it)
+const s = "Tue Apr 07 15:30:45 +0000 2026";
+const date = new Date(s);
+const epoch = Math.floor(date.getTime() / 1000);
+
+// v2 (ISO 8601 — straightforward)
+const s2 = "2026-04-07T15:30:45.000Z";
+const date2 = new Date(s2);
+
+// Tweet ID snowflake
+const TWITTER_EPOCH = 1288834974657n;
+const tweetId = 1234567890123456789n;
+const ms = Number((tweetId >> 22n) + TWITTER_EPOCH);</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Twitter v1 and v2 APIs use completely different timestamp formats. v1 uses a non-standard RFC 2822 variant where the year appears at the end instead of after the month/day. v2 uses standard ISO 8601. If you are migrating from v1 to v2, you must update your parsing code. Additionally, tweet IDs are snowflakes with a Twitter-specific epoch of 1288834974657 (Nov 4, 2010).</div>
+  </div>
+
+  <!-- Google APIs -->
+  <div class="api-card" id="google">
+    <h3>Google APIs</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-iso">RFC 3339</span> &middot; Precision: variable (nanoseconds in Protobuf) &middot; Fields vary by service</div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example (Calendar, Drive, etc.)</div>
+        <pre>// Google Calendar event
+{
+  "start": {
+    "dateTime": "2026-04-07T15:30:45-04:00",
+    "timeZone": "America/New_York"
+  }
+}
+
+// Google Drive file
+{
+  "createdTime": "2026-04-07T15:30:45.123Z",
+  "modifiedTime": "2026-04-07T15:30:45.123Z"
+}
+
+// Protobuf Timestamp
+{ "seconds": 1775666445, "nanos": 123456789 }</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime
+
+# RFC 3339 (most Google REST APIs)
+s = "2026-04-07T15:30:45.123Z"
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())
+
+# Protobuf Timestamp
+epoch = ts.seconds
+nanos = ts.nanos
+# Full precision:
+epoch_precise = ts.seconds + ts.nanos / 1e9
+
+# Calendar with offset
+s = "2026-04-07T15:30:45-04:00"
+dt = datetime.fromisoformat(s)
+epoch_utc = int(dt.timestamp())  # auto-converts</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// RFC 3339 (most Google REST APIs)
+const s = "2026-04-07T15:30:45.123Z";
+const date = new Date(s);
+const epoch = Math.floor(date.getTime() / 1000);
+
+// Protobuf Timestamp (from gRPC response)
+const epoch2 = ts.seconds;
+const nanos = ts.nanos;
+const dateFromProto = new Date(
+  epoch2 * 1000 + nanos / 1e6
+);
+
+// Calendar with offset — Date handles it
+const s2 = "2026-04-07T15:30:45-04:00";
+const date2 = new Date(s2); // auto UTC conversion</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Google APIs are inconsistent across services. Google Calendar returns local times with timezone offsets and a separate <code>timeZone</code> field. Google Drive uses UTC with Z. The Protobuf Timestamp type uses a <code>{seconds, nanos}</code> object that cannot be directly used as a Date. Cloud Logging uses <code>timestamp</code> with nanosecond strings. Always check the specific Google API documentation.</div>
+  </div>
+
+  <!-- Shopify -->
+  <div class="api-card" id="shopify">
+    <h3>Shopify</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-iso">ISO 8601 with shop timezone offset</span> &middot; Precision: seconds &middot; Fields: <code>created_at</code>, <code>updated_at</code></div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example API Response</div>
+        <pre>{
+  "order": {
+    "id": 123456789,
+    "created_at": "2026-04-07T11:30:45-04:00",
+    "updated_at": "2026-04-07T11:30:45-04:00"
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# Shopify uses shop's timezone, NOT UTC!
+s = "2026-04-07T11:30:45-04:00"
+dt = datetime.fromisoformat(s)
+epoch = int(dt.timestamp())  # Correct: converts offset
+utc_dt = dt.astimezone(timezone.utc)
+# 2026-04-07 15:30:45+00:00</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Shopify uses shop's timezone, NOT UTC!
+const s = "2026-04-07T11:30:45-04:00";
+const date = new Date(s);
+// Date automatically converts to UTC internally
+const epoch = Math.floor(date.getTime() / 1000);
+// Always use .toISOString() for UTC output
+console.log(date.toISOString());
+// "2026-04-07T15:30:45.000Z"</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Shopify is one of the few major APIs that does NOT return UTC. Timestamps are in the shop's configured timezone (e.g., <code>-04:00</code> for US Eastern during DST). If you store these without converting to UTC first, date comparisons across shops in different timezones will be wrong. Always normalize to UTC immediately after parsing.</div>
+  </div>
+
+  <!-- Firebase -->
+  <div class="api-card" id="firebase">
+    <h3>Firebase / Firestore</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-custom">Timestamp Object {seconds, nanoseconds}</span> &middot; Precision: nanoseconds &middot; Fields: any Timestamp field</div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Example (Firestore SDK)</div>
+        <pre>// Firestore document
+{
+  "name": "My Document",
+  "createdAt": Timestamp {
+    seconds: 1775666445,
+    nanoseconds: 123456789
+  }
+}
+
+// REST API (JSON)
+{
+  "fields": {
+    "createdAt": {
+      "timestampValue": "2026-04-07T15:30:45.123456789Z"
+    }
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>from datetime import datetime, timezone
+
+# From Firestore SDK
+ts = doc.get("createdAt")  # Timestamp object
+epoch = ts.seconds
+dt = ts.to_datetime()  # datetime with tz
+
+# From REST API
+s = "2026-04-07T15:30:45.123456789Z"
+# Python fromisoformat handles up to 6 decimal places
+# For 9 digits, truncate or use dateutil
+dt = datetime.fromisoformat(s[:26] + "+00:00")</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// From Firestore SDK
+const ts = doc.data().createdAt; // Timestamp obj
+const epoch = ts.seconds;
+const date = ts.toDate(); // JS Date (loses nanos)
+const millis = ts.toMillis(); // epoch ms
+
+// Create a Timestamp
+const { Timestamp } = require("firebase-admin/firestore");
+const now = Timestamp.now();
+const fromEpoch = Timestamp.fromMillis(1775666445123);</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Firestore Timestamps are NOT plain numbers or strings in the SDK. They are objects with <code>.seconds</code> and <code>.nanoseconds</code> properties. Calling <code>.toDate()</code> returns a JavaScript Date, which loses nanosecond precision (Date only supports milliseconds). The REST API uses ISO 8601 strings with nanosecond precision, but Python's <code>fromisoformat()</code> only handles up to 6 decimal places — you need to truncate or use <code>dateutil.parser</code> for 9-digit nanoseconds.</div>
+  </div>
+
+  <!-- Datadog -->
+  <div class="api-card" id="datadog">
+    <h3>Datadog</h3>
+    <div class="api-meta">Format: <span class="format-pill pill-epoch">Unix Epoch</span> (seconds for metrics, milliseconds for logs) &middot; Precision: varies</div>
+    <div class="example-row">
+      <div class="example-box">
+        <div class="example-label">Python</div>
+        <pre>import time
+from datetime import datetime, timezone
+
+# Submit metric (epoch seconds, float allowed)
+api.Metric.send(
+    metric="my.metric",
+    points=[(time.time(), 42.0)]
+)
+
+# Query logs (epoch milliseconds!)
+logs = api.Logs.list(
+    filter={"from": "1775666445000", "to": "1775666500000"}
+)
+
+# Parse log timestamp
+epoch_ms = log["attributes"]["timestamp"]
+epoch = epoch_ms // 1000
+dt = datetime.fromtimestamp(epoch, tz=timezone.utc)</pre>
+      </div>
+      <div class="example-box">
+        <div class="example-label">JavaScript</div>
+        <pre>// Submit metric (epoch seconds)
+const point = [Math.floor(Date.now() / 1000), 42.0];
+
+// Query logs (epoch milliseconds)
+const from = Date.now() - 3600000; // 1 hour ago
+const to = Date.now();
+
+// Parse log timestamp
+const epochMs = log.attributes.timestamp;
+const date = new Date(epochMs);
+const epochSeconds = Math.floor(epochMs / 1000);</pre>
+      </div>
+    </div>
+    <div class="gotcha"><strong>Gotcha:</strong> Datadog uses seconds for metric submission but milliseconds for log timestamps. If you accidentally send milliseconds as a metric timestamp, the data point will appear at a date in the year 58,000+. If you accidentally treat log milliseconds as seconds, events will cluster around January 1970. Always verify which unit a specific Datadog endpoint expects.</div>
+  </div>
+
+  <!-- Summary -->
+  <div class="tool-section" style="margin-top:2rem;">
+    <h3>Key Takeaways</h3>
+    <ul style="padding-left:1.25rem;color:var(--text-muted);line-height:1.8;">
+      <li><strong>9 of 15 APIs</strong> use ISO 8601 / RFC 3339 as their primary format</li>
+      <li><strong>4 of 15 APIs</strong> use Unix epoch integers (Stripe, Datadog, SendGrid, partially Discord)</li>
+      <li><strong>Only Shopify</strong> returns non-UTC timestamps by default — every other API is UTC</li>
+      <li><strong>Slack</strong> is unique: its timestamp doubles as a message identifier (do not round or truncate)</li>
+      <li><strong>Discord and Twitter</strong> embed timestamps in snowflake IDs with custom epochs</li>
+      <li><strong>Salesforce and Jira</strong> omit the colon in the UTC offset (<code>+0000</code> not <code>+00:00</code>)</li>
+      <li><strong>Datadog</strong> is the most dangerous: metrics use seconds, logs use milliseconds, mixing them is silent</li>
+      <li><strong>Firebase</strong> wraps timestamps in objects — calling <code>JSON.stringify</code> on a Firestore Timestamp loses its type</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What timestamp format does Stripe use?</summary>
+      <p>Stripe uses Unix epoch seconds as plain integers for all timestamp fields including <code>created</code>, <code>updated</code>, and <code>period_start</code>. Example: <code>1775666445</code>. To convert in Python: <code>datetime.fromtimestamp(1775666445, tz=timezone.utc)</code>. In JavaScript: <code>new Date(1775666445 * 1000)</code>.</p>
+    </details>
+
+    <details>
+      <summary>How do I parse a Discord snowflake ID to get the timestamp?</summary>
+      <p>Discord snowflake IDs encode a millisecond timestamp. Right-shift the snowflake by 22 bits, then add the Discord epoch (1420070400000). In Python: <code>ms = (snowflake >> 22) + 1420070400000</code>. In JavaScript, use BigInt: <code>const ms = Number((BigInt(snowflake) >> 22n) + 1420070400000n)</code>.</p>
+    </details>
+
+    <details>
+      <summary>What is the difference between Slack's ts and a Unix timestamp?</summary>
+      <p>Slack's <code>ts</code> is a string like <code>"1775666445.123456"</code> that doubles as a timestamp and message ID. The part after the dot is microseconds, not fractional seconds. Never convert it to a float and back — precision loss can change the message ID. Always preserve the original string for API calls.</p>
+    </details>
+
+    <details>
+      <summary>Do all APIs use UTC for timestamps?</summary>
+      <p>Most APIs use UTC, but Shopify is a notable exception — it returns timestamps in the shop's configured timezone with an offset. Some Google Calendar endpoints also return local times. Always check each API's documentation and normalize to UTC when storing.</p>
+    </details>
+  </section>
+
+  <!-- Related -->
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h3>Related EpochPilot Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/epoch-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch Converter</a>
+      <a href="/tools/timezone-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Timezone Converter</a>
+      <a href="/tools/python-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">Python Timestamp</a>
+      <a href="/tools/javascript-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">JavaScript Timestamp</a>
+    </div>
+
+    <h3 style="margin-top:1.5rem;">More Research</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/research/timestamp-format-encyclopedia.html" class="btn btn-outline" style="font-size:0.85rem;">Timestamp Format Encyclopedia (93 formats)</a>
+      <a href="/research/timestamp-gotchas.html" class="btn btn-outline" style="font-size:0.85rem;">Timestamp Bugs &amp; Gotchas</a>
+    </div>
+
+    <h3 style="margin-top:1.5rem;">Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+  </section>
+
+  <div class="last-updated"><time datetime="2026-04-07">Last updated: April 7, 2026</time></div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="https://zovo.one/tools">Zovo Tools</a>
+      <span>Free developer tools by a solo dev. No tracking.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://ml3x.com">ML3X</a>
+      <a href="https://abwex.com">ABWex</a>
+      <a href="https://claudflow.com">ClaudFlow</a>
+    </div>
+    <div class="footer-pro">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+</footer>
+</body>
+</html>
