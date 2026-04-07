@@ -249,6 +249,23 @@
   }
   .table-wrapper { overflow-x: auto; }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Timestamp Bugs You'll Hit (and How to Avoid Them)",
+  "description": "15 real-world timestamp bugs that break production systems: timezone-naive comparisons, DST transitions, Y2038, JavaScript Date precision, epoch seconds vs milliseconds, leap seconds, and more. Bug code + fix code for each.",
+  "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+  "publisher": {"@type": "Organization", "name": "EpochPilot", "url": "https://epochpilot.com"},
+  "datePublished": "2026-04-06",
+  "dateModified": "2026-04-07",
+  "mainEntityOfPage": "https://epochpilot.com/research/timestamp-gotchas.html",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero-subtitle", ".stat-number"]
+  }
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -1364,6 +1381,34 @@ await slack.chat.update({ channel: "C123", ts, text: "updated" });</pre>
   <div class="last-updated"><time datetime="2026-04-07">Last updated: April 7, 2026</time></div>
 </main>
 
+
+<section class="related-tools" style="max-width:900px;margin:3rem auto;padding:2rem;background:rgba(88,166,255,0.05);border:1px solid rgba(88,166,255,0.15);border-radius:12px;">
+  <h2 style="font-size:1.3rem;color:#f0f6fc;margin-bottom:1rem;">🔧 Related Tools</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.75rem;">
+    <a href="/tools/cron-expression-builder.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Cron Expression Builder →</a>
+    <a href="/tools/cron-to-english.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Cron to English →</a>
+    <a href="/tools/crontab-guru.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Crontab Guru →</a>
+    <a href="/tools/days-between-dates.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Days Between Dates →</a>
+    <a href="/tools/business-days-calculator.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Business Days Calculator →</a>
+    <a href="/tools/age-calculator.html" style="color:#58a6ff;text-decoration:none;padding:0.5rem;border-radius:6px;background:rgba(88,166,255,0.08);">Age Calculator →</a>
+  </div>
+</section>
+
+<div class="data-downloads" style="max-width:900px;margin:2rem auto;padding:1.5rem;background:rgba(88,166,255,0.05);border:1px solid rgba(88,166,255,0.15);border-radius:12px;text-align:center;">
+  <h3 style="font-size:1.1rem;color:#f0f6fc;margin-bottom:1rem;">📥 Download Raw Data</h3>
+  <p style="font-size:0.85rem;color:#8b949e;margin-bottom:1rem;">Free under CC BY 4.0. Cite this page when sharing.</p>
+  <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+  <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+</div>
+
+<div class="related-research" style="max-width:900px;margin:2rem auto;padding:1.5rem;background:rgba(88,166,255,0.05);border:1px solid rgba(88,166,255,0.15);border-radius:12px;">
+  <h3 style="font-size:1.1rem;color:#f0f6fc;margin-bottom:0.75rem;">📚 More Developer Research</h3>
+  <a href="https://heytensor.com/research/pytorch-error-database.html" style="color:#58a6ff;text-decoration:none;display:block;margin-bottom:0.5rem;">PyTorch Error Database — 52 real errors analyzed →</a>
+  <a href="https://lochbot.com/research/prompt-security-patterns.html" style="color:#58a6ff;text-decoration:none;display:block;margin-bottom:0.5rem;">Prompt Security Patterns — 32 defense patterns →</a>
+  <a href="https://kickllm.com/research/llm-value-index-2026.html" style="color:#58a6ff;text-decoration:none;display:block;margin-bottom:0.5rem;">LLM Value Index 2026 — 42 models compared →</a>
+  <a href="https://kappakit.com/research/developer-tool-usage-2026.html" style="color:#58a6ff;text-decoration:none;display:block;">Developer Tool Usage 2026 — npm download stats →</a>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
@@ -1371,15 +1416,37 @@ await slack.chat.update({ channel: "C123", ts, text: "updated" });</pre>
       <span>Free developer tools by a solo dev. No tracking.</span>
     </div>
     <div class="footer-links">
-      <a href="https://ml3x.com">ML3X</a>
-      <a href="https://abwex.com">ABWex</a>
-      <a href="https://claudflow.com">ClaudFlow</a>
+      <a href="https://heytensor.com">HeyTensor</a>
+      <a href="https://kappakit.com">KappaKit</a>
+      <a href="https://epochpilot.com">EpochPilot</a>
     </div>
     <div class="footer-pro">
       <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
     </div>
     <div class="footer-copy">
       &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+    </div>
+  </div>
+  <div class="zovo-network" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1);">
+    <p style="font-size:0.85rem;color:#8b949e;margin-bottom:0.75rem;font-weight:600;">Explore Free Developer Tools</p>
+    <div style="display:flex;gap:0.5rem 1rem;flex-wrap:wrap;font-size:0.8rem;justify-content:center;">
+      <a href="https://heytensor.com" style="color:#58a6ff;text-decoration:none;">HeyTensor</a>
+      <a href="https://kappakit.com" style="color:#58a6ff;text-decoration:none;">KappaKit</a>
+      <a href="https://kickllm.com" style="color:#58a6ff;text-decoration:none;">KickLLM</a>
+      <a href="https://lochbot.com" style="color:#58a6ff;text-decoration:none;">LochBot</a>
+      <a href="https://lockml.com" style="color:#58a6ff;text-decoration:none;">LockML</a>
+      <a href="https://claudhq.com" style="color:#58a6ff;text-decoration:none;">ClaudHQ</a>
+      <a href="https://claudflow.com" style="color:#58a6ff;text-decoration:none;">ClaudFlow</a>
+      <a href="https://claudkit.com" style="color:#58a6ff;text-decoration:none;">ClaudKit</a>
+      <a href="https://invokebot.com" style="color:#58a6ff;text-decoration:none;">InvokeBot</a>
+      <a href="https://ml3x.com" style="color:#58a6ff;text-decoration:none;">ML3X</a>
+      <a href="https://gen8x.com" style="color:#58a6ff;text-decoration:none;">Gen8X</a>
+      <a href="https://gpt0x.com" style="color:#58a6ff;text-decoration:none;">GPT0X</a>
+      <a href="https://enhio.com" style="color:#58a6ff;text-decoration:none;">Enhio</a>
+      <a href="https://abwex.com" style="color:#58a6ff;text-decoration:none;">Abwex</a>
+      <a href="https://kappafy.com" style="color:#58a6ff;text-decoration:none;">Kappafy</a>
+      <a href="https://krzen.com" style="color:#58a6ff;text-decoration:none;">Krzen</a>
+      <a href="https://ml0x.com" style="color:#58a6ff;text-decoration:none;">ML0X</a>
     </div>
   </div>
 </footer>
