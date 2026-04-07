@@ -1,34 +1,79 @@
-# Epoch & Time Converter — Unix Timestamp, Timezone, Cron Parser & Live Clock
+# EpochPilot -- Epoch & Timestamp Converter, Timezone Tools & Cron Parser
 
-**[Convert Time →](https://epochpilot.com)** | [About](https://epochpilot.com/about.html) | [Blog](https://epochpilot.com/blog/)
+**[-> Use EpochPilot (live tool)](https://epochpilot.com/)**
 
-Epoch & Time Converter is a comprehensive time utility for developers. Convert Unix epoch timestamps to human-readable dates and back. Compare times across timezones. Calculate time differences between two dates. Parse and explain cron expressions in plain English. Includes a live UTC clock for quick reference. The go-to tool for debugging timestamps in logs, APIs, and databases.
+EpochPilot is a free browser-based suite of 30+ time and timestamp tools for developers. Convert Unix timestamps, compare timezones, parse cron expressions, calculate time differences, and more. All processing happens locally in your browser -- no data is sent to any server.
 
 ## Features
 
-- **Epoch timestamp converter** — convert between Unix timestamps and human-readable dates instantly
-- **Timezone comparison** — see the same moment across multiple timezones side by side
-- **Time difference calculator** — compute the exact duration between any two dates
-- **Cron expression parser** — paste a cron string, get a plain-English explanation and next run times
-- **Live UTC clock** — always-visible reference clock with millisecond precision
+- Unix epoch to human-readable date converter with auto-format detection
+- Human date to epoch converter supporting multiple date formats
+- Timezone converter using the IANA database with DST handling
+- Cron expression parser with 10 preset templates and next-run preview
+- Time difference calculator for epochs and date strings
+- Relative time calculator from any date
+- Live UTC and local clocks updating in real-time
+- 100% client-side -- your data never leaves your browser
+- Open source -- inspect the code yourself
 
-## How It Works
+## Tools
 
-Enter a Unix timestamp (seconds or milliseconds) to see the corresponding date in your local timezone and UTC. Or pick a date and time to get the epoch value. Use the timezone panel to add cities and see the same moment worldwide. The cron parser accepts standard 5-field and extended 6-field cron expressions and shows you the next 10 scheduled execution times. All conversions happen in-browser using the Intl API.
+### Epoch & Timestamp Converters
+- [Epoch Converter](https://epochpilot.com/tools/epoch-converter.html) -- Convert Unix timestamps to human dates
+- [Epoch to Date](https://epochpilot.com/tools/epoch-to-date.html) -- Epoch timestamp to readable date
+- [Date to Epoch](https://epochpilot.com/tools/date-to-epoch.html) -- Convert any date to Unix timestamp
+- [Unix Timestamp Converter](https://epochpilot.com/tools/unix-timestamp-converter.html) -- Universal Unix timestamp tool
+- [Milliseconds Converter](https://epochpilot.com/tools/milliseconds-converter.html) -- Convert millisecond timestamps
 
-## Built With
+### Timezone Converters
+- [Timezone Converter](https://epochpilot.com/tools/timezone-converter.html) -- Convert between any IANA timezones
+- [UTC Converter](https://epochpilot.com/tools/utc-converter.html) -- Convert to and from UTC
+- [GMT Converter](https://epochpilot.com/tools/gmt-converter.html) -- GMT timezone conversion
+- [EST to UTC](https://epochpilot.com/tools/est-to-utc.html) -- Eastern Standard Time to UTC
+- [PST to UTC](https://epochpilot.com/tools/pst-to-utc.html) -- Pacific Standard Time to UTC
+- [UTC to PST](https://epochpilot.com/tools/utc-to-pst.html) -- UTC to Pacific Standard Time
+- [CET to UTC](https://epochpilot.com/tools/cet-to-utc.html) -- Central European Time to UTC
+- [IST to UTC](https://epochpilot.com/tools/ist-to-utc.html) -- India Standard Time to UTC
+- [JST to UTC](https://epochpilot.com/tools/jst-to-utc.html) -- Japan Standard Time to UTC
+- [AEST to UTC](https://epochpilot.com/tools/aest-to-utc.html) -- Australian Eastern Time to UTC
 
-- Vanilla JavaScript (no frameworks, no dependencies)
-- Client-side only — your data never leaves your browser
+### Cron Tools
+- [Cron Expression Builder](https://epochpilot.com/tools/cron-expression-builder.html) -- Visual cron builder
+- [Cron to English](https://epochpilot.com/tools/cron-to-english.html) -- Translate cron to plain English
+- [Cron Next Runs](https://epochpilot.com/tools/cron-next-runs.html) -- Preview next execution times
+- [Cron Job Generator](https://epochpilot.com/tools/cron-job-generator.html) -- Generate cron job configurations
+- [Crontab Guru](https://epochpilot.com/tools/crontab-guru.html) -- Interactive crontab reference
 
+### Date Calculators
+- [Days Between Dates](https://epochpilot.com/tools/days-between-dates.html) -- Calculate days between two dates
+- [Weeks Between Dates](https://epochpilot.com/tools/weeks-between-dates.html) -- Calculate weeks between dates
+- [Date Add/Subtract](https://epochpilot.com/tools/date-add-subtract.html) -- Add or subtract from a date
+- [Business Days Calculator](https://epochpilot.com/tools/business-days-calculator.html) -- Count working days
+- [Age Calculator](https://epochpilot.com/tools/age-calculator.html) -- Calculate exact age from birthdate
 
-- [Developer Toolkit](https://kappakit.com) — Base64, JWT, Hash, UUID, and more dev utilities
-- [A/B Test Calculator](https://abwex.com) — analyze experiment results with time-based cohorts
-- [Text Enhancement Tool](https://enhio.com) — analyze and improve your technical documentation
+### Language-Specific Timestamp Tools
+- [JavaScript Timestamp](https://epochpilot.com/tools/javascript-timestamp.html) -- Date.now() and new Date() reference
+- [Python Timestamp](https://epochpilot.com/tools/python-timestamp.html) -- time.time() and datetime reference
+- [Java Timestamp](https://epochpilot.com/tools/java-timestamp.html) -- System.currentTimeMillis() reference
+- [PHP Timestamp](https://epochpilot.com/tools/php-timestamp.html) -- time() and strtotime() reference
+- [Golang Timestamp](https://epochpilot.com/tools/golang-timestamp.html) -- time.Now().Unix() reference
 
-## Contributing
+## Tech Stack
 
-Found a bug or have a feature request? [Open an issue](https://github.com/theluckystrike/epochpilot.com/issues).
+- Vanilla JavaScript (no frameworks, no build step)
+- Static HTML hosted on GitHub Pages
+- Cloudflare DNS + SSL
+- Zero dependencies, zero tracking, zero cookies
+
+## Part of Zovo Tools
+
+EpochPilot is part of [Zovo Tools](https://zovo.one/tools) -- a collection of free developer tools.
+
+**Other tools in the network:**
+- [HeyTensor](https://heytensor.com) -- PyTorch tensor shape calculator
+- [LochBot](https://lochbot.com) -- Prompt injection vulnerability checker
+- [KappaKit](https://kappakit.com) -- Developer toolkit (Base64, JWT, hash, UUID)
+- [ABWex](https://abwex.com) -- A/B test significance calculator
 
 ## License
 
