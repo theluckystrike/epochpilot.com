@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Unix Timestamp — Live Clock | EpochPilot</title>
+<meta name="description" content="See the current Unix timestamp updating live. Copy the current epoch time in seconds or milliseconds. Shows UTC date, local time, and ISO 8601 format.">
+<meta name="keywords" content="unix time now, current unix timestamp, epoch time now, current epoch">
+<link rel="canonical" href="https://epochpilot.com/tools/unix-time-now.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/unix-time-now.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/unix-time-now.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Current Unix Timestamp — Live Clock | EpochPilot">
+<meta property="og:description" content="See the current Unix timestamp updating live. Copy epoch time in seconds or milliseconds.">
+<meta property="og:url" content="https://epochpilot.com/tools/unix-time-now.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Current Unix Timestamp — Live Clock | EpochPilot">
+<meta name="twitter:description" content="See the current Unix timestamp updating live. Copy epoch time in seconds or milliseconds.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Current Unix Timestamp",
+  "url": "https://epochpilot.com/tools/unix-time-now.html",
+  "description": "See the current Unix timestamp updating live. Copy the current epoch time in seconds or milliseconds.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the current Unix timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The current Unix timestamp is the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC (the Unix epoch). The live counter above shows this value updating every second. As of 2026, Unix timestamps are in the 1.77 billion range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between seconds and milliseconds timestamps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unix timestamps in seconds are 10 digits (e.g., 1744300800). Millisecond timestamps are 13 digits (e.g., 1744300800000). JavaScript's Date.now() returns milliseconds. Python's time.time() returns seconds as a float. Most APIs use seconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will Unix time overflow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Year 2038 problem: 32-bit signed integers overflow on January 19, 2038 at 03:14:07 UTC. After this, timestamps stored as 32-bit signed ints will wrap to negative numbers. Most modern systems use 64-bit timestamps, which won't overflow for 292 billion years."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get Unix time in my programming language?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JavaScript: Math.floor(Date.now()/1000). Python: int(time.time()). Java: System.currentTimeMillis()/1000. PHP: time(). Go: time.Now().Unix(). Ruby: Time.now.to_i. All return seconds since the Unix epoch."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Current Unix Timestamp</h1>
+    <p>See the current Unix timestamp updating live. Copy the current epoch time in seconds or milliseconds. Shows UTC date, local time, and ISO 8601 format.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="epoch-basic" data-config='{}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>What is the current Unix timestamp?</summary>
+      <p>The current Unix timestamp is the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC (the Unix epoch). The live counter above shows this value updating every second. As of 2026, Unix timestamps are in the 1.77 billion range.</p>
+    </details>
+    <details>
+      <summary>What is the difference between seconds and milliseconds timestamps?</summary>
+      <p>Unix timestamps in seconds are 10 digits (e.g., 1744300800). Millisecond timestamps are 13 digits (e.g., 1744300800000). JavaScript's <code>Date.now()</code> returns milliseconds. Python's <code>time.time()</code> returns seconds as a float. Most APIs use seconds.</p>
+    </details>
+    <details>
+      <summary>When will Unix time overflow?</summary>
+      <p>The Year 2038 problem: 32-bit signed integers overflow on January 19, 2038 at 03:14:07 UTC. After this, timestamps stored as 32-bit signed ints will wrap to negative numbers. Most modern systems use 64-bit timestamps, which won't overflow for 292 billion years.</p>
+    </details>
+    <details>
+      <summary>How do I get Unix time in my programming language?</summary>
+      <p>JavaScript: <code>Math.floor(Date.now()/1000)</code>. Python: <code>int(time.time())</code>. Java: <code>System.currentTimeMillis()/1000</code>. PHP: <code>time()</code>. Go: <code>time.Now().Unix()</code>. Ruby: <code>Time.now.to_i</code>. All return seconds since the Unix epoch.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This tool calls <code>Date.now()</code> in JavaScript to get the current timestamp in milliseconds, then divides by 1000 for seconds. The display updates every second using <code>setInterval</code>. The UTC date and ISO 8601 representations are computed from the same timestamp using the <code>Date</code> object's built-in methods.</p>
+
+    <p>Unix time is the universal timestamp format across all major operating systems and programming languages. It is timezone-neutral (always UTC), monotonically increasing, and compact. If you need to convert a specific Unix timestamp to a human-readable date, use our <a href="/tools/epoch-to-date.html">Epoch to Date converter</a>.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/epoch-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch Converter</a>
+      <a href="/tools/epoch-to-date.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch to Date</a>
+      <a href="/tools/milliseconds-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Milliseconds Converter</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No data is transmitted to any server. Source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+    <h3>Contact</h3>
+    <p>EpochPilot is built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a> for feedback.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Format data from our <a href="/research/api-timestamp-formats.html" style="color:#58a6ff;">API Timestamp Formats</a> — 15 APIs compared side-by-side</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/app.js" type="module"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

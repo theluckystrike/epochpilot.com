@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTC to GMT Converter | EpochPilot</title>
+<meta name="description" content="Convert UTC to GMT and BST (British Summer Time). See the difference between UTC and GMT. GMT is UTC+0 in winter, BST is UTC+1 in summer.">
+<meta name="keywords" content="utc to gmt, utc vs gmt, gmt converter, bst converter">
+<link rel="canonical" href="https://epochpilot.com/tools/utc-to-gmt.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/utc-to-gmt.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/utc-to-gmt.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="UTC to GMT Converter | EpochPilot">
+<meta property="og:description" content="Convert UTC to GMT and BST. See the difference between UTC and GMT. GMT is UTC+0 in winter, BST is UTC+1 in summer.">
+<meta property="og:url" content="https://epochpilot.com/tools/utc-to-gmt.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UTC to GMT Converter | EpochPilot">
+<meta name="twitter:description" content="Convert UTC to GMT and BST. See the difference between UTC and GMT.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "UTC to GMT Converter",
+  "url": "https://epochpilot.com/tools/utc-to-gmt.html",
+  "description": "Convert UTC to GMT and BST (British Summer Time). See the difference between UTC and GMT.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is UTC the same as GMT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In practice, UTC and GMT show the same time (UTC+0). However, UTC is a time standard based on atomic clocks, while GMT is a timezone used in the UK during winter. The UK switches to BST (UTC+1) in summer, so GMT and UTC only match from late October to late March."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is BST (British Summer Time)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BST is UTC+1, used in the UK from the last Sunday in March to the last Sunday in October. During BST, London is 1 hour ahead of UTC. The rest of the year, the UK uses GMT which equals UTC+0."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do developers confuse UTC and GMT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Many programming languages and APIs use GMT and UTC interchangeably. JavaScript's Date.toGMTString() returns UTC time. HTTP headers use 'GMT' in date fields but mean UTC. For all practical software purposes, GMT=UTC+0, but always use UTC in code to avoid ambiguity with BST."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which countries use GMT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The UK (winter only), Iceland (year-round), Portugal (mainland, winter only), Ghana, Ivory Coast, Senegal, and several other West African countries use GMT (UTC+0). Ireland uses IST (Irish Standard Time, UTC+1) in summer and GMT in winter."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>UTC to GMT Converter</h1>
+    <p>Convert UTC to GMT and BST (British Summer Time). See the difference between UTC and GMT. GMT is UTC+0 in winter, BST is UTC+1 in summer.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="timezone-pair" data-config='{"from":"UTC","to":"Europe/London"}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Is UTC the same as GMT?</summary>
+      <p>In practice, UTC and GMT show the same time (UTC+0). However, UTC is a time standard based on atomic clocks, while GMT is a timezone used in the UK during winter. The UK switches to BST (UTC+1) in summer, so GMT and UTC only match from late October to late March.</p>
+    </details>
+    <details>
+      <summary>What is BST (British Summer Time)?</summary>
+      <p>BST is UTC+1, used in the UK from the last Sunday in March to the last Sunday in October. During BST, London is 1 hour ahead of UTC. The rest of the year, the UK uses GMT which equals UTC+0.</p>
+    </details>
+    <details>
+      <summary>Why do developers confuse UTC and GMT?</summary>
+      <p>Many programming languages and APIs use GMT and UTC interchangeably. JavaScript's <code>Date.toGMTString()</code> returns UTC time. HTTP headers use 'GMT' in date fields but mean UTC. For all practical software purposes, GMT=UTC+0, but always use UTC in code to avoid ambiguity with BST.</p>
+    </details>
+    <details>
+      <summary>Which countries use GMT?</summary>
+      <p>The UK (winter only), Iceland (year-round), Portugal (mainland, winter only), Ghana, Ivory Coast, Senegal, and several other West African countries use GMT (UTC+0). Ireland uses IST (Irish Standard Time, UTC+1) in summer and GMT in winter.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This converter uses the IANA timezone <code>Europe/London</code>, which automatically accounts for the UK's BST/GMT transitions. During winter months, UTC and London time are identical. During summer (last Sunday in March to last Sunday in October), London time is UTC+1.</p>
+
+    <p>The distinction matters for developers because many APIs and protocols use "GMT" when they technically mean UTC. The HTTP <code>Date</code> header, for example, always uses "GMT" but represents UTC. JavaScript's deprecated <code>toGMTString()</code> returns UTC. When in doubt, treat "GMT" in technical contexts as UTC+0 and use this converter to see actual London local time.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/gmt-converter.html" class="btn btn-outline" style="font-size:0.85rem;">GMT to Local Time Converter</a>
+      <a href="/tools/utc-converter.html" class="btn btn-outline" style="font-size:0.85rem;">UTC Time Converter</a>
+      <a href="/tools/cet-to-utc.html" class="btn btn-outline" style="font-size:0.85rem;">CET to UTC Converter</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No data is transmitted to any server. Source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+    <h3>Contact</h3>
+    <p>EpochPilot is built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a> for feedback.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Format data from our <a href="/research/api-timestamp-formats.html" style="color:#58a6ff;">API Timestamp Formats</a> — 15 APIs compared side-by-side</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/app.js" type="module"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

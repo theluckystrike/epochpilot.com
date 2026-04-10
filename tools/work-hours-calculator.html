@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Hours Calculator | EpochPilot</title>
+<meta name="description" content="Calculate total work hours between two dates. Excludes weekends automatically. Enter start and end dates to get working hours, days, and weeks.">
+<meta name="keywords" content="work hours calculator, working hours between dates, business hours calculator">
+<link rel="canonical" href="https://epochpilot.com/tools/work-hours-calculator.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/work-hours-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/work-hours-calculator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Work Hours Calculator | EpochPilot">
+<meta property="og:description" content="Calculate total work hours between two dates. Excludes weekends automatically.">
+<meta property="og:url" content="https://epochpilot.com/tools/work-hours-calculator.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Work Hours Calculator | EpochPilot">
+<meta name="twitter:description" content="Calculate total work hours between two dates. Excludes weekends automatically.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Work Hours Calculator",
+  "url": "https://epochpilot.com/tools/work-hours-calculator.html",
+  "description": "Calculate total work hours between two dates. Excludes weekends automatically.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate work hours between two dates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter a start date and end date. The calculator counts business days (Monday-Friday), then multiplies by your work hours per day (default 8). Weekends are excluded automatically. For example, a full work week (Mon-Fri) = 5 days × 8 hours = 40 work hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this include holidays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Holidays vary by country and company, so the calculator counts all weekdays as work days. To account for holidays, subtract them manually from the total. For US federal holidays, subtract approximately 11 days per year."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many work hours are in a year?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A standard year has approximately 2,080 work hours (52 weeks × 40 hours). After subtracting 11 US federal holidays and 15 days of PTO, the typical working year is about 1,872 hours. Leap years add one potential work day (8 hours)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I change the hours per day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The default is 8 hours per day, but you can adjust it to match your work schedule. Part-time workers can set it to 4 or 6 hours. The calculator will multiply business days by your custom hours-per-day value."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Work Hours Calculator</h1>
+    <p>Calculate total work hours between two dates. Excludes weekends automatically. Enter start and end dates to get working hours, days, and weeks.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="date-calculator" data-config='{"mode":"work-hours"}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How do I calculate work hours between two dates?</summary>
+      <p>Enter a start date and end date. The calculator counts business days (Monday-Friday), then multiplies by your work hours per day (default 8). Weekends are excluded automatically. For example, a full work week (Mon-Fri) = 5 days × 8 hours = 40 work hours.</p>
+    </details>
+    <details>
+      <summary>Does this include holidays?</summary>
+      <p>No. Holidays vary by country and company, so the calculator counts all weekdays as work days. To account for holidays, subtract them manually from the total. For US federal holidays, subtract approximately 11 days per year.</p>
+    </details>
+    <details>
+      <summary>How many work hours are in a year?</summary>
+      <p>A standard year has approximately 2,080 work hours (52 weeks × 40 hours). After subtracting 11 US federal holidays and 15 days of PTO, the typical working year is about 1,872 hours. Leap years add one potential work day (8 hours).</p>
+    </details>
+    <details>
+      <summary>Can I change the hours per day?</summary>
+      <p>Yes. The default is 8 hours per day, but you can adjust it to match your work schedule. Part-time workers can set it to 4 or 6 hours. The calculator will multiply business days by your custom hours-per-day value.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>The calculator iterates through each day in the range and checks <code>getDay()</code> to exclude Saturday (6) and Sunday (0). The remaining days are multiplied by your configured hours-per-day. All calculations run in your browser with no server communication.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/business-days-calculator.html" class="btn btn-outline" style="font-size:0.85rem;">Business Days Calculator</a>
+      <a href="/tools/days-between-dates.html" class="btn btn-outline" style="font-size:0.85rem;">Days Between Dates</a>
+      <a href="/tools/countdown-to-date.html" class="btn btn-outline" style="font-size:0.85rem;">Countdown to Date</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No data is transmitted to any server. Source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+    <h3>Contact</h3>
+    <p>EpochPilot is built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a> for feedback.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Format data from our <a href="/research/timestamp-gotchas.html" style="color:#58a6ff;">Timestamp Gotchas</a> — common date/time pitfalls explained</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/app.js" type="module"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

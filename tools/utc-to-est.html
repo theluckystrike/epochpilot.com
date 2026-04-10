@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTC to EST/EDT Converter | EpochPilot</title>
+<meta name="description" content="Convert UTC to Eastern Time (EST/EDT) instantly. Handles DST transitions automatically. EST is UTC-5, EDT is UTC-4. Free converter for developers.">
+<meta name="keywords" content="utc to est, utc to edt, utc to eastern time, timezone converter">
+<link rel="canonical" href="https://epochpilot.com/tools/utc-to-est.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/utc-to-est.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/utc-to-est.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="UTC to EST/EDT Converter | EpochPilot">
+<meta property="og:description" content="Convert UTC to Eastern Time (EST/EDT) instantly. Handles DST transitions automatically. EST is UTC-5, EDT is UTC-4.">
+<meta property="og:url" content="https://epochpilot.com/tools/utc-to-est.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UTC to EST/EDT Converter | EpochPilot">
+<meta name="twitter:description" content="Convert UTC to Eastern Time (EST/EDT) instantly. Handles DST transitions automatically. EST is UTC-5, EDT is UTC-4.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "UTC to EST/EDT Converter",
+  "url": "https://epochpilot.com/tools/utc-to-est.html",
+  "description": "Convert UTC to Eastern Time (EST/EDT) instantly. Handles DST transitions automatically.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between EST and EDT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "EST (Eastern Standard Time) is UTC-5, used from November to March. EDT (Eastern Daylight Time) is UTC-4, used from March to November. The transition happens on the second Sunday of March (spring forward) and the first Sunday of November (fall back)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert UTC to Eastern Time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "During EST (winter): subtract 5 hours from UTC. During EDT (summer): subtract 4 hours from UTC. For example, 18:00 UTC is 13:00 EST in winter or 14:00 EDT in summer. This converter handles the DST transition automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does EST switch to EDT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Clocks spring forward on the second Sunday of March at 2:00 AM local time (EST to EDT). Clocks fall back on the first Sunday of November at 2:00 AM local time (EDT to EST). In 2026, the transitions are March 8 and November 1."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which US cities use Eastern Time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "New York, Washington D.C., Boston, Philadelphia, Atlanta, Miami, Detroit, and Toronto (Canada) all use Eastern Time. It covers roughly 47% of the US population, making it the most commonly referenced US timezone."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>UTC to EST/EDT Converter</h1>
+    <p>Convert UTC to Eastern Time (EST/EDT) instantly. Handles DST transitions automatically. EST is UTC-5, EDT is UTC-4. Free converter for developers.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section">
+    <div id="tool-container" data-component="timezone-pair" data-config='{"from":"UTC","to":"America/New_York"}'></div>
+  </div>
+
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What is the difference between EST and EDT?</summary>
+      <p>EST (Eastern Standard Time) is UTC-5, used from November to March. EDT (Eastern Daylight Time) is UTC-4, used from March to November. The transition happens on the second Sunday of March (spring forward) and the first Sunday of November (fall back).</p>
+    </details>
+
+    <details>
+      <summary>How do I convert UTC to Eastern Time?</summary>
+      <p>During EST (winter): subtract 5 hours from UTC. During EDT (summer): subtract 4 hours from UTC. For example, 18:00 UTC is 13:00 EST in winter or 14:00 EDT in summer. This converter handles the DST transition automatically.</p>
+    </details>
+
+    <details>
+      <summary>When does EST switch to EDT?</summary>
+      <p>Clocks spring forward on the second Sunday of March at 2:00 AM local time (EST to EDT). Clocks fall back on the first Sunday of November at 2:00 AM local time (EDT to EST). In 2026, the transitions are March 8 and November 1.</p>
+    </details>
+
+    <details>
+      <summary>Which US cities use Eastern Time?</summary>
+      <p>New York, Washington D.C., Boston, Philadelphia, Atlanta, Miami, Detroit, and Toronto (Canada) all use Eastern Time. It covers roughly 47% of the US population, making it the most commonly referenced US timezone.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>This converter uses the <code>Intl.DateTimeFormat</code> API with the IANA timezone <code>America/New_York</code>. The browser's timezone database automatically handles EST/EDT transitions, so you never need to manually check whether Daylight Saving Time is in effect.</p>
+
+    <p>Eastern Time is the most used timezone in the United States and is the reference timezone for US stock markets (NYSE opens at 9:30 AM ET). For API developers, knowing the current EST/EDT offset is critical when scheduling tasks, processing financial data, or coordinating with US-based services.</p>
+
+    <h3>Common UTC to Eastern Time Conversions</h3>
+    <p>UTC 00:00 = ET 19:00 (prev day EST) / 20:00 (prev day EDT) | UTC 12:00 = ET 07:00 EST / 08:00 EDT | UTC 17:00 = ET 12:00 EST / 13:00 EDT.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/est-to-utc.html" class="btn btn-outline" style="font-size:0.85rem;">EST to UTC Converter</a>
+      <a href="/tools/utc-to-pst.html" class="btn btn-outline" style="font-size:0.85rem;">UTC to PST Converter</a>
+      <a href="/tools/timezone-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Timezone Converter</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>Everything runs locally in your browser. No timestamps, dates, or personal data are transmitted to any server. The source code is open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Format data from our <a href="/research/api-timestamp-formats.html" style="color:#58a6ff;">API Timestamp Formats</a> — 15 APIs compared side-by-side</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/app.js" type="module"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
