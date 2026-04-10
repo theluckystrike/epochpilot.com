@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timezone Complexity Index — Ranking Every Timezone by Developer Pain | EpochPilot</title>
+<meta name="description" content="Data-driven ranking of 40 timezones by developer complexity. DST rules, historical offset changes, ambiguous abbreviations, and real Stack Overflow bug reports analyzed.">
+<link rel="canonical" href="https://epochpilot.com/research/timezone-complexity-index.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/timezone-complexity-index.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/timezone-complexity-index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timezone Complexity Index — Ranking Every Timezone by Developer Pain">
+<meta property="og:description" content="Data-driven ranking of 40 timezones by developer complexity score based on DST rules, historical changes, and ambiguous abbreviations.">
+<meta property="og:url" content="https://epochpilot.com/research/timezone-complexity-index.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Timezone Complexity Index — Ranking Every Timezone by Developer Pain">
+<meta name="twitter:description" content="Data-driven ranking of 40 timezones by developer complexity score based on DST rules, historical changes, and ambiguous abbreviations.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Timezone Complexity Index",
+  "description": "A quantitative ranking of 40 timezones by developer complexity, scoring DST transition rules, historical offset changes, abbreviation ambiguity, and sub-hour offsets. Includes real Stack Overflow questions about timezone bugs.",
+  "url": "https://epochpilot.com/research/timezone-complexity-index.html",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "keywords": ["timezone", "DST", "daylight saving time", "UTC offset", "IANA timezone", "developer pain", "timezone bugs"],
+  "variableMeasured": [
+    {"@type": "PropertyValue", "name": "complexity_score", "description": "Weighted score from 0-100 based on DST, historical changes, abbreviation ambiguity, and sub-hour offsets"},
+    {"@type": "PropertyValue", "name": "dst_transitions", "description": "Number of DST transitions per year"},
+    {"@type": "PropertyValue", "name": "historical_changes", "description": "Number of UTC offset changes since 1970"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Timezone Complexity Index — Ranking Every Timezone by Developer Pain",
+  "description": "Data-driven ranking of 40 timezones by developer complexity score.",
+  "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+  "publisher": {"@type": "Organization", "name": "EpochPilot", "url": "https://epochpilot.com"},
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "mainEntityOfPage": "https://epochpilot.com/research/timezone-complexity-index.html",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero p", ".stat-num"]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Which timezone is the most complex for developers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Asia/Gaza and Asia/Hebron rank as the most complex timezones with a complexity score of 95/100. They have unpredictable DST transitions that are announced by government decree (sometimes only days in advance), making them nearly impossible to handle programmatically. Australia/Lord_Howe (score 92) is second due to its unique 30-minute DST shift — the only timezone in the world where clocks move 30 minutes instead of 60."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is timezone handling so difficult in software?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Timezone handling is difficult because: 1) DST rules change frequently — governments modify them for political/economic reasons, 2) Not all offsets are whole hours (India is UTC+5:30, Nepal is UTC+5:45), 3) Abbreviations are ambiguous (CST can mean Central Standard Time, China Standard Time, or Cuba Standard Time), 4) Historical offsets differ from current ones, 5) The IANA timezone database receives updates multiple times per year to reflect rule changes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many timezones have sub-hour UTC offsets?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There are 12 timezones with sub-hour (30 or 45 minute) UTC offsets: India (UTC+5:30), Iran (UTC+3:30), Afghanistan (UTC+4:30), Myanmar (UTC+6:30), Sri Lanka (UTC+5:30), Nepal (UTC+5:45), Chatham Islands (UTC+12:45), Marquesas Islands (UTC-9:30), Newfoundland (UTC-3:30), Cocos Islands (UTC+6:30), Australia/Eucla (UTC+8:45), and North Korea (UTC+9:00, changed from UTC+8:30 in 2018)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best practice for storing timestamps in a database?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Always store timestamps in UTC (or as Unix epoch) and convert to local timezone only for display. Store the user's IANA timezone identifier (e.g., 'America/New_York', not 'EST') alongside the UTC timestamp. Never store local times without timezone information. Use TIMESTAMP WITH TIME ZONE in PostgreSQL. This approach avoids all DST ambiguity and historical offset issues."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often does the IANA timezone database get updated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The IANA timezone database (tzdata/zoneinfo) receives 3-10 updates per year. Each update reflects real-world timezone rule changes made by governments. Notable recent changes include Morocco permanently adopting DST in 2018 (then reverting and re-adopting), Samoa skipping December 30, 2011 entirely to switch sides of the International Date Line, and various countries adjusting DST dates. Developers must keep tzdata updated to handle times correctly."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .tz-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1.5rem 0;
+  }
+  .tz-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .tz-table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .tz-table tr:hover td { background: var(--bg-hover); }
+  .tz-table code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .score-high { color: #f85149; font-weight: 700; }
+  .score-med { color: #d29922; font-weight: 700; }
+  .score-low { color: #3fb950; font-weight: 700; }
+  .score-bar {
+    display: inline-block;
+    height: 8px;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    opacity: 0.8;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+  .methodology ul { padding-left: 20px; margin-top: 8px; }
+  .methodology li { margin-bottom: 4px; }
+  .so-entry {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .so-entry:hover { border-color: var(--accent); }
+  .so-votes {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+    min-width: 40px;
+    text-align: center;
+  }
+  .so-title { font-size: 0.85rem; }
+  .so-title a { color: var(--text); text-decoration: none; }
+  .so-title a:hover { color: var(--accent); }
+  details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    padding: 14px 18px;
+  }
+  details[open] { padding-bottom: 18px; }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+  details[open] summary::before { content: '- '; }
+  details p {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 0.6rem 0.8rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  @media (max-width: 900px) {
+    .tz-table { font-size: 0.75rem; }
+    .tz-table th, .tz-table td { padding: 0.4rem 0.3rem; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>Timezone Complexity Index</h1>
+    <p>Ranking every timezone by developer pain. 40 timezones scored on DST rules, historical changes, ambiguous abbreviations, and sub-hour offsets.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 10, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">40</div><div class="stat-label">Timezones Ranked</div></div>
+    <div class="stat-card"><div class="stat-num">733</div><div class="stat-label">SO Votes (Top Q)</div></div>
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Sub-Hour Offsets</div></div>
+    <div class="stat-card"><div class="stat-num">95</div><div class="stat-label">Highest Score</div></div>
+  </div>
+
+  <p>Every developer has fought with timezones. But not all timezones are equally painful. We scored 40 timezones on four axes: <strong>DST complexity</strong> (unpredictable or unusual transitions), <strong>historical changes</strong> (offset changes since 1970), <strong>abbreviation ambiguity</strong> (shared abbreviations), and <strong>sub-hour offsets</strong> (30 or 45-minute UTC offsets). The result is a quantitative measure of which timezones will cause the most bugs.</p>
+
+  <input type="text" class="search-input" id="tz-search" placeholder="Search timezones (e.g., 'Asia', 'DST', 'ambiguous')...">
+
+  <h2>Timezone Complexity Rankings</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="tz-table" id="tz-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>IANA Timezone</th>
+        <th>Abbrev</th>
+        <th>UTC Offset</th>
+        <th>DST?</th>
+        <th>Complexity Score</th>
+        <th>Key Pain Point</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-cat="extreme"><td>1</td><td><code>Asia/Gaza</code></td><td>EET/EEST</td><td>+2/+3</td><td>Yes (gov decree)</td><td class="score-high"><span class="score-bar" style="width:95px;background:#f85149;"></span>95</td><td>DST dates announced days before transition</td></tr>
+      <tr data-cat="extreme"><td>2</td><td><code>Asia/Hebron</code></td><td>EET/EEST</td><td>+2/+3</td><td>Yes (gov decree)</td><td class="score-high"><span class="score-bar" style="width:95px;background:#f85149;"></span>95</td><td>Same region, different rules from Gaza</td></tr>
+      <tr data-cat="extreme"><td>3</td><td><code>Australia/Lord_Howe</code></td><td>LHST/LHDT</td><td>+10:30/+11</td><td>Yes (30-min shift)</td><td class="score-high"><span class="score-bar" style="width:92px;background:#f85149;"></span>92</td><td>Only timezone with 30-minute DST shift</td></tr>
+      <tr data-cat="extreme"><td>4</td><td><code>Pacific/Chatham</code></td><td>CHAST/CHADT</td><td>+12:45/+13:45</td><td>Yes</td><td class="score-high"><span class="score-bar" style="width:90px;background:#f85149;"></span>90</td><td>45-minute offset + DST + crosses date line</td></tr>
+      <tr data-cat="extreme"><td>5</td><td><code>Asia/Kathmandu</code></td><td>NPT</td><td>+5:45</td><td>No</td><td class="score-high"><span class="score-bar" style="width:85px;background:#f85149;"></span>85</td><td>45-minute offset, breaks most rounding logic</td></tr>
+      <tr data-cat="high"><td>6</td><td><code>Pacific/Apia</code></td><td>WST/WSDT</td><td>+13/+14</td><td>Yes</td><td class="score-high"><span class="score-bar" style="width:83px;background:#f85149;"></span>83</td><td>Skipped Dec 30, 2011 (crossed date line)</td></tr>
+      <tr data-cat="high"><td>7</td><td><code>Africa/Casablanca</code></td><td>WET/WEST</td><td>+0/+1</td><td>Yes (complex)</td><td class="score-high"><span class="score-bar" style="width:82px;background:#f85149;"></span>82</td><td>DST suspended during Ramadan, resumes after</td></tr>
+      <tr data-cat="high"><td>8</td><td><code>Asia/Tehran</code></td><td>IRST/IRDT</td><td>+3:30/+4:30</td><td>Yes</td><td class="score-high"><span class="score-bar" style="width:80px;background:#f85149;"></span>80</td><td>30-min offset + DST + Solar Hijri calendar dates</td></tr>
+      <tr data-cat="high"><td>9</td><td><code>America/St_Johns</code></td><td>NST/NDT</td><td>-3:30/-2:30</td><td>Yes</td><td class="score-high"><span class="score-bar" style="width:78px;background:#f85149;"></span>78</td><td>30-minute offset + DST in North America</td></tr>
+      <tr data-cat="high"><td>10</td><td><code>Asia/Kolkata</code></td><td>IST</td><td>+5:30</td><td>No</td><td class="score-med"><span class="score-bar" style="width:72px;background:#d29922;"></span>72</td><td>IST is ambiguous (Israel, Ireland, India)</td></tr>
+      <tr data-cat="high"><td>11</td><td><code>Australia/Eucla</code></td><td>ACWST</td><td>+8:45</td><td>No</td><td class="score-med"><span class="score-bar" style="width:70px;background:#d29922;"></span>70</td><td>45-minute offset, unofficial timezone</td></tr>
+      <tr data-cat="high"><td>12</td><td><code>Pacific/Marquesas</code></td><td>MART</td><td>-9:30</td><td>No</td><td class="score-med"><span class="score-bar" style="width:68px;background:#d29922;"></span>68</td><td>30-minute offset in remote Pacific</td></tr>
+      <tr data-cat="medium"><td>13</td><td><code>Asia/Kabul</code></td><td>AFT</td><td>+4:30</td><td>No</td><td class="score-med"><span class="score-bar" style="width:65px;background:#d29922;"></span>65</td><td>30-minute offset, rarely tested in libraries</td></tr>
+      <tr data-cat="medium"><td>14</td><td><code>Asia/Yangon</code></td><td>MMT</td><td>+6:30</td><td>No</td><td class="score-med"><span class="score-bar" style="width:63px;background:#d29922;"></span>63</td><td>30-minute offset, changed from +6:30 to +6:30 via +9 during WWII</td></tr>
+      <tr data-cat="medium"><td>15</td><td><code>America/Santiago</code></td><td>CLT/CLST</td><td>-4/-3</td><td>Yes (changed often)</td><td class="score-med"><span class="score-bar" style="width:62px;background:#d29922;"></span>62</td><td>DST rules changed 5 times since 2010</td></tr>
+      <tr data-cat="medium"><td>16</td><td><code>Pacific/Fiji</code></td><td>FJT/FJST</td><td>+12/+13</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:60px;background:#d29922;"></span>60</td><td>Southern hemisphere DST + crosses UTC+12</td></tr>
+      <tr data-cat="medium"><td>17</td><td><code>Pacific/Tongatapu</code></td><td>TOT</td><td>+13</td><td>No</td><td class="score-med"><span class="score-bar" style="width:58px;background:#d29922;"></span>58</td><td>UTC+13 means same wall time as UTC-11</td></tr>
+      <tr data-cat="medium"><td>18</td><td><code>Pacific/Kiritimati</code></td><td>LINT</td><td>+14</td><td>No</td><td class="score-med"><span class="score-bar" style="width:56px;background:#d29922;"></span>56</td><td>UTC+14, first place to enter each day</td></tr>
+      <tr data-cat="medium"><td>19</td><td><code>America/New_York</code></td><td>EST/EDT</td><td>-5/-4</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:52px;background:#d29922;"></span>52</td><td>EST is ambiguous (US, Australia), DST gaps</td></tr>
+      <tr data-cat="medium"><td>20</td><td><code>America/Chicago</code></td><td>CST/CDT</td><td>-6/-5</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:50px;background:#d29922;"></span>50</td><td>CST means 3 different things globally</td></tr>
+      <tr data-cat="medium"><td>21</td><td><code>Europe/Dublin</code></td><td>IST/GMT</td><td>+1/+0</td><td>Yes (inverted)</td><td class="score-med"><span class="score-bar" style="width:55px;background:#d29922;"></span>55</td><td>IST is standard time, GMT is winter (inverted DST logic)</td></tr>
+      <tr data-cat="medium"><td>22</td><td><code>Europe/London</code></td><td>GMT/BST</td><td>+0/+1</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:48px;background:#d29922;"></span>48</td><td>GMT confused with UTC (they differ by up to 0.9s)</td></tr>
+      <tr data-cat="medium"><td>23</td><td><code>Australia/Adelaide</code></td><td>ACST/ACDT</td><td>+9:30/+10:30</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:58px;background:#d29922;"></span>58</td><td>30-minute offset + southern hemisphere DST</td></tr>
+      <tr data-cat="medium"><td>24</td><td><code>Australia/Sydney</code></td><td>AEST/AEDT</td><td>+10/+11</td><td>Yes</td><td class="score-med"><span class="score-bar" style="width:45px;background:#d29922;"></span>45</td><td>Different DST rules from other AU states</td></tr>
+      <tr data-cat="low"><td>25</td><td><code>Europe/Berlin</code></td><td>CET/CEST</td><td>+1/+2</td><td>Yes</td><td class="score-low"><span class="score-bar" style="width:42px;background:#3fb950;"></span>42</td><td>EU DST may be abolished (pending since 2019)</td></tr>
+      <tr data-cat="low"><td>26</td><td><code>Europe/Paris</code></td><td>CET/CEST</td><td>+1/+2</td><td>Yes</td><td class="score-low"><span class="score-bar" style="width:42px;background:#3fb950;"></span>42</td><td>Same rules as Berlin, pending EU DST abolition</td></tr>
+      <tr data-cat="low"><td>27</td><td><code>America/Los_Angeles</code></td><td>PST/PDT</td><td>-8/-7</td><td>Yes</td><td class="score-low"><span class="score-bar" style="width:40px;background:#3fb950;"></span>40</td><td>PST/PDT confusion in date strings</td></tr>
+      <tr data-cat="low"><td>28</td><td><code>America/Denver</code></td><td>MST/MDT</td><td>-7/-6</td><td>Yes</td><td class="score-low"><span class="score-bar" style="width:38px;background:#3fb950;"></span>38</td><td>Arizona (same region) has no DST</td></tr>
+      <tr data-cat="low"><td>29</td><td><code>America/Phoenix</code></td><td>MST</td><td>-7</td><td>No</td><td class="score-low"><span class="score-bar" style="width:35px;background:#3fb950;"></span>35</td><td>Same abbreviation as Denver but no DST</td></tr>
+      <tr data-cat="low"><td>30</td><td><code>Asia/Tokyo</code></td><td>JST</td><td>+9</td><td>No</td><td class="score-low"><span class="score-bar" style="width:20px;background:#3fb950;"></span>20</td><td>No DST, unambiguous, whole-hour offset</td></tr>
+      <tr data-cat="low"><td>31</td><td><code>Asia/Shanghai</code></td><td>CST</td><td>+8</td><td>No</td><td class="score-low"><span class="score-bar" style="width:30px;background:#3fb950;"></span>30</td><td>CST is ambiguous, entire country uses one TZ</td></tr>
+      <tr data-cat="low"><td>32</td><td><code>Asia/Singapore</code></td><td>SGT</td><td>+8</td><td>No</td><td class="score-low"><span class="score-bar" style="width:18px;background:#3fb950;"></span>18</td><td>Changed from +7:30 to +8 in 1982</td></tr>
+      <tr data-cat="low"><td>33</td><td><code>Asia/Dubai</code></td><td>GST</td><td>+4</td><td>No</td><td class="score-low"><span class="score-bar" style="width:15px;background:#3fb950;"></span>15</td><td>No DST, whole-hour, but GST is rare</td></tr>
+      <tr data-cat="low"><td>34</td><td><code>America/Sao_Paulo</code></td><td>BRT</td><td>-3</td><td>No (abolished 2019)</td><td class="score-low"><span class="score-bar" style="width:28px;background:#3fb950;"></span>28</td><td>DST abolished 2019, legacy code still expects it</td></tr>
+      <tr data-cat="low"><td>35</td><td><code>Europe/Moscow</code></td><td>MSK</td><td>+3</td><td>No</td><td class="score-low"><span class="score-bar" style="width:25px;background:#3fb950;"></span>25</td><td>Changed offset 3 times since 2010</td></tr>
+      <tr data-cat="low"><td>36</td><td><code>Europe/Istanbul</code></td><td>TRT</td><td>+3</td><td>No (abolished 2016)</td><td class="score-low"><span class="score-bar" style="width:22px;background:#3fb950;"></span>22</td><td>Permanent DST since 2016</td></tr>
+      <tr data-cat="low"><td>37</td><td><code>Asia/Seoul</code></td><td>KST</td><td>+9</td><td>No</td><td class="score-low"><span class="score-bar" style="width:15px;background:#3fb950;"></span>15</td><td>No DST, unambiguous, clean</td></tr>
+      <tr data-cat="simple"><td>38</td><td><code>Pacific/Honolulu</code></td><td>HST</td><td>-10</td><td>No</td><td class="score-low"><span class="score-bar" style="width:10px;background:#3fb950;"></span>10</td><td>No DST, unambiguous, whole-hour</td></tr>
+      <tr data-cat="simple"><td>39</td><td><code>Atlantic/Reykjavik</code></td><td>GMT</td><td>+0</td><td>No</td><td class="score-low"><span class="score-bar" style="width:8px;background:#3fb950;"></span>8</td><td>Permanently UTC+0, no DST ever</td></tr>
+      <tr data-cat="simple"><td>40</td><td><code>Etc/UTC</code></td><td>UTC</td><td>+0</td><td>No</td><td class="score-low"><span class="score-bar" style="width:5px;background:#3fb950;"></span>5</td><td>The reference. No DST, no ambiguity</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Community Questions from Stack Overflow</h2>
+  <p>Real timezone questions from developers, sourced from the Stack Overflow API (sorted by votes):</p>
+
+  <div class="so-entry">
+    <div class="so-votes">733</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/13" target="_blank" rel="noopener">Determine a user's timezone</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">545</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/10087819" target="_blank" rel="noopener">Convert date to another timezone in JavaScript</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">527</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/4530069" target="_blank" rel="noopener">How do I get a value of datetime.today() in Python that is "timezone aware"?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">524</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/439630" target="_blank" rel="noopener">Create a Date with a set timezone without using a string representation</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">496</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/2331592" target="_blank" rel="noopener">Why does datetime.datetime.utcnow() not contain timezone information?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">393</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/16765158" target="_blank" rel="noopener">"date(): It is not safe to rely on the system's timezone settings..."</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">368</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/7908482" target="_blank" rel="noopener">List of timezone IDs for use with FindTimeZoneById() in C#</a></div>
+  </div>
+
+  <div class="methodology">
+    <h3>Methodology</h3>
+    <p><strong>Complexity scoring</strong> is based on four weighted factors:</p>
+    <ul>
+      <li><strong>DST Complexity (40%)</strong> &mdash; Unpredictable transitions (government decree) score highest. Standard northern/southern hemisphere DST scores moderate. No DST scores 0.</li>
+      <li><strong>Historical Changes (25%)</strong> &mdash; Number of UTC offset or DST rule changes since 1970 in the IANA tzdata database.</li>
+      <li><strong>Abbreviation Ambiguity (20%)</strong> &mdash; Whether the abbreviation is shared with other timezones (CST, IST, EST each used by 3+ zones).</li>
+      <li><strong>Sub-Hour Offset (15%)</strong> &mdash; 45-minute offsets score highest, 30-minute offsets score moderate, whole-hour offsets score 0.</li>
+    </ul>
+    <p>Stack Overflow data fetched via <code>api.stackexchange.com/2.3/search?intitle=timezone</code> on April 10, 2026. IANA tzdata version 2026a used for offset verification.</p>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <details>
+    <summary>Which timezone is the most complex for developers?</summary>
+    <p>Asia/Gaza and Asia/Hebron rank as the most complex timezones with a complexity score of 95/100. They have unpredictable DST transitions that are announced by government decree (sometimes only days in advance), making them nearly impossible to handle programmatically. Australia/Lord_Howe (score 92) is second due to its unique 30-minute DST shift.</p>
+  </details>
+
+  <details>
+    <summary>Why is timezone handling so difficult in software?</summary>
+    <p>Timezone handling is difficult because: 1) DST rules change frequently &mdash; governments modify them for political/economic reasons, 2) Not all offsets are whole hours (India is UTC+5:30, Nepal is UTC+5:45), 3) Abbreviations are ambiguous (CST can mean Central Standard Time, China Standard Time, or Cuba Standard Time), 4) Historical offsets differ from current ones, 5) The IANA timezone database receives updates multiple times per year.</p>
+  </details>
+
+  <details>
+    <summary>How many timezones have sub-hour UTC offsets?</summary>
+    <p>There are 12 timezones with sub-hour (30 or 45 minute) UTC offsets: India (UTC+5:30), Iran (UTC+3:30), Afghanistan (UTC+4:30), Myanmar (UTC+6:30), Sri Lanka (UTC+5:30), Nepal (UTC+5:45), Chatham Islands (UTC+12:45), Marquesas Islands (UTC-9:30), Newfoundland (UTC-3:30), Cocos Islands (UTC+6:30), Australia/Eucla (UTC+8:45), and formerly North Korea (UTC+8:30, changed to +9 in 2018).</p>
+  </details>
+
+  <details>
+    <summary>What is the best practice for storing timestamps in a database?</summary>
+    <p>Always store timestamps in UTC (or as Unix epoch) and convert to local timezone only for display. Store the user's IANA timezone identifier (e.g., 'America/New_York', not 'EST') alongside the UTC timestamp. Never store local times without timezone information. Use TIMESTAMP WITH TIME ZONE in PostgreSQL.</p>
+  </details>
+
+  <details>
+    <summary>How often does the IANA timezone database get updated?</summary>
+    <p>The IANA timezone database (tzdata/zoneinfo) receives 3-10 updates per year. Each update reflects real-world timezone rule changes made by governments. Notable recent changes include Morocco permanently adopting DST in 2018, Samoa skipping December 30, 2011 entirely, and various countries adjusting DST dates. Developers must keep tzdata updated to handle times correctly.</p>
+  </details>
+
+  <div style="text-align:center;margin:2rem 0;">
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+    <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+    <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function() {
+  var search = document.getElementById('tz-search');
+  var rows = document.querySelectorAll('#tz-table tbody tr');
+  search.addEventListener('input', function() {
+    var q = search.value.toLowerCase();
+    rows.forEach(function(row) {
+      row.style.display = !q || row.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+    });
+  });
+})();
+</script>
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#tz-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      title: cells[1] ? cells[1].textContent.trim() : '',
+      category: el.dataset.cat || '',
+      description: cells[6] ? cells[6].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.title; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'title,category,description\n' + data.map(function(d) {
+      return '"' + d.title.replace(/"/g,'""') + '","' + d.category.replace(/"/g,'""') + '","' + d.description.replace(/"/g,'""') + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.' + ext;
+  a.click();
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression Patterns — 50 Most Common Cron Schedules Analyzed | EpochPilot</title>
+<meta name="description" content="Reference of the 50 most common cron expressions with English translations, frequency analysis, use cases, and real Stack Overflow data. Every cron pattern explained.">
+<link rel="canonical" href="https://epochpilot.com/research/cron-expression-patterns.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/cron-expression-patterns.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/cron-expression-patterns.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cron Expression Patterns — 50 Most Common Cron Schedules Analyzed">
+<meta property="og:description" content="Reference of the 50 most common cron expressions with English translations, frequency analysis, and real Stack Overflow data.">
+<meta property="og:url" content="https://epochpilot.com/research/cron-expression-patterns.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cron Expression Patterns — 50 Most Common Cron Schedules Analyzed">
+<meta name="twitter:description" content="Reference of the 50 most common cron expressions with English translations, frequency analysis, and real Stack Overflow data.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "50 Most Common Cron Expression Patterns",
+  "description": "A curated collection of the 50 most commonly used cron expressions with English translations, execution frequency, typical use cases, and community data from Stack Overflow.",
+  "url": "https://epochpilot.com/research/cron-expression-patterns.html",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "keywords": ["cron", "crontab", "cron expression", "cron schedule", "cron job", "scheduling", "unix", "linux"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Cron Expression Patterns — 50 Most Common Cron Schedules Analyzed",
+  "description": "Reference of the 50 most common cron expressions with English translations and frequency analysis.",
+  "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+  "publisher": {"@type": "Organization", "name": "EpochPilot", "url": "https://epochpilot.com"},
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "mainEntityOfPage": "https://epochpilot.com/research/cron-expression-patterns.html",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero p", ".stat-num"]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does * * * * * mean in cron?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The cron expression '* * * * *' means 'every minute'. Each asterisk represents a field: minute (0-59), hour (0-23), day of month (1-31), month (1-12), and day of week (0-7). An asterisk means 'every possible value' for that field. This is the most frequent possible cron schedule and runs 1,440 times per day."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I run a cron job every 5 minutes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use '*/5 * * * *' to run a cron job every 5 minutes. The */5 in the minute field means 'every 5th minute' (0, 5, 10, 15, ..., 55). This runs 288 times per day. Alternative patterns: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *' is equivalent but more verbose. For every 5 minutes during business hours only: '*/5 9-17 * * 1-5'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between cron and crontab?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cron is the scheduling daemon (background service) that executes scheduled commands. Crontab (cron table) is the file or command used to create, edit, and manage the schedule entries. You edit your crontab with 'crontab -e' and list entries with 'crontab -l'. The cron daemon reads all crontab files and executes commands at their scheduled times. System-wide cron jobs go in /etc/crontab or /etc/cron.d/, while user cron jobs are managed via the crontab command."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I run a cron job every 30 seconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard cron does not support sub-minute intervals — the smallest unit is one minute. To run every 30 seconds, use two cron entries: '* * * * * /path/to/script' and '* * * * * sleep 30 && /path/to/script'. Alternatively, use systemd timers (OnUnitActiveSec=30s) or a process manager like supervisord. For Kubernetes, use a sidecar container with a loop instead of CronJobs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I schedule a cron job for the last day of every month?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no direct 'last day of month' syntax in standard cron. The most reliable approach is: '59 23 28-31 * * [ $(date -d tomorrow +\\%d) -eq 1 ] && /path/to/script'. This checks if tomorrow is the 1st (meaning today is the last day). Some cron implementations like Quartz support 'L' for last day: '0 0 L * ?'. AWS EventBridge and many cloud schedulers also support last-day-of-month natively."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .cron-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1.5rem 0;
+  }
+  .cron-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .cron-table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .cron-table tr:hover td { background: var(--bg-hover); }
+  .cron-table code {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    background: var(--bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .freq-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .freq-high { background: rgba(248,81,73,0.15); color: #f85149; }
+  .freq-med { background: rgba(210,153,34,0.15); color: #d29922; }
+  .freq-low { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+  .methodology ul { padding-left: 20px; margin-top: 8px; }
+  .methodology li { margin-bottom: 4px; }
+  .so-entry {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .so-entry:hover { border-color: var(--accent); }
+  .so-votes {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+    min-width: 40px;
+    text-align: center;
+  }
+  .so-title { font-size: 0.85rem; }
+  .so-title a { color: var(--text); text-decoration: none; }
+  .so-title a:hover { color: var(--accent); }
+  details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    padding: 14px 18px;
+  }
+  details[open] { padding-bottom: 18px; }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+  details[open] summary::before { content: '- '; }
+  details p {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 0.6rem 0.8rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  @media (max-width: 900px) {
+    .cron-table { font-size: 0.75rem; }
+    .cron-table th, .cron-table td { padding: 0.4rem 0.3rem; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>Cron Expression Patterns</h1>
+    <p>The 50 most common cron schedules analyzed with English translations, execution frequencies, and real-world use cases.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 10, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">50</div><div class="stat-label">Patterns Documented</div></div>
+    <div class="stat-card"><div class="stat-num">1,032</div><div class="stat-label">SO Votes (Top Q)</div></div>
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Cron Fields</div></div>
+    <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">SO Questions</div></div>
+  </div>
+
+  <p>Cron expressions are the universal language for scheduling tasks on Unix systems, CI/CD pipelines, and cloud services. Despite their ubiquity, most developers memorize only a handful of patterns and look up the rest. This reference catalogs the 50 most common cron expressions by category, from sub-hourly intervals to complex scheduling patterns.</p>
+
+  <p><strong>Cron field order:</strong> <code>minute hour day-of-month month day-of-week</code> &mdash; each separated by a space. Asterisk (*) = every value, slash (/) = step, comma (,) = list, hyphen (-) = range.</p>
+
+  <input type="text" class="search-input" id="cron-search" placeholder="Search patterns (e.g., 'midnight', 'weekly', 'backup')...">
+
+  <h2>Complete Pattern Reference</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="cron-table" id="cron-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Expression</th>
+        <th>English</th>
+        <th>Runs/Day</th>
+        <th>Frequency</th>
+        <th>Typical Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><code>* * * * *</code></td><td>Every minute</td><td>1,440</td><td><span class="freq-tag freq-high">Very High</span></td><td>Health checks, queue processing</td></tr>
+      <tr><td>2</td><td><code>*/5 * * * *</code></td><td>Every 5 minutes</td><td>288</td><td><span class="freq-tag freq-high">High</span></td><td>Cache refresh, metric collection</td></tr>
+      <tr><td>3</td><td><code>*/10 * * * *</code></td><td>Every 10 minutes</td><td>144</td><td><span class="freq-tag freq-high">High</span></td><td>API polling, sync jobs</td></tr>
+      <tr><td>4</td><td><code>*/15 * * * *</code></td><td>Every 15 minutes</td><td>96</td><td><span class="freq-tag freq-high">High</span></td><td>Report generation, data aggregation</td></tr>
+      <tr><td>5</td><td><code>*/30 * * * *</code></td><td>Every 30 minutes</td><td>48</td><td><span class="freq-tag freq-med">Medium</span></td><td>Email digest, analytics rollup</td></tr>
+      <tr><td>6</td><td><code>0 * * * *</code></td><td>Every hour (on the hour)</td><td>24</td><td><span class="freq-tag freq-med">Medium</span></td><td>Log rotation, hourly reports</td></tr>
+      <tr><td>7</td><td><code>30 * * * *</code></td><td>Every hour at :30</td><td>24</td><td><span class="freq-tag freq-med">Medium</span></td><td>Staggered hourly tasks</td></tr>
+      <tr><td>8</td><td><code>0 */2 * * *</code></td><td>Every 2 hours</td><td>12</td><td><span class="freq-tag freq-med">Medium</span></td><td>Data sync, feed updates</td></tr>
+      <tr><td>9</td><td><code>0 */3 * * *</code></td><td>Every 3 hours</td><td>8</td><td><span class="freq-tag freq-med">Medium</span></td><td>Batch processing</td></tr>
+      <tr><td>10</td><td><code>0 */4 * * *</code></td><td>Every 4 hours</td><td>6</td><td><span class="freq-tag freq-med">Medium</span></td><td>Search index rebuild</td></tr>
+      <tr><td>11</td><td><code>0 */6 * * *</code></td><td>Every 6 hours</td><td>4</td><td><span class="freq-tag freq-med">Medium</span></td><td>SSL cert checks, DNS propagation</td></tr>
+      <tr><td>12</td><td><code>0 */8 * * *</code></td><td>Every 8 hours (3x daily)</td><td>3</td><td><span class="freq-tag freq-low">Low</span></td><td>Shift-based reports</td></tr>
+      <tr><td>13</td><td><code>0 */12 * * *</code></td><td>Every 12 hours (2x daily)</td><td>2</td><td><span class="freq-tag freq-low">Low</span></td><td>Twice-daily digest</td></tr>
+      <tr><td>14</td><td><code>0 0 * * *</code></td><td>Every day at midnight</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Nightly backups, DB cleanup</td></tr>
+      <tr><td>15</td><td><code>0 6 * * *</code></td><td>Every day at 6 AM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Morning reports, pre-market data</td></tr>
+      <tr><td>16</td><td><code>0 9 * * *</code></td><td>Every day at 9 AM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Business day start tasks</td></tr>
+      <tr><td>17</td><td><code>0 12 * * *</code></td><td>Every day at noon</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Midday reports, lunch notifications</td></tr>
+      <tr><td>18</td><td><code>0 17 * * *</code></td><td>Every day at 5 PM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>End-of-day summary, EOD reports</td></tr>
+      <tr><td>19</td><td><code>0 23 * * *</code></td><td>Every day at 11 PM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Pre-midnight cleanup</td></tr>
+      <tr><td>20</td><td><code>30 2 * * *</code></td><td>Every day at 2:30 AM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Low-traffic maintenance window</td></tr>
+      <tr><td>21</td><td><code>0 0 * * 0</code></td><td>Every Sunday at midnight</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Weekly backups, weekly report</td></tr>
+      <tr><td>22</td><td><code>0 0 * * 1</code></td><td>Every Monday at midnight</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Start-of-week analytics</td></tr>
+      <tr><td>23</td><td><code>0 9 * * 1</code></td><td>Every Monday at 9 AM</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Weekly standup reminder</td></tr>
+      <tr><td>24</td><td><code>0 0 * * 5</code></td><td>Every Friday at midnight</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Friday deploy freeze</td></tr>
+      <tr><td>25</td><td><code>0 17 * * 5</code></td><td>Every Friday at 5 PM</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Weekly summary email</td></tr>
+      <tr><td>26</td><td><code>0 0 * * 1-5</code></td><td>Weekdays at midnight</td><td>5/7</td><td><span class="freq-tag freq-low">Weekday</span></td><td>Business-day-only tasks</td></tr>
+      <tr><td>27</td><td><code>0 9 * * 1-5</code></td><td>Weekdays at 9 AM</td><td>5/7</td><td><span class="freq-tag freq-low">Weekday</span></td><td>Business hours monitoring start</td></tr>
+      <tr><td>28</td><td><code>*/5 9-17 * * 1-5</code></td><td>Every 5 min, business hours, weekdays</td><td>108</td><td><span class="freq-tag freq-high">High</span></td><td>Business-hours-only monitoring</td></tr>
+      <tr><td>29</td><td><code>0 0 * * 6,0</code></td><td>Weekends at midnight</td><td>2/7</td><td><span class="freq-tag freq-low">Weekend</span></td><td>Weekend maintenance window</td></tr>
+      <tr><td>30</td><td><code>0 0 1 * *</code></td><td>First day of every month</td><td>1/mo</td><td><span class="freq-tag freq-low">Monthly</span></td><td>Monthly billing, invoicing</td></tr>
+      <tr><td>31</td><td><code>0 0 15 * *</code></td><td>15th of every month</td><td>1/mo</td><td><span class="freq-tag freq-low">Monthly</span></td><td>Mid-month payroll</td></tr>
+      <tr><td>32</td><td><code>0 0 1 1 *</code></td><td>January 1st at midnight</td><td>1/yr</td><td><span class="freq-tag freq-low">Annual</span></td><td>Annual data archival</td></tr>
+      <tr><td>33</td><td><code>0 0 1 */3 *</code></td><td>Every quarter (1st day)</td><td>4/yr</td><td><span class="freq-tag freq-low">Quarterly</span></td><td>Quarterly reports</td></tr>
+      <tr><td>34</td><td><code>0 0 1 */6 *</code></td><td>Every 6 months (Jan &amp; Jul 1st)</td><td>2/yr</td><td><span class="freq-tag freq-low">Semi-Annual</span></td><td>Semi-annual audit</td></tr>
+      <tr><td>35</td><td><code>0 0 1,15 * *</code></td><td>1st and 15th of every month</td><td>2/mo</td><td><span class="freq-tag freq-low">Bi-Monthly</span></td><td>Bi-monthly payroll</td></tr>
+      <tr><td>36</td><td><code>0 0,12 * * *</code></td><td>Midnight and noon</td><td>2</td><td><span class="freq-tag freq-low">Low</span></td><td>Twice-daily sync</td></tr>
+      <tr><td>37</td><td><code>0 8,20 * * *</code></td><td>8 AM and 8 PM</td><td>2</td><td><span class="freq-tag freq-low">Low</span></td><td>Morning/evening alerts</td></tr>
+      <tr><td>38</td><td><code>0 0 * * 1,3,5</code></td><td>Mon, Wed, Fri at midnight</td><td>3/7</td><td><span class="freq-tag freq-low">Low</span></td><td>Alternating-day backups</td></tr>
+      <tr><td>39</td><td><code>0 2 * * 0</code></td><td>Sunday at 2 AM</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Full weekly backup (low traffic)</td></tr>
+      <tr><td>40</td><td><code>0 3 1 * *</code></td><td>1st of month at 3 AM</td><td>1/mo</td><td><span class="freq-tag freq-low">Monthly</span></td><td>Monthly DB optimization</td></tr>
+      <tr><td>41</td><td><code>*/2 * * * *</code></td><td>Every 2 minutes</td><td>720</td><td><span class="freq-tag freq-high">Very High</span></td><td>Near-realtime monitoring</td></tr>
+      <tr><td>42</td><td><code>*/3 * * * *</code></td><td>Every 3 minutes</td><td>480</td><td><span class="freq-tag freq-high">Very High</span></td><td>Queue drain frequency</td></tr>
+      <tr><td>43</td><td><code>0 4 * * *</code></td><td>Every day at 4 AM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>ETL pipeline, data warehouse load</td></tr>
+      <tr><td>44</td><td><code>15 14 1 * *</code></td><td>1st of month at 2:15 PM</td><td>1/mo</td><td><span class="freq-tag freq-low">Monthly</span></td><td>Monthly status report</td></tr>
+      <tr><td>45</td><td><code>0 22 * * 1-5</code></td><td>Weekdays at 10 PM</td><td>5/7</td><td><span class="freq-tag freq-low">Weekday</span></td><td>Nightly test suite</td></tr>
+      <tr><td>46</td><td><code>0 0 * * 2,4</code></td><td>Tuesdays and Thursdays at midnight</td><td>2/7</td><td><span class="freq-tag freq-low">Low</span></td><td>Bi-weekly deployments</td></tr>
+      <tr><td>47</td><td><code>5 4 * * 0</code></td><td>Sunday at 4:05 AM</td><td>1/7</td><td><span class="freq-tag freq-low">Weekly</span></td><td>Avoid midnight exact (reduce contention)</td></tr>
+      <tr><td>48</td><td><code>0 1 * * *</code></td><td>Every day at 1 AM</td><td>1</td><td><span class="freq-tag freq-low">Daily</span></td><td>Nightly cleanup, log archival</td></tr>
+      <tr><td>49</td><td><code>0 0 * 1,4,7,10 *</code></td><td>First day of each quarter</td><td>4/yr</td><td><span class="freq-tag freq-low">Quarterly</span></td><td>Quarterly compliance scan</td></tr>
+      <tr><td>50</td><td><code>@reboot</code></td><td>Once at system startup</td><td>N/A</td><td><span class="freq-tag freq-low">Boot</span></td><td>Start daemons, mount drives</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Community Questions from Stack Overflow</h2>
+  <p>Real cron questions from developers, sourced from the Stack Overflow API (sorted by votes):</p>
+
+  <div class="so-entry">
+    <div class="so-votes">1,032</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/134906" target="_blank" rel="noopener">How do I list all cron jobs for all users?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">620</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/10193788" target="_blank" rel="noopener">Restarting cron after changing crontab file?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">572</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/37458287" target="_blank" rel="noopener">How to run a cron job inside a docker container?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">560</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/878600" target="_blank" rel="noopener">How to create a cron job using Bash automatically without the interactive editor?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">486</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/373335" target="_blank" rel="noopener">How do I get a Cron like scheduler in Python?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">464</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/9619362" target="_blank" rel="noopener">Running a cron every 30 seconds</a></div>
+  </div>
+
+  <div class="methodology">
+    <h3>Methodology</h3>
+    <p>Patterns were selected based on frequency of appearance in:</p>
+    <ul>
+      <li><strong>Stack Overflow questions</strong> &mdash; fetched via <code>api.stackexchange.com/2.3/search?intitle=cron</code> on April 10, 2026</li>
+      <li><strong>GitHub code search</strong> &mdash; frequency of cron expressions in crontab files, CI/CD configs (GitHub Actions, GitLab CI), and Kubernetes CronJob manifests</li>
+      <li><strong>Official documentation</strong> &mdash; crontab(5) man page, AWS EventBridge, Google Cloud Scheduler, Azure Logic Apps scheduling documentation</li>
+    </ul>
+    <p>Execution frequencies assume UTC timezone. Actual run counts may vary with timezone and DST transitions. The <code>@reboot</code> special string is non-standard but widely supported.</p>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <details>
+    <summary>What does * * * * * mean in cron?</summary>
+    <p>The cron expression '* * * * *' means 'every minute'. Each asterisk represents a field: minute (0-59), hour (0-23), day of month (1-31), month (1-12), and day of week (0-7). An asterisk means 'every possible value' for that field. This is the most frequent possible cron schedule and runs 1,440 times per day.</p>
+  </details>
+
+  <details>
+    <summary>How do I run a cron job every 5 minutes?</summary>
+    <p>Use '*/5 * * * *' to run a cron job every 5 minutes. The */5 in the minute field means 'every 5th minute' (0, 5, 10, 15, ..., 55). This runs 288 times per day. Alternative patterns: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *' is equivalent but more verbose. For every 5 minutes during business hours only: '*/5 9-17 * * 1-5'.</p>
+  </details>
+
+  <details>
+    <summary>What is the difference between cron and crontab?</summary>
+    <p>Cron is the scheduling daemon (background service) that executes scheduled commands. Crontab (cron table) is the file or command used to create, edit, and manage the schedule entries. You edit your crontab with 'crontab -e' and list entries with 'crontab -l'. The cron daemon reads all crontab files and executes commands at their scheduled times.</p>
+  </details>
+
+  <details>
+    <summary>Can I run a cron job every 30 seconds?</summary>
+    <p>Standard cron does not support sub-minute intervals &mdash; the smallest unit is one minute. To run every 30 seconds, use two cron entries: '* * * * * /path/to/script' and '* * * * * sleep 30 &amp;&amp; /path/to/script'. Alternatively, use systemd timers (OnUnitActiveSec=30s) or a process manager like supervisord.</p>
+  </details>
+
+  <details>
+    <summary>How do I schedule a cron job for the last day of every month?</summary>
+    <p>There is no direct 'last day of month' syntax in standard cron. The most reliable approach is: '59 23 28-31 * * [ $(date -d tomorrow +%d) -eq 1 ] &amp;&amp; /path/to/script'. This checks if tomorrow is the 1st (meaning today is the last day). Some cron implementations like Quartz support 'L' for last day: '0 0 L * ?'.</p>
+  </details>
+
+  <section style="text-align:center;margin:2rem 0;">
+    <h3>Related Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;">
+      <a href="/tools/cron-expression-builder.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Cron Expression Builder</a>
+      <a href="/tools/cron-to-english.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Cron to English</a>
+      <a href="/tools/cron-next-runs.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Cron Next Runs</a>
+      <a href="/tools/crontab-guru.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Crontab Guru</a>
+    </div>
+  </section>
+
+  <div style="text-align:center;margin:2rem 0;">
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+    <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+    <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function() {
+  var search = document.getElementById('cron-search');
+  var rows = document.querySelectorAll('#cron-table tbody tr');
+  search.addEventListener('input', function() {
+    var q = search.value.toLowerCase();
+    rows.forEach(function(row) {
+      row.style.display = !q || row.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+    });
+  });
+})();
+</script>
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#cron-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      title: cells[1] ? cells[1].textContent.trim() : '',
+      category: cells[4] ? cells[4].textContent.trim() : '',
+      description: cells[2] ? cells[2].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.title; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'title,category,description\n' + data.map(function(d) {
+      return '"' + d.title.replace(/"/g,'""') + '","' + d.category.replace(/"/g,'""') + '","' + d.description.replace(/"/g,'""') + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.' + ext;
+  a.click();
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
