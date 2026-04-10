@@ -80,7 +80,16 @@
         "@type": "Answer",
         "text": "Append '>> /var/log/myjob.log 2>&1' to your cron command to redirect both stdout and stderr to a log file. Without this, cron typically emails output to the user."
       }
-    }]
+    },
+    {
+      "@type": "Question",
+      "name": "Is this tool free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All EpochPilot tools are free, run in your browser, and require no signup or account."
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -132,6 +141,8 @@
       <summary>How do I log cron job output?</summary>
       <p>Append '&gt;&gt; /var/log/myjob.log 2&gt;&amp;1' to your cron command to redirect both stdout and stderr to a log file. Without this, cron typically emails output to the user.</p>
     </details>
+
+    <details><summary>Is this tool free?</summary><p>Yes. All EpochPilot tools are free, run in your browser, and require no signup or account.</p></details>
   </section>
 
   <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">

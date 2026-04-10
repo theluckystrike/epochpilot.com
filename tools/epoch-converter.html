@@ -80,7 +80,16 @@
         "@type": "Answer",
         "text": "Yes. Negative epoch values represent dates before January 1, 1970. For example, -86400 corresponds to December 31, 1969. The converter handles these correctly."
       }
-    }]
+    },
+    {
+      "@type": "Question",
+      "name": "Is this tool free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All EpochPilot tools are free, run in your browser, and require no signup or account."
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -110,9 +119,58 @@
     <div id="tool-container" data-component="epoch-basic" data-config='{}'></div>
   </div>
 
+  <section class="code-examples" style="max-width:720px;margin:2rem auto;">
+    <h2>Code Examples</h2>
+    <h3>Python</h3>
+    <pre><code>import time
+from datetime import datetime
+
+# Current epoch
+epoch = int(time.time())  # 1712764800
+
+# Epoch to datetime
+dt = datetime.fromtimestamp(epoch)
+print(dt)  # 2026-04-10 12:00:00
+
+# Datetime to epoch
+epoch = int(datetime(2026, 4, 10).timestamp())
+print(epoch)  # 1712707200</code></pre>
+
+    <h3>JavaScript</h3>
+    <pre><code>// Current epoch (seconds)
+const epoch = Math.floor(Date.now() / 1000);
+
+// Epoch to Date
+const date = new Date(epoch * 1000);
+console.log(date.toISOString());
+
+// Date to epoch
+const epoch2 = Math.floor(new Date('2026-04-10').getTime() / 1000);</code></pre>
+
+    <h3>Go</h3>
+    <pre><code>package main
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // Current epoch
+    epoch := time.Now().Unix()
+
+    // Epoch to time
+    t := time.Unix(epoch, 0)
+    fmt.Println(t.Format(time.RFC3339))
+
+    // Time to epoch
+    t2, _ := time.Parse("2006-01-02", "2026-04-10")
+    fmt.Println(t2.Unix())
+}</code></pre>
+  </section>
+
   <section class="faq-section" style="max-width:720px;margin:2rem auto;">
     <h2>Frequently Asked Questions</h2>
-    
+
     <details>
       <summary>What is a Unix epoch timestamp?</summary>
       <p>A Unix epoch timestamp is the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC. It is widely used in programming, databases, and APIs to represent points in time as a single integer.</p>
@@ -132,6 +190,8 @@
       <summary>Can this tool handle negative epoch values?</summary>
       <p>Yes. Negative epoch values represent dates before January 1, 1970. For example, -86400 corresponds to December 31, 1969. The converter handles these correctly.</p>
     </details>
+
+    <details><summary>Is this tool free?</summary><p>Yes. All EpochPilot tools are free, run in your browser, and require no signup or account.</p></details>
   </section>
 
   <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">

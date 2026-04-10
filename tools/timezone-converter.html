@@ -80,7 +80,16 @@
         "@type": "Answer",
         "text": "The IANA timezone database (also called tz or zoneinfo) is the definitive source for timezone rules including DST changes. It is maintained by a community of volunteers and used by virtually all operating systems and programming languages."
       }
-    }]
+    },
+    {
+      "@type": "Question",
+      "name": "Is this tool free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All EpochPilot tools are free, run in your browser, and require no signup or account."
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -110,9 +119,49 @@
     <div id="tool-container" data-component="timezone-pair" data-config='{&quot;from&quot;:&quot;America/New_York&quot;,&quot;to&quot;:&quot;UTC&quot;}'></div>
   </div>
 
+  <section class="code-examples" style="max-width:720px;margin:2rem auto;">
+    <h2>Code Examples</h2>
+    <h3>Python</h3>
+    <pre><code>from datetime import datetime
+from zoneinfo import ZoneInfo
+
+# Convert between timezones
+eastern = ZoneInfo("America/New_York")
+utc = ZoneInfo("UTC")
+tokyo = ZoneInfo("Asia/Tokyo")
+
+now_eastern = datetime.now(eastern)
+now_utc = now_eastern.astimezone(utc)
+now_tokyo = now_eastern.astimezone(tokyo)
+
+print(f"New York: {now_eastern}")
+print(f"UTC:      {now_utc}")
+print(f"Tokyo:    {now_tokyo}")</code></pre>
+
+    <h3>JavaScript</h3>
+    <pre><code>// Convert current time to different timezones
+const now = new Date();
+
+const options = {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false
+};
+
+console.log(new Intl.DateTimeFormat('en-US', options).format(now));
+
+// Get UTC offset for a timezone
+const formatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  timeZoneName: 'shortOffset'
+});
+console.log(formatter.format(now));  // e.g., "4/10/2026, GMT-4"</code></pre>
+  </section>
+
   <section class="faq-section" style="max-width:720px;margin:2rem auto;">
     <h2>Frequently Asked Questions</h2>
-    
+
     <details>
       <summary>How does the timezone converter handle Daylight Saving Time?</summary>
       <p>The converter uses the browser's Intl.DateTimeFormat API backed by the IANA timezone database. DST transitions are handled automatically by the operating system's ICU data, giving you correct results year-round.</p>
@@ -132,6 +181,8 @@
       <summary>What is the IANA timezone database?</summary>
       <p>The IANA timezone database (also called tz or zoneinfo) is the definitive source for timezone rules including DST changes. It is maintained by a community of volunteers and used by virtually all operating systems and programming languages.</p>
     </details>
+
+    <details><summary>Is this tool free?</summary><p>Yes. All EpochPilot tools are free, run in your browser, and require no signup or account.</p></details>
   </section>
 
   <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">

@@ -118,9 +118,50 @@
     <div id="tool-container" data-component="cron-builder" data-config='{}'></div>
   </div>
 
+  <section class="code-examples" style="max-width:720px;margin:2rem auto;">
+    <h2>Common Crontab Examples</h2>
+    <h3>Frequently Used Schedules</h3>
+    <pre><code># Every minute
+* * * * *  /path/to/script.sh
+
+# Every 5 minutes
+*/5 * * * *  /path/to/script.sh
+
+# Every hour at minute 0
+0 * * * *  /path/to/script.sh
+
+# Every day at midnight
+0 0 * * *  /path/to/script.sh
+
+# Every Monday at 9 AM
+0 9 * * 1  /path/to/script.sh
+
+# First day of every month at noon
+0 12 1 * *  /path/to/script.sh
+
+# Weekdays at 8:30 AM
+30 8 * * 1-5  /path/to/script.sh</code></pre>
+
+    <h3>Cron Management Commands</h3>
+    <pre><code># Edit your crontab
+crontab -e
+
+# List current cron jobs
+crontab -l
+
+# Remove all cron jobs (careful!)
+crontab -r
+
+# Edit another user's crontab (requires root)
+sudo crontab -u username -e
+
+# Redirect output to a log file
+0 * * * *  /path/to/script.sh >> /var/log/myjob.log 2>&1</code></pre>
+  </section>
+
   <section class="faq-section" style="max-width:720px;margin:2rem auto;">
     <h2>Frequently Asked Questions</h2>
-    
+
     <details>
       <summary>What is a cron expression?</summary>
       <p>A cron expression is a string of five fields (minute, hour, day of month, month, day of week) that defines a recurring schedule. It is used by cron daemons on Unix/Linux systems and by task schedulers in many frameworks.</p>
