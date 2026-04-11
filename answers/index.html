@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Answers &mdash; Epoch, Timezone &amp; Cron Questions | EpochPilot</title>
+<meta name="description" content="Browse 89 answers about Unix timestamps, timezone conversions, cron expressions, and date math. Instant answers with code examples.">
+<link rel="canonical" href="https://epochpilot.com/answers/">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/answers/">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/answers/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Answers &mdash; Epoch, Timezone &amp; Cron Questions | EpochPilot">
+<meta property="og:description" content="Browse 89 answers about Unix timestamps, timezone conversions, cron expressions, and date math.">
+<meta property="og:url" content="https://epochpilot.com/answers/">
+<meta property="og:site_name" content="EpochPilot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Answers &mdash; Epoch, Timezone &amp; Cron Questions">
+<meta name="twitter:description" content="Browse 89 answers about Unix timestamps, timezone conversions, cron expressions, and date math.">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <span>Answers</span></nav>
+    <h1>Answers</h1>
+    <p style="color:var(--text-muted,#8b949e);margin-top:0.5rem;">Instant answers to common epoch, timezone, cron, and date math questions. Each page includes code examples and conversion tables.</p>
+  </div>
+
+  <div style="max-width:900px;margin:2rem auto;line-height:1.7;">
+
+    <h2 id="timestamps">Unix Timestamps</h2>
+    <p>Convert specific epoch timestamps to human-readable dates. Each answer includes UTC, ISO 8601, US Eastern time, code examples in Python, JavaScript, and Go, and contextual facts about the date.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.5rem;margin:1rem 0;">
+      <a href="/answers/what-is-epoch-0.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 0 (Unix Origin)</a>
+      <a href="/answers/what-is-epoch-1.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1</a>
+      <a href="/answers/what-is-epoch-86400.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 86400 (First Day)</a>
+      <a href="/answers/what-is-epoch-1000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1000000</a>
+      <a href="/answers/what-is-epoch-946684800.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 946684800 (Y2K)</a>
+      <a href="/answers/what-is-epoch-1000000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1000000000 (1 Billion)</a>
+      <a href="/answers/what-is-epoch-1000211160.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1000211160 (9/11)</a>
+      <a href="/answers/what-is-epoch-1100000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1100000000</a>
+      <a href="/answers/what-is-epoch-1200000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1200000000</a>
+      <a href="/answers/what-is-epoch-1234567890.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1234567890 (Sequential)</a>
+      <a href="/answers/what-is-epoch-1300000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1300000000</a>
+      <a href="/answers/what-is-epoch-1400000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1400000000</a>
+      <a href="/answers/what-is-epoch-1500000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1500000000</a>
+      <a href="/answers/what-is-epoch-1577836800.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1577836800 (2020)</a>
+      <a href="/answers/what-is-epoch-1600000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1600000000</a>
+      <a href="/answers/what-is-epoch-1609459200.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1609459200 (2021)</a>
+      <a href="/answers/what-is-epoch-1640995200.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1640995200 (2022)</a>
+      <a href="/answers/what-is-epoch-1650000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1650000000</a>
+      <a href="/answers/what-is-epoch-1672531200.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1672531200 (2023)</a>
+      <a href="/answers/what-is-epoch-1680000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1680000000</a>
+      <a href="/answers/what-is-epoch-1690000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1690000000</a>
+      <a href="/answers/what-is-epoch-1700000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1700000000</a>
+      <a href="/answers/what-is-epoch-1704067200.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1704067200 (2024)</a>
+      <a href="/answers/what-is-epoch-1710000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1710000000</a>
+      <a href="/answers/what-is-epoch-1712345678.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1712345678</a>
+      <a href="/answers/what-is-epoch-1715000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1715000000</a>
+      <a href="/answers/what-is-epoch-1720000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1720000000</a>
+      <a href="/answers/what-is-epoch-1725000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1725000000</a>
+      <a href="/answers/what-is-epoch-1730000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1730000000</a>
+      <a href="/answers/what-is-epoch-1735689600.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1735689600 (2025)</a>
+      <a href="/answers/what-is-epoch-1740000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1740000000</a>
+      <a href="/answers/what-is-epoch-1750000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1750000000</a>
+      <a href="/answers/what-is-epoch-1760000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1760000000</a>
+      <a href="/answers/what-is-epoch-1767225600.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1767225600 (2026)</a>
+      <a href="/answers/what-is-epoch-1770000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1770000000</a>
+      <a href="/answers/what-is-epoch-1780000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1780000000</a>
+      <a href="/answers/what-is-epoch-1790000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1790000000</a>
+      <a href="/answers/what-is-epoch-1800000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1800000000</a>
+      <a href="/answers/what-is-epoch-1893456000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1893456000 (2030)</a>
+      <a href="/answers/what-is-epoch-1900000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 1900000000</a>
+      <a href="/answers/what-is-epoch-2000000000.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 2000000000</a>
+      <a href="/answers/what-is-epoch-2147483647.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Epoch 2147483647 (Y2038)</a>
+      <a href="/answers/unix-timestamp-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Unix Timestamp Right Now</a>
+    </div>
+
+    <h2 id="timezones">Timezone Conversions</h2>
+    <p>Convert between common timezone pairs with offset tables, DST notes, and code examples. Both specific-time conversions and live "right now" converters.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.5rem;margin:1rem 0;">
+      <a href="/answers/utc-to-est-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to EST Right Now</a>
+      <a href="/answers/utc-to-pst-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to PST Right Now</a>
+      <a href="/answers/utc-to-cst-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to CST Right Now</a>
+      <a href="/answers/utc-to-ist-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to IST Right Now</a>
+      <a href="/answers/utc-to-gmt-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to GMT Right Now</a>
+      <a href="/answers/utc-to-cet-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to CET Right Now</a>
+      <a href="/answers/utc-to-jst-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to JST Right Now</a>
+      <a href="/answers/utc-to-aest-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">UTC to AEST Right Now</a>
+      <a href="/answers/est-to-ist-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">EST to IST Right Now</a>
+      <a href="/answers/est-to-gmt-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">EST to GMT Right Now</a>
+      <a href="/answers/est-to-cet-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">EST to CET Right Now</a>
+      <a href="/answers/pst-to-est-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">PST to EST Right Now</a>
+      <a href="/answers/pst-to-ist-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">PST to IST Right Now</a>
+      <a href="/answers/ist-to-est-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">IST to EST Right Now</a>
+      <a href="/answers/ist-to-pst-right-now.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">IST to PST Right Now</a>
+      <a href="/answers/3pm-utc-to-ist.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">3 PM UTC to IST</a>
+      <a href="/answers/9am-pst-to-est.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">9 AM PST to EST</a>
+      <a href="/answers/5pm-est-to-utc.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">5 PM EST to UTC</a>
+      <a href="/answers/midnight-utc-to-jst.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Midnight UTC to JST</a>
+      <a href="/answers/10am-cet-to-pst.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">10 AM CET to PST</a>
+      <a href="/answers/noon-gmt-to-aest.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Noon GMT to AEST</a>
+      <a href="/answers/8am-ist-to-utc.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">8 AM IST to UTC</a>
+      <a href="/answers/6pm-utc-to-cst.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">6 PM UTC to CST</a>
+    </div>
+
+    <h2 id="cron">Cron Expressions</h2>
+    <p>Common cron schedules explained with field breakdowns, next run times, use cases, and code examples for Linux, Python, and Node.js.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.5rem;margin:1rem 0;">
+      <a href="/answers/cron-every-5-minutes.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 5 Minutes</a>
+      <a href="/answers/cron-every-10-minutes.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 10 Minutes</a>
+      <a href="/answers/cron-every-15-minutes.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 15 Minutes</a>
+      <a href="/answers/cron-every-30-minutes.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 30 Minutes</a>
+      <a href="/answers/cron-every-30-seconds.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 30 Seconds</a>
+      <a href="/answers/cron-every-hour.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every Hour</a>
+      <a href="/answers/cron-every-2-hours.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 2 Hours</a>
+      <a href="/answers/cron-every-4-hours.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 4 Hours</a>
+      <a href="/answers/cron-every-6-hours.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 6 Hours</a>
+      <a href="/answers/cron-every-12-hours.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every 12 Hours</a>
+      <a href="/answers/cron-every-day-at-midnight.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every Day at Midnight</a>
+      <a href="/answers/cron-daily-9am.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Daily at 9 AM</a>
+      <a href="/answers/cron-every-monday-9am.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every Monday at 9 AM</a>
+      <a href="/answers/cron-every-monday.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every Monday at Midnight</a>
+      <a href="/answers/cron-every-sunday.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Every Sunday at Midnight</a>
+      <a href="/answers/cron-weekdays-only.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Weekdays Only</a>
+      <a href="/answers/cron-first-day-of-month.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">First Day of Month</a>
+      <a href="/answers/cron-last-day-of-month.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">Last Day of Month</a>
+    </div>
+
+    <h2 id="date-math">Date Math</h2>
+    <p>Countdowns, week numbers, and other date calculations.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.5rem;margin:1rem 0;">
+      <a href="/answers/how-many-days-until-christmas.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">How Many Days Until Christmas?</a>
+      <a href="/answers/how-many-days-until-new-year.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">How Many Days Until New Year?</a>
+      <a href="/answers/how-many-weeks-left-in-2026.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">How Many Weeks Left in 2026?</a>
+      <a href="/answers/what-week-number-is-it.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">What Week Number Is It?</a>
+      <a href="/answers/what-day-of-year-is-today.html" style="padding:0.5rem;border:1px solid var(--border,#30363d);border-radius:6px;text-decoration:none;">What Day of the Year Is Today?</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a></div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

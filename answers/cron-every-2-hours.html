@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression for Every 2 Hours | EpochPilot</title>
+<meta name="description" content="The cron expression for every 2 hours is 0 */2 * * *. Free tool to verify and explore.">
+<link rel="canonical" href="https://epochpilot.com/answers/cron-every-2-hours.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/answers/cron-every-2-hours.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/answers/cron-every-2-hours.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cron Expression for Every 2 Hours | EpochPilot">
+<meta property="og:description" content="The cron expression for every 2 hours is 0 */2 * * *. Free tool to verify and explore.">
+<meta property="og:url" content="https://epochpilot.com/answers/cron-every-2-hours.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cron Expression for Every 2 Hours">
+<meta name="twitter:description" content="The cron expression for every 2 hours is 0 */2 * * *. Free tool to verify and explore.">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the cron expression for every 2 hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The cron expression for every 2 hours is 0 */2 * * *. This schedule runs 12 times per day."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I set up a cron job for every 2 hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open your crontab with 'crontab -e' and add a line starting with '0 */2 * * *' followed by the command you want to run. For example: 0 */2 * * * /path/to/script.sh"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does each field in 0 */2 * * * mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A cron expression has 5 fields: minute (0), hour (*/2), day of month (*), month (*), and day of week (*). In 0 */2 * * *: 0 — at the top of the hour; */2 — every 2nd hour (0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22)."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Every 2 Hours</span></nav>
+    <h1>Cron Expression for Every 2 Hours</h1>
+  </div>
+  <div style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;border-left:4px solid var(--accent,#58a6ff);">
+    <p style="font-size:1.2rem;font-weight:700;margin:0;"><code style="background:var(--bg-code,#0d1117);padding:0.2rem 0.5rem;border-radius:4px;">0 */2 * * *</code></p>
+  </div>
+
+  <div style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>Expression Breakdown</h2>
+    <p>The cron expression <code>0 */2 * * *</code> schedules a job to run <strong>every 2 hours</strong>. A standard cron expression consists of five fields representing minute, hour, day of month, month, and day of week. Here is what each field means in this expression:</p>
+    <table style="width:100%;border-collapse:collapse;margin:1rem 0;">
+      <tr><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);color:var(--text-muted,#8b949e);">Minute</td><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);"><code>0</code> &mdash; at the top of the hour</td></tr>
+      <tr><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);color:var(--text-muted,#8b949e);">Hour</td><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);"><code>*/2</code> &mdash; every 2nd hour (0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22)</td></tr>
+      <tr><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);color:var(--text-muted,#8b949e);">Day of Month</td><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);"><code>*</code> &mdash; every day of the month</td></tr>
+      <tr><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);color:var(--text-muted,#8b949e);">Month</td><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);"><code>*</code> &mdash; every month</td></tr>
+      <tr><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);color:var(--text-muted,#8b949e);">Day of Week</td><td style="padding:0.5rem;border-bottom:1px solid var(--border,#30363d);"><code>*</code> &mdash; every day of the week</td></tr>
+    </table>
+    <p>This schedule runs <strong>12 times per day</strong> (0.5 times per hour), which amounts to <strong>84 times per week</strong> and approximately <strong>360 times per month</strong>.</p>
+
+    <h2>Next 5 Run Times</h2>
+    <p>Starting from April 11, 2026 00:00 UTC, the next five executions are:</p>
+    <ol>
+      <li><code>2026-04-11T00:00:00Z</code> &mdash; Sat, 11 Apr 2026 00:00:00 GMT</li>
+      <li><code>2026-04-11T02:00:00Z</code> &mdash; Sat, 11 Apr 2026 02:00:00 GMT</li>
+      <li><code>2026-04-11T04:00:00Z</code> &mdash; Sat, 11 Apr 2026 04:00:00 GMT</li>
+      <li><code>2026-04-11T06:00:00Z</code> &mdash; Sat, 11 Apr 2026 06:00:00 GMT</li>
+      <li><code>2026-04-11T08:00:00Z</code> &mdash; Sat, 11 Apr 2026 08:00:00 GMT</li>
+    </ol>
+
+    <h2>Common Use Cases</h2>
+    <p>Running a task every 2 hours is a popular cron schedule. Here are some typical applications:</p>
+    <ul>
+      <li><strong>SSL certificate</strong>: SSL certificate expiration monitoring</li>
+      <li><strong>Automated sitemap</strong>: Automated sitemap regeneration for SEO</li>
+      <li><strong>Data warehouse</strong>: Data warehouse ETL pipeline triggers</li>
+      <li><strong>System resource</strong>: System resource usage reporting and alerting</li>
+    </ul>
+
+    <h2>Code Examples</h2>
+    <h3>Linux / macOS Crontab</h3>
+    <pre style="background:var(--bg-code,#0d1117);padding:1rem;border-radius:6px;overflow-x:auto;"><code># Open crontab editor
+crontab -e
+
+# Add this line to run your script every 2 hours
+0 */2 * * * /usr/local/bin/my-task.sh
+
+# With logging
+0 */2 * * * /usr/local/bin/my-task.sh >> /var/log/my-task.log 2>&1</code></pre>
+
+    <h3>Python (schedule library alternative)</h3>
+    <pre style="background:var(--bg-code,#0d1117);padding:1rem;border-radius:6px;overflow-x:auto;"><code># Using APScheduler with cron trigger
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
+
+scheduler = BlockingScheduler()
+trigger = CronTrigger.from_crontab("0 */2 * * *")
+scheduler.add_job(my_function, trigger)
+scheduler.start()</code></pre>
+
+    <h3>JavaScript (Node.js with node-cron)</h3>
+    <pre style="background:var(--bg-code,#0d1117);padding:1rem;border-radius:6px;overflow-x:auto;"><code>const cron = require('node-cron');
+
+// Run task every 2 hours
+cron.schedule('0 */2 * * *', () => {
+  console.log('Task running at', new Date().toISOString());
+  // Your task logic here
+});</code></pre>
+
+    <h2>Frequently Asked Questions</h2>
+    <details style="margin:1rem 0;padding:0.75rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:6px;">
+      <summary style="cursor:pointer;font-weight:600;">What does each field in <code>0 */2 * * *</code> mean?</summary>
+      <p style="margin-top:0.75rem;">A cron expression has five fields separated by spaces: <strong>minute</strong> (0-59), <strong>hour</strong> (0-23), <strong>day of month</strong> (1-31), <strong>month</strong> (1-12), and <strong>day of week</strong> (0-7, where 0 and 7 are Sunday). The <code>*/n</code> syntax means "every nth interval." In <code>0 */2 * * *</code>, the fields are: 0 — at the top of the hour; */2 — every 2nd hour (0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22); * — every day of the month.</p>
+    </details>
+    <details style="margin:1rem 0;padding:0.75rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:6px;">
+      <summary style="cursor:pointer;font-weight:600;">How do I verify that <code>0 */2 * * *</code> is correct?</summary>
+      <p style="margin-top:0.75rem;">Use the <a href="/tools/cron-expression-builder.html">EpochPilot Cron Expression Builder</a> to paste your expression and see the next run times visually. You can also use the <code>crontab -l</code> command to list your current crontab entries, or test with a simple echo command: <code>0 */2 * * * echo "test" >> /tmp/cron-test.log</code>.</p>
+    </details>
+    <details style="margin:1rem 0;padding:0.75rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:6px;">
+      <summary style="cursor:pointer;font-weight:600;">What timezone does cron use?</summary>
+      <p style="margin-top:0.75rem;">By default, cron uses the system timezone configured on your server. On most cloud servers this is UTC. You can check your system timezone with <code>timedatectl</code> on Linux or <code>date +%Z</code>. Some cron implementations (like Kubernetes CronJobs) let you specify a timezone explicitly. Always verify your server's timezone to ensure jobs run at the expected times.</p>
+    </details>
+
+    <p><a href="/tools/cron-expression-builder.html">Try the Cron Expression Builder</a> to create and test cron schedules.</p>
+
+    <h2>Related Questions</h2>
+    <ul>
+      <li><a href="/answers/cron-every-10-minutes.html">Cron expression for every 10 minutes</a></li>
+      <li><a href="/answers/cron-every-15-minutes.html">Cron expression for every 15 minutes</a></li>
+      <li><a href="/answers/cron-every-30-minutes.html">Cron expression for every 30 minutes</a></li>
+      <li><a href="/answers/cron-every-5-minutes.html">Cron expression: every 5 minutes</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a></div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

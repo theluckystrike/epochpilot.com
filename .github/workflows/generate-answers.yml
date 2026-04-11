@@ -1,0 +1,99 @@
+name: Generate Answer Pages
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at 8 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Read and increment batch counter
+        id: batch
+        run: |
+          if [ -f .batch-counter ]; then
+            BATCH=$(cat .batch-counter)
+          else
+            BATCH=1
+          fi
+          NEXT=$((BATCH + 1))
+          echo "$NEXT" > .batch-counter
+          echo "batch=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Generating batch $NEXT"
+
+      - name: Generate answer pages
+        run: node scripts/generate.js
+
+      - name: Validate generated pages
+        run: node scripts/validate.js
+
+      - name: Update sitemap
+        run: |
+          if [ -f .generated-pages.json ]; then
+            node -e "
+              const fs = require('fs');
+              const pages = JSON.parse(fs.readFileSync('.generated-pages.json', 'utf8'));
+              if (pages.length === 0) { console.log('No new pages'); process.exit(0); }
+              let sitemap = fs.readFileSync('sitemap.xml', 'utf8');
+              const today = new Date().toISOString().split('T')[0];
+              const entries = pages.map(slug =>
+                '  <url>\n    <loc>https://epochpilot.com/answers/' + slug + '.html</loc>\n    <lastmod>' + today + '</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.5</priority>\n</url>'
+              ).join('\n');
+              sitemap = sitemap.replace('</urlset>', entries + '\n</urlset>');
+              fs.writeFileSync('sitemap.xml', sitemap);
+              console.log('Added ' + pages.length + ' URLs to sitemap');
+            "
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add answers/ sitemap.xml .batch-counter .generated-pages.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "V31 batch ${{ steps.batch.outputs.batch }}: generate new answer pages
+
+          Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
+          git push
+
+      - name: Ping IndexNow
+        if: success()
+        run: |
+          if [ -f .generated-pages.json ]; then
+            node -e "
+              const https = require('https');
+              const pages = JSON.parse(require('fs').readFileSync('.generated-pages.json', 'utf8'));
+              if (pages.length === 0) process.exit(0);
+              const urls = pages.map(s => 'https://epochpilot.com/answers/' + s + '.html');
+              const body = JSON.stringify({
+                host: 'epochpilot.com',
+                key: '7d936d35364e4bafacde17efce5402f9',
+                urlList: urls
+              });
+              const req = https.request({
+                hostname: 'api.indexnow.org',
+                path: '/IndexNow',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Content-Length': body.length }
+              }, res => {
+                console.log('IndexNow response:', res.statusCode);
+              });
+              req.write(body);
+              req.end();
+            "
+          fi
