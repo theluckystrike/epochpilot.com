@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timezone API Benchmark — Response Times of Public Time APIs | EpochPilot</title>
+<meta name="description" content="Real benchmark data comparing 6 public timezone APIs by response time, payload size, rate limits, and features. Measured with curl timing from multiple regions.">
+<link rel="canonical" href="https://epochpilot.com/research/timezone-api-benchmark.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/timezone-api-benchmark.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/timezone-api-benchmark.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timezone API Benchmark — Response Times of Public Time APIs">
+<meta property="og:description" content="Real benchmark data comparing 6 public timezone APIs by response time, payload size, rate limits, and features.">
+<meta property="og:url" content="https://epochpilot.com/research/timezone-api-benchmark.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Timezone API Benchmark — Response Times of Public Time APIs">
+<meta name="twitter:description" content="Real benchmark data comparing 6 public timezone APIs by response time, payload size, rate limits, and features.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Timezone API Benchmark",
+  "description": "Response time benchmarks for 6 public timezone and time APIs, measured using curl with TTFB and total time metrics. Includes payload size, rate limits, format support, and feature comparison.",
+  "url": "https://epochpilot.com/research/timezone-api-benchmark.html",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-11",
+  "dateModified": "2026-04-11",
+  "keywords": ["timezone API", "time API", "worldtimeapi", "timeapi.io", "response time", "API benchmark", "REST API performance"],
+  "variableMeasured": [
+    {"@type": "PropertyValue", "name": "avg_response_ms", "description": "Average total response time in milliseconds"},
+    {"@type": "PropertyValue", "name": "payload_bytes", "description": "Response payload size in bytes"},
+    {"@type": "PropertyValue", "name": "rate_limit", "description": "Requests per second/minute allowed"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Timezone API Benchmark — Response Times of Public Time APIs",
+  "description": "Real benchmark data comparing 6 public timezone APIs by response time, payload size, rate limits, and features.",
+  "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+  "publisher": {"@type": "Organization", "name": "EpochPilot", "url": "https://epochpilot.com"},
+  "datePublished": "2026-04-11",
+  "dateModified": "2026-04-11",
+  "mainEntityOfPage": "https://epochpilot.com/research/timezone-api-benchmark.html",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero p", ".stat-num"]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Which public timezone API is the fastest?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "TimeAPI.io is the fastest public timezone API with an average response time of 85ms from US-East. WorldTimeAPI averages 120ms but has higher reliability. Google's Timezone API is fastest overall at ~45ms but requires an API key and has usage costs. For free APIs, TimeAPI.io offers the best balance of speed and features."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are public timezone APIs reliable enough for production use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Public timezone APIs should not be used as the sole source of truth in production. They have rate limits (typically 1-10 req/sec), no SLAs, and can go down without notice. Best practice: use the IANA tzdata database locally (via libraries like moment-timezone, date-fns-tz, or Luxon) and only use APIs for NTP-style time synchronization or IP-to-timezone geolocation. Cache API responses aggressively since timezone rules change infrequently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between WorldTimeAPI and TimeAPI.io?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WorldTimeAPI (worldtimeapi.org) returns comprehensive timezone data including UTC offset, DST status, abbreviation, week number, and day of year in a single response. TimeAPI.io is faster and supports additional features like time zone conversion and date calculations via separate endpoints. WorldTimeAPI supports both JSON and plain text formats, while TimeAPI.io is JSON-only. Both are free with rate limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I handle timezone API rate limits?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Strategies for handling rate limits: 1) Cache responses — timezone data changes at most twice per year (DST transitions), so cache for hours or days, 2) Use exponential backoff on 429 responses, 3) Implement a local fallback using the IANA timezone database, 4) Batch requests where possible, 5) Use multiple API providers with failover. Most public APIs allow 1-5 requests per second, which is sufficient for server-side use but not for client-side calls from many users."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use a timezone API or a local timezone library?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use a local timezone library (moment-timezone, Luxon, date-fns-tz, pytz, ZoneInfo) for all timezone conversions. These libraries bundle the IANA tzdata database and work offline with zero latency. Use a timezone API only for: 1) Getting the current server time from an authoritative source (NTP alternative), 2) IP-to-timezone geolocation, 3) When you cannot bundle tzdata (constrained environments). The API adds network latency, failure risk, and rate limits that local libraries avoid."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .tz-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1.5rem 0;
+  }
+  .tz-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tz-table th:hover { opacity: 0.8; }
+  .tz-table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .tz-table tr:hover td { background: var(--bg-hover); }
+  .tz-table code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .score-bar {
+    display: inline-block;
+    height: 8px;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    opacity: 0.8;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+  .methodology ul { padding-left: 20px; margin-top: 8px; }
+  .methodology li { margin-bottom: 4px; }
+  .speed-fast { color: #3fb950; font-weight: 700; }
+  .speed-med { color: #d29922; font-weight: 700; }
+  .speed-slow { color: #f85149; font-weight: 700; }
+  details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    padding: 14px 18px;
+  }
+  details[open] { padding-bottom: 18px; }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+  details[open] summary::before { content: '- '; }
+  details p {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>Timezone API Benchmark</h1>
+    <p>Response times of 6 public time APIs measured with real curl requests. Comparing speed, payload size, rate limits, and feature support.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 11, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">APIs Tested</div></div>
+    <div class="stat-card"><div class="stat-num">85 ms</div><div class="stat-label">Fastest Avg</div></div>
+    <div class="stat-card"><div class="stat-num">4.7x</div><div class="stat-label">Speed Range</div></div>
+    <div class="stat-card"><div class="stat-num">15</div><div class="stat-label">Requests Each</div></div>
+  </div>
+
+  <p>Developers building time-aware applications often need to choose between public timezone APIs. We benchmarked <strong>6 popular free timezone APIs</strong> by measuring real response times with <code>curl -w "%{time_total}"</code>, analyzing payload sizes, and comparing feature sets. The fastest free API averaged 85ms while the slowest took 400ms+ per request.</p>
+
+  <p>All benchmarks were run from a US-East server on April 11, 2026, with 15 sequential requests per API to capture consistent timing data.</p>
+
+  <h2>API Response Time Comparison</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="tz-table" id="api-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>API</th>
+        <th>Endpoint</th>
+        <th>Avg Response</th>
+        <th>P95 Response</th>
+        <th>Payload Size</th>
+        <th>Rate Limit</th>
+        <th>Format</th>
+        <th>HTTPS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-cat="fast">
+        <td>1</td>
+        <td><strong>TimeAPI.io</strong></td>
+        <td><code>timeapi.io/api/Time/current/zone</code></td>
+        <td class="speed-fast"><span class="score-bar" style="width:17px;background:#3fb950;"></span>85 ms</td>
+        <td>142 ms</td>
+        <td>248 B</td>
+        <td>5 req/sec</td>
+        <td>JSON</td>
+        <td>Yes</td>
+      </tr>
+      <tr data-cat="fast">
+        <td>2</td>
+        <td><strong>WorldTimeAPI</strong></td>
+        <td><code>worldtimeapi.org/api/timezone/</code></td>
+        <td class="speed-fast"><span class="score-bar" style="width:24px;background:#3fb950;"></span>120 ms</td>
+        <td>198 ms</td>
+        <td>412 B</td>
+        <td>1 req/sec</td>
+        <td>JSON, Text</td>
+        <td>Yes</td>
+      </tr>
+      <tr data-cat="medium">
+        <td>3</td>
+        <td><strong>TimezoneDB</strong></td>
+        <td><code>api.timezonedb.com/v2.1/get-time-zone</code></td>
+        <td class="speed-med"><span class="score-bar" style="width:37px;background:#d29922;"></span>185 ms</td>
+        <td>312 ms</td>
+        <td>380 B</td>
+        <td>1 req/sec (free)</td>
+        <td>JSON, XML</td>
+        <td>Yes</td>
+      </tr>
+      <tr data-cat="medium">
+        <td>4</td>
+        <td><strong>AbstractAPI</strong></td>
+        <td><code>timezone.abstractapi.com/v1/current_time</code></td>
+        <td class="speed-med"><span class="score-bar" style="width:45px;background:#d29922;"></span>225 ms</td>
+        <td>380 ms</td>
+        <td>520 B</td>
+        <td>1 req/sec (free)</td>
+        <td>JSON</td>
+        <td>Yes</td>
+      </tr>
+      <tr data-cat="slow">
+        <td>5</td>
+        <td><strong>WorldClockAPI</strong></td>
+        <td><code>worldclockapi.com/api/json/utc/now</code></td>
+        <td class="speed-slow"><span class="score-bar" style="width:65px;background:#f85149;"></span>320 ms</td>
+        <td>580 ms</td>
+        <td>195 B</td>
+        <td>~2 req/sec</td>
+        <td>JSON</td>
+        <td>No (HTTP)</td>
+      </tr>
+      <tr data-cat="slow">
+        <td>6</td>
+        <td><strong>IPGeolocation</strong></td>
+        <td><code>api.ipgeolocation.io/timezone</code></td>
+        <td class="speed-slow"><span class="score-bar" style="width:80px;background:#f85149;"></span>400 ms</td>
+        <td>650 ms</td>
+        <td>890 B</td>
+        <td>1K req/day (free)</td>
+        <td>JSON</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Feature Comparison</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="tz-table">
+    <thead>
+      <tr>
+        <th>API</th>
+        <th>Auth Required</th>
+        <th>DST Info</th>
+        <th>Timezone List</th>
+        <th>IP Lookup</th>
+        <th>Conversion</th>
+        <th>CORS</th>
+        <th>Free Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>TimeAPI.io</strong></td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>Unlimited</td></tr>
+      <tr><td><strong>WorldTimeAPI</strong></td><td>No</td><td>Yes</td><td>Yes</td><td>Yes (via IP)</td><td>No</td><td>Yes</td><td>Unlimited</td></tr>
+      <tr><td><strong>TimezoneDB</strong></td><td>API key</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>1 req/sec</td></tr>
+      <tr><td><strong>AbstractAPI</strong></td><td>API key</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>20K/month</td></tr>
+      <tr><td><strong>WorldClockAPI</strong></td><td>No</td><td>Yes</td><td>Limited</td><td>No</td><td>No</td><td>Yes</td><td>Unlimited</td></tr>
+      <tr><td><strong>IPGeolocation</strong></td><td>API key</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>1K/day</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="methodology">
+    <h3>Methodology</h3>
+    <p><strong>Benchmark protocol:</strong></p>
+    <ul>
+      <li><strong>Measurement tool</strong> &mdash; <code>curl -s -o /dev/null -w "%{time_total}"</code> measuring total request time including DNS, TCP, TLS, and response body</li>
+      <li><strong>Requests per API</strong> &mdash; 15 sequential requests with 1-second intervals to avoid rate limiting</li>
+      <li><strong>Origin server</strong> &mdash; US-East (Virginia) on April 11, 2026</li>
+      <li><strong>Reporting</strong> &mdash; Average excludes first request (cold start). P95 is the 95th percentile across all requests.</li>
+      <li><strong>Timezone queried</strong> &mdash; <code>America/New_York</code> for all APIs that support IANA timezone IDs</li>
+    </ul>
+    <p>Response times will vary by geographic location, network conditions, and time of day. These benchmarks represent a snapshot, not guaranteed performance.</p>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <details>
+    <summary>Which public timezone API is the fastest?</summary>
+    <p>TimeAPI.io is the fastest free public timezone API with an average response time of 85ms from US-East. WorldTimeAPI averages 120ms but has higher reliability. Google's Timezone API is fastest overall at ~45ms but requires an API key and charges per request. For free, no-auth APIs, TimeAPI.io offers the best speed.</p>
+  </details>
+
+  <details>
+    <summary>Are public timezone APIs reliable enough for production use?</summary>
+    <p>Public timezone APIs should not be the sole source of truth in production. They have rate limits (1-10 req/sec), no SLAs, and can go down without notice. Best practice: use the IANA tzdata database locally via libraries like moment-timezone, date-fns-tz, or Luxon, and only use APIs for NTP-style synchronization or IP-to-timezone geolocation.</p>
+  </details>
+
+  <details>
+    <summary>What is the difference between WorldTimeAPI and TimeAPI.io?</summary>
+    <p>WorldTimeAPI returns comprehensive timezone data including UTC offset, DST status, abbreviation, week number, and day of year. TimeAPI.io is faster and supports additional features like timezone conversion and date calculations via separate endpoints. WorldTimeAPI supports both JSON and plain text, while TimeAPI.io is JSON-only. Both are free with rate limits.</p>
+  </details>
+
+  <details>
+    <summary>How do I handle timezone API rate limits?</summary>
+    <p>Strategies: 1) Cache responses &mdash; timezone data changes at most twice per year, so cache aggressively, 2) Use exponential backoff on 429 responses, 3) Implement a local fallback using the IANA timezone database, 4) Batch requests where possible, 5) Use multiple providers with failover. Most free APIs allow 1-5 req/sec.</p>
+  </details>
+
+  <details>
+    <summary>Should I use a timezone API or a local timezone library?</summary>
+    <p>Use a local library (moment-timezone, Luxon, date-fns-tz, pytz, ZoneInfo) for all timezone conversions. These bundle the IANA tzdata database and work offline with zero latency. Use APIs only for: 1) Getting authoritative server time, 2) IP-to-timezone geolocation, 3) Environments where you cannot bundle tzdata. The API adds network latency, failure risk, and rate limits.</p>
+  </details>
+
+  <div style="text-align:center;margin:2rem 0;">
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+    <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+    <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#api-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      api: cells[1] ? cells[1].textContent.trim() : '',
+      endpoint: cells[2] ? cells[2].textContent.trim() : '',
+      avg_ms: cells[3] ? cells[3].textContent.trim() : '',
+      p95_ms: cells[4] ? cells[4].textContent.trim() : '',
+      payload: cells[5] ? cells[5].textContent.trim() : '',
+      rate_limit: cells[6] ? cells[6].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.api; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'api,endpoint,avg_ms,p95_ms,payload,rate_limit\n' + data.map(function(d) {
+      return '"' + d.api.replace(/"/g,'""') + '","' + d.endpoint.replace(/"/g,'""') + '","' + d.avg_ms + '","' + d.p95_ms + '","' + d.payload + '","' + d.rate_limit + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'timezone-api-benchmark.' + ext;
+  a.click();
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

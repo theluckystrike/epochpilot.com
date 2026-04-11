@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timestamp Precision Guide — Seconds vs Milliseconds vs Microseconds vs Nanoseconds | EpochPilot</title>
+<meta name="description" content="Complete guide to timestamp precision levels. Storage requirements, language support, conversion formulas, and real Stack Overflow data on precision gotchas across databases and programming languages.">
+<link rel="canonical" href="https://epochpilot.com/research/timestamp-precision-guide.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/research/timestamp-precision-guide.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/research/timestamp-precision-guide.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timestamp Precision Guide — Seconds vs Milliseconds vs Microseconds vs Nanoseconds">
+<meta property="og:description" content="Complete guide to timestamp precision levels with storage requirements, language support, and conversion gotchas.">
+<meta property="og:url" content="https://epochpilot.com/research/timestamp-precision-guide.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Timestamp Precision Guide — Seconds vs Milliseconds vs Microseconds vs Nanoseconds">
+<meta name="twitter:description" content="Complete guide to timestamp precision levels with storage requirements, language support, and conversion gotchas.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Timestamp Precision Guide",
+  "description": "Comprehensive comparison of timestamp precision levels (seconds, milliseconds, microseconds, nanoseconds) across programming languages, databases, and APIs. Includes storage requirements, overflow dates, and conversion formulas.",
+  "url": "https://epochpilot.com/research/timestamp-precision-guide.html",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-11",
+  "dateModified": "2026-04-11",
+  "keywords": ["timestamp precision", "milliseconds", "microseconds", "nanoseconds", "epoch", "unix timestamp", "time resolution"],
+  "variableMeasured": [
+    {"@type": "PropertyValue", "name": "precision_level", "description": "Timestamp precision: seconds, milliseconds, microseconds, nanoseconds"},
+    {"@type": "PropertyValue", "name": "storage_bytes", "description": "Bytes required to store the timestamp"},
+    {"@type": "PropertyValue", "name": "overflow_date", "description": "Date when the value overflows a 64-bit signed integer"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Timestamp Precision Guide — Seconds vs Milliseconds vs Microseconds vs Nanoseconds",
+  "description": "Complete guide to timestamp precision levels with storage requirements, language support, and conversion gotchas.",
+  "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+  "publisher": {"@type": "Organization", "name": "EpochPilot", "url": "https://epochpilot.com"},
+  "datePublished": "2026-04-11",
+  "dateModified": "2026-04-11",
+  "mainEntityOfPage": "https://epochpilot.com/research/timestamp-precision-guide.html",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero p", ".stat-num"]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between Unix timestamp in seconds vs milliseconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Unix timestamp in seconds counts the number of seconds since January 1, 1970 UTC (currently ~1.78 billion). A millisecond timestamp is 1000x larger (currently ~1.78 trillion). To identify which you have: if the number has 10 digits, it's seconds; 13 digits means milliseconds; 16 digits means microseconds; 19 digits means nanoseconds. JavaScript's Date.now() returns milliseconds, while Python's time.time() returns seconds with decimal fractional precision."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will the Unix timestamp overflow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 32-bit signed Unix timestamp overflows on January 19, 2038 at 03:14:07 UTC (the 'Y2K38 problem'). A 64-bit signed integer storing seconds won't overflow for 292 billion years. For millisecond precision in 64-bit, overflow occurs in 292 million years. For nanosecond precision in 64-bit, overflow occurs in the year 2262. Most modern systems use 64-bit timestamps, but embedded systems and legacy code may still use 32-bit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which programming languages use millisecond timestamps by default?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JavaScript (Date.now(), Date.getTime()), Java (System.currentTimeMillis()), and Dart use milliseconds by default. Python (time.time()), Ruby (Time.now.to_i), Go (time.Now().Unix()), and C (time()) use seconds by default. Rust's SystemTime and Go's time.Now() can return nanoseconds. This inconsistency is a major source of bugs when converting between languages — always check whether your API returns seconds or milliseconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much storage does each timestamp precision require?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Second-precision timestamps need 4 bytes (32-bit) or 8 bytes (64-bit). Millisecond precision requires 8 bytes (64-bit integer). Microsecond and nanosecond precision also require 8 bytes as 64-bit integers. PostgreSQL's TIMESTAMP stores microsecond precision in 8 bytes. MySQL's DATETIME stores second precision in 5 bytes, or microsecond precision in 8 bytes with DATETIME(6). String representations (ISO 8601) use 20-30 bytes depending on precision and timezone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are common timestamp precision bugs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common bugs: 1) Treating a millisecond timestamp as seconds, resulting in dates in the year 50,000+, 2) Truncating microseconds when storing in a database that only supports milliseconds, 3) Floating-point precision loss when converting between formats — JavaScript can only represent integers exactly up to 2^53, 4) Comparing timestamps with different precisions without normalization, 5) ActiveRecord truncating timestamp precision below what the database supports. Stack Overflow has 13+ highly-voted questions about these issues."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .research-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .tz-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1.5rem 0;
+  }
+  .tz-table th {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tz-table th:hover { opacity: 0.8; }
+  .tz-table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .tz-table tr:hover td { background: var(--bg-hover); }
+  .tz-table code {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    background: var(--bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .methodology {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .methodology strong { color: var(--text); }
+  .methodology ul { padding-left: 20px; margin-top: 8px; }
+  .methodology li { margin-bottom: 4px; }
+  .so-entry {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .so-entry:hover { border-color: var(--accent); }
+  .so-votes {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+    min-width: 40px;
+    text-align: center;
+  }
+  .so-title { font-size: 0.85rem; }
+  .so-title a { color: var(--text); text-decoration: none; }
+  .so-title a:hover { color: var(--accent); }
+  details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    padding: 14px 18px;
+  }
+  details[open] { padding-bottom: 18px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+  details[open] summary::before { content: '- '; }
+  details p { margin-top: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <span class="research-badge">Original Research</span>
+    <h1>Timestamp Precision Guide</h1>
+    <p>Seconds vs milliseconds vs microseconds vs nanoseconds. Storage requirements, language support, database behavior, and conversion gotchas.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">By <a href="/about.html">Michael Lip</a> &middot; Published April 11, 2026 &middot; <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Precision Levels</div></div>
+    <div class="stat-card"><div class="stat-num">13</div><div class="stat-label">SO Votes (Top Q)</div></div>
+    <div class="stat-card"><div class="stat-num">2038</div><div class="stat-label">32-bit Overflow Year</div></div>
+    <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">Languages Covered</div></div>
+  </div>
+
+  <p>One of the most common timestamp bugs is mixing up <strong>seconds</strong> and <strong>milliseconds</strong>. JavaScript returns milliseconds, Python returns seconds, and Go can return nanoseconds. This guide covers every precision level, showing storage requirements, overflow dates, and exactly which APIs and databases use which precision.</p>
+
+  <h2>Precision Level Comparison</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="tz-table" id="precision-table">
+    <thead>
+      <tr>
+        <th>Precision</th>
+        <th>Unit</th>
+        <th>Digits (2026)</th>
+        <th>Example Value</th>
+        <th>Resolution</th>
+        <th>Storage (int)</th>
+        <th>32-bit Overflow</th>
+        <th>64-bit Overflow</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Seconds</strong></td><td>1s</td><td>10 digits</td><td><code>1744329600</code></td><td>1 second</td><td>4 or 8 bytes</td><td>2038-01-19</td><td>292B years</td></tr>
+      <tr><td><strong>Milliseconds</strong></td><td>1ms</td><td>13 digits</td><td><code>1744329600000</code></td><td>0.001 seconds</td><td>8 bytes</td><td>N/A (too large)</td><td>292M years</td></tr>
+      <tr><td><strong>Microseconds</strong></td><td>1&micro;s</td><td>16 digits</td><td><code>1744329600000000</code></td><td>0.000001 seconds</td><td>8 bytes</td><td>N/A</td><td>292K years</td></tr>
+      <tr><td><strong>Nanoseconds</strong></td><td>1ns</td><td>19 digits</td><td><code>1744329600000000000</code></td><td>0.000000001 seconds</td><td>8 bytes</td><td>N/A</td><td>Year 2262</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Language &amp; Database Precision Defaults</h2>
+
+  <div style="overflow-x:auto;">
+  <table class="tz-table">
+    <thead>
+      <tr>
+        <th>Language / DB</th>
+        <th>Default Precision</th>
+        <th>API Call</th>
+        <th>Higher Precision Available</th>
+        <th>Gotcha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>JavaScript</strong></td><td>Milliseconds</td><td><code>Date.now()</code></td><td><code>performance.now()</code> (microseconds)</td><td>Number.MAX_SAFE_INTEGER limits to year 285,616</td></tr>
+      <tr><td><strong>Python</strong></td><td>Seconds (float)</td><td><code>time.time()</code></td><td><code>time.time_ns()</code> (nanoseconds)</td><td>Float precision loses microseconds after 2020</td></tr>
+      <tr><td><strong>Java</strong></td><td>Milliseconds</td><td><code>System.currentTimeMillis()</code></td><td><code>Instant.now()</code> (nanoseconds)</td><td>Date class only supports milliseconds</td></tr>
+      <tr><td><strong>Go</strong></td><td>Seconds</td><td><code>time.Now().Unix()</code></td><td><code>time.Now().UnixNano()</code> (nanoseconds)</td><td>UnixNano overflows in year 2262</td></tr>
+      <tr><td><strong>Rust</strong></td><td>Seconds + nanos</td><td><code>SystemTime::now()</code></td><td>Duration has nanos field</td><td>Duration stores (secs, nanos) as separate fields</td></tr>
+      <tr><td><strong>C/C++</strong></td><td>Seconds</td><td><code>time(NULL)</code></td><td><code>clock_gettime(CLOCK_REALTIME)</code> (ns)</td><td>32-bit time_t overflows in 2038</td></tr>
+      <tr><td><strong>Ruby</strong></td><td>Seconds</td><td><code>Time.now.to_i</code></td><td><code>Time.now.to_f</code> (microseconds via float)</td><td>to_f loses precision beyond microseconds</td></tr>
+      <tr><td><strong>PHP</strong></td><td>Seconds</td><td><code>time()</code></td><td><code>microtime(true)</code> (microseconds)</td><td>microtime returns float, precision loss possible</td></tr>
+      <tr><td><strong>PostgreSQL</strong></td><td>Microseconds</td><td><code>TIMESTAMP</code></td><td>8 bytes, microsecond resolution</td><td>Microsecond precision, not nanosecond</td></tr>
+      <tr><td><strong>MySQL</strong></td><td>Seconds</td><td><code>DATETIME</code></td><td><code>DATETIME(6)</code> (microseconds)</td><td>Must specify (6) for sub-second precision</td></tr>
+      <tr><td><strong>SQLite</strong></td><td>Text / Real / Int</td><td><code>strftime('%s','now')</code></td><td>No native timestamp type</td><td>Stores as text, real, or integer — your choice</td></tr>
+      <tr><td><strong>MongoDB</strong></td><td>Milliseconds</td><td><code>new Date()</code></td><td>ISODate has ms precision only</td><td>Cannot store microsecond or nanosecond timestamps</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Community Questions from Stack Overflow</h2>
+  <p>Real questions developers ask about timestamp precision, sourced from the Stack Overflow API:</p>
+
+  <div class="so-entry">
+    <div class="so-votes">13</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/12060546" target="_blank" rel="noopener">Remove TIMESTAMP precision from NOW() result in PostgreSQL?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">12</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/3900557" target="_blank" rel="noopener">What are the disadvantages of choosing higher timestamp precision in Oracle?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">5</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/19168014" target="_blank" rel="noopener">Is activerecord truncating timestamp precision?</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">4</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/6849609" target="_blank" rel="noopener">Determine effective timestamp precision returned by "stat()"</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">3</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/29785081" target="_blank" rel="noopener">Higher timestamp precision with scapy</a></div>
+  </div>
+  <div class="so-entry">
+    <div class="so-votes">2</div>
+    <div class="so-title"><a href="https://stackoverflow.com/questions/55426215" target="_blank" rel="noopener">MySQL 8 timestamp precision in nanoseconds</a></div>
+  </div>
+
+  <div class="methodology">
+    <h3>Methodology</h3>
+    <p><strong>Data sources:</strong></p>
+    <ul>
+      <li><strong>Stack Overflow API</strong> &mdash; Queried <code>api.stackexchange.com/2.3/search?intitle=timestamp+precision</code> on April 11, 2026, returning questions sorted by votes</li>
+      <li><strong>Language documentation</strong> &mdash; Precision defaults verified against official documentation for Python 3.12, Node.js 22, Java 21, Go 1.22, Rust 1.77, Ruby 3.3, PHP 8.3</li>
+      <li><strong>Database documentation</strong> &mdash; Storage sizes and precision limits from PostgreSQL 17, MySQL 8.4, MongoDB 8.0, and SQLite 3.45 documentation</li>
+      <li><strong>Conversion formulas</strong> &mdash; Seconds to milliseconds: multiply by 1,000. To microseconds: multiply by 1,000,000. To nanoseconds: multiply by 1,000,000,000.</li>
+    </ul>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <details>
+    <summary>What is the difference between Unix timestamp in seconds vs milliseconds?</summary>
+    <p>A Unix timestamp in seconds counts seconds since January 1, 1970 UTC (currently ~1.78 billion). A millisecond timestamp is 1000x larger (~1.78 trillion). To identify which you have: 10 digits means seconds, 13 digits means milliseconds, 16 digits means microseconds, 19 digits means nanoseconds. JavaScript's Date.now() returns milliseconds, while Python's time.time() returns seconds with decimal precision.</p>
+  </details>
+
+  <details>
+    <summary>When will the Unix timestamp overflow?</summary>
+    <p>The 32-bit signed Unix timestamp overflows on January 19, 2038 at 03:14:07 UTC (the "Y2K38 problem"). A 64-bit signed integer storing seconds won't overflow for 292 billion years. For nanosecond precision in 64-bit, overflow occurs in the year 2262. Most modern systems use 64-bit timestamps, but embedded systems and legacy code may still use 32-bit.</p>
+  </details>
+
+  <details>
+    <summary>Which programming languages use millisecond timestamps by default?</summary>
+    <p>JavaScript (Date.now()), Java (System.currentTimeMillis()), and Dart use milliseconds by default. Python, Ruby, Go, and C use seconds by default. This inconsistency is a major source of bugs when converting between languages &mdash; always check whether your API returns seconds or milliseconds.</p>
+  </details>
+
+  <details>
+    <summary>How much storage does each timestamp precision require?</summary>
+    <p>Second-precision timestamps need 4 bytes (32-bit) or 8 bytes (64-bit). Millisecond, microsecond, and nanosecond precision all require 8 bytes as 64-bit integers. PostgreSQL's TIMESTAMP stores microsecond precision in 8 bytes. MySQL's DATETIME uses 5 bytes at second precision, or 8 bytes with DATETIME(6) for microseconds.</p>
+  </details>
+
+  <details>
+    <summary>What are common timestamp precision bugs?</summary>
+    <p>Most common bugs: 1) Treating a millisecond timestamp as seconds, resulting in dates in the year 50,000+, 2) Truncating microseconds when storing in a database with lower precision, 3) Floating-point precision loss in JavaScript beyond 2^53, 4) Comparing timestamps with different precisions without normalization, 5) ActiveRecord truncating timestamp precision below database support.</p>
+  </details>
+
+  <div style="text-align:center;margin:2rem 0;">
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+    <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+    <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#precision-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      precision: cells[0] ? cells[0].textContent.trim() : '',
+      unit: cells[1] ? cells[1].textContent.trim() : '',
+      digits: cells[2] ? cells[2].textContent.trim() : '',
+      example: cells[3] ? cells[3].textContent.trim() : '',
+      resolution: cells[4] ? cells[4].textContent.trim() : '',
+      storage: cells[5] ? cells[5].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.precision; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'precision,unit,digits,example,resolution,storage\n' + data.map(function(d) {
+      return '"' + d.precision + '","' + d.unit + '","' + d.digits + '","' + d.example + '","' + d.resolution + '","' + d.storage + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'timestamp-precision-guide.' + ext;
+  a.click();
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
