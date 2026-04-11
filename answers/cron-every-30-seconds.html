@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression for Every 30 Seconds | EpochPilot</title>
+<meta name="description" content="Cron does not support seconds. Use two cron entries or a task scheduler for 30-second intervals. Free tool to verify and explore.">
+<link rel="canonical" href="https://epochpilot.com/answers/cron-every-30-seconds.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/answers/cron-every-30-seconds.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/answers/cron-every-30-seconds.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cron Expression for Every 30 Seconds | EpochPilot">
+<meta property="og:description" content="Cron does not support seconds. Use two cron entries or a task scheduler.">
+<meta property="og:url" content="https://epochpilot.com/answers/cron-every-30-seconds.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cron Expression for Every 30 Seconds">
+<meta name="twitter:description" content="Cron does not support seconds. Use two cron entries or a task scheduler.">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "What is the cron expression for every 30 seconds?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Standard cron does not support sub-minute intervals. The smallest unit in cron is one minute. To run a job every 30 seconds, use two cron entries: one that runs every minute (* * * * * /your/command) and another that runs every minute with a 30-second sleep (* * * * * sleep 30 && /your/command). Alternatively, use a scheduler like systemd timers, Kubernetes CronJob with a sidecar, or a language-level scheduler."
+    }
+  }]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Every 30 Seconds</span></nav>
+    <h1>Cron Expression for Every 30 Seconds</h1>
+  </div>
+  <div style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;">
+    <p style="font-size:1.2rem;font-weight:700;margin:0;">Cron does not support seconds. Use two entries or a scheduler.</p>
+  </div>
+
+  <div style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>Why Cron Cannot Do This</h2>
+    <p>Standard cron has five fields: minute, hour, day-of-month, month, and day-of-week. The smallest granularity is <strong>one minute</strong>. There is no seconds field.</p>
+
+    <h2>Workaround: Two Cron Entries</h2>
+    <p>You can approximate every-30-seconds by combining two entries in your crontab:</p>
+    <pre><code>* * * * * /your/command
+* * * * * sleep 30 &amp;&amp; /your/command</code></pre>
+    <p>The first runs at the top of each minute. The second sleeps 30 seconds, then runs the same command — giving you two executions per minute, 30 seconds apart.</p>
+
+    <h2>Better Alternatives</h2>
+    <ul>
+      <li><strong>systemd timers</strong> — support sub-second precision on Linux</li>
+      <li><strong>Node.js / Python schedulers</strong> — use <code>setInterval</code> or <code>APScheduler</code></li>
+      <li><strong>Kubernetes CronJob</strong> — pair with a sidecar loop for sub-minute intervals</li>
+    </ul>
+
+    <p><a href="/tools/cron-expression-builder.html">Try the Cron Expression Builder</a> to create and test cron schedules.</p>
+
+    <h2>Related Questions</h2>
+    <ul>
+      <li><a href="/answers/cron-every-5-minutes.html">Cron expression for every 5 minutes</a></li>
+      <li><a href="/answers/cron-every-hour.html">Cron expression for every hour</a></li>
+      <li><a href="/answers/cron-every-day-at-midnight.html">Cron expression for every day at midnight</a></li>
+      <li><a href="/answers/cron-weekdays-only.html">Cron expression for weekdays only</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a></div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
