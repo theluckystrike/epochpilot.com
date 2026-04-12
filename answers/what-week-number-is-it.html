@@ -32,6 +32,7 @@
   }]
 }
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://epochpilot.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://epochpilot.com/answers/"},{"@type":"ListItem","position":3,"name":"Week Number"}]}</script>
 </head>
 <body>
 <header class="site-header">
@@ -53,7 +54,7 @@
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Week Number</span></nav>
     <h1>What Week Number Is It?</h1>
   </div>
-  <div style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;text-align:center;">
+  <div class="direct-answer" style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;text-align:center;">
     <p style="font-size:0.9rem;color:var(--text-muted,#8b949e);margin:0 0 0.5rem;">Current ISO 8601 Week</p>
     <p style="font-size:3rem;font-weight:700;margin:0;" id="weeknum">--</p>
     <p style="font-size:0.9rem;color:var(--text-muted,#8b949e);margin:0.5rem 0 0;" id="dateinfo"></p>
@@ -71,13 +72,15 @@
 
     <p><a href="/tools/week-number.html">Try the full Week Number tool</a> to look up any date.</p>
 
-    <h2>Related Questions</h2>
-    <ul>
-      <li><a href="/answers/what-day-of-year-is-today.html">What day of the year is today?</a></li>
-      <li><a href="/answers/how-many-weeks-left-in-2026.html">How many weeks left in 2026?</a></li>
-      <li><a href="/answers/how-many-days-until-new-year.html">How many days until New Year?</a></li>
-      <li><a href="/answers/unix-timestamp-now.html">What is the Unix timestamp right now?</a></li>
-    </ul>
+    <section class="related-links">
+      <h2>Related Questions</h2>
+      <div class="related-grid">
+        <a href="/answers/what-day-of-year-is-today.html" class="related-card">What day of the year is today?</a>
+        <a href="/answers/how-many-weeks-left-in-2026.html" class="related-card">How many weeks left in 2026?</a>
+        <a href="/answers/how-many-days-until-new-year.html" class="related-card">How many days until New Year?</a>
+        <a href="/answers/unix-timestamp-now.html" class="related-card">What is the Unix timestamp right now?</a>
+      </div>
+    </section>
   </div>
 </main>
 

@@ -32,6 +32,7 @@
   }]
 }
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://epochpilot.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://epochpilot.com/answers/"},{"@type":"ListItem","position":3,"name":"Unix Timestamp Now"}]}</script>
 </head>
 <body>
 <header class="site-header">
@@ -53,7 +54,7 @@
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Unix Timestamp Now</span></nav>
     <h1>What Is the Unix Timestamp Right Now?</h1>
   </div>
-  <div style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;text-align:center;">
+  <div class="direct-answer" style="max-width:720px;margin:2rem auto;padding:1.5rem;background:var(--bg-card,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;text-align:center;">
     <p style="font-size:0.9rem;color:var(--text-muted,#8b949e);margin:0 0 0.5rem;">Current Unix Epoch (seconds)</p>
     <p style="font-size:2.5rem;font-weight:700;margin:0;font-family:monospace;" id="epoch">--</p>
     <p style="font-size:0.9rem;color:var(--text-muted,#8b949e);margin:0.5rem 0 0;" id="utctime"></p>
@@ -71,13 +72,15 @@
 
     <p><a href="/tools/epoch-converter.html">Try the full Epoch Converter</a> to convert any timestamp.</p>
 
-    <h2>Related Questions</h2>
-    <ul>
-      <li><a href="/answers/what-is-epoch-0.html">What is epoch 0?</a></li>
-      <li><a href="/answers/what-is-epoch-1700000000.html">What is epoch 1700000000?</a></li>
-      <li><a href="/answers/what-day-of-year-is-today.html">What day of the year is today?</a></li>
-      <li><a href="/answers/what-week-number-is-it.html">What week number is it?</a></li>
-    </ul>
+    <section class="related-links">
+      <h2>Related Questions</h2>
+      <div class="related-grid">
+        <a href="/answers/what-is-epoch-0.html" class="related-card">What is epoch 0?</a>
+        <a href="/answers/what-is-epoch-1700000000.html" class="related-card">What is epoch 1700000000?</a>
+        <a href="/answers/what-day-of-year-is-today.html" class="related-card">What day of the year is today?</a>
+        <a href="/answers/what-week-number-is-it.html" class="related-card">What week number is it?</a>
+      </div>
+    </section>
   </div>
 </main>
 

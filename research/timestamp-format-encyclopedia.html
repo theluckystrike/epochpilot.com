@@ -784,7 +784,7 @@ SELECT to_timestamp(1775666445);</pre></td>
           <td><code>2026-04-07 15:30:45.123457</code></td>
           <td>Microseconds</td>
           <td>None — stored as-is</td>
-          <td class="gotcha-cell">Never use for absolute times; use <code>timestamptz</code> instead. Comparing across TZs is undefined</td>
+          <td class="gotcha-cell">Never use for absolute times; use <code>timestamptz</code> instead. Comparing across TZs is not well-defined</td>
           <td class="code-cell"><pre>SELECT EXTRACT(EPOCH FROM ts_col);
 -- Result assumes timestamp is in session TZ</pre></td>
         </tr>
