@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Intl.DateTimeFormat Complete Guide — Timezone Formatting | EpochPilot</title>
+<meta name="description" content="The definitive Intl.DateTimeFormat reference: every option explained, live playground, timezone handling, DST pitfalls, 15+ real-world code examples, and copy-paste patterns for JavaScript date formatting.">
+<meta name="keywords" content="javascript intl datetimeformat, intl datetimeformat timezone, javascript timezone conversion, format date timezone javascript, intl datetimeformat options, javascript date formatting, asia kolkata intl datetimeformat, indian standard time intl datetimeformat">
+<link rel="canonical" href="https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript Intl.DateTimeFormat Complete Guide — Timezone Formatting">
+<meta property="og:description" content="Every Intl.DateTimeFormat option explained with a live playground, timezone handling, DST pitfalls, and 15+ real-world code examples.">
+<meta property="og:url" content="https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JavaScript Intl.DateTimeFormat Complete Guide — Timezone Formatting">
+<meta name="twitter:description" content="Every Intl.DateTimeFormat option explained with a live playground, timezone handling, and 15+ code examples.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "JavaScript Intl.DateTimeFormat Complete Guide — Timezone Formatting",
+  "description": "The definitive Intl.DateTimeFormat reference: every option explained, live playground, timezone handling, DST pitfalls, and 15+ real-world code examples.",
+  "url": "https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html",
+  "datePublished": "2026-05-16",
+  "dateModified": "2026-05-16",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zovo Tools",
+    "url": "https://zovo.one"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://epochpilot.com/guides/javascript-timezone-intl-datetimeformat.html"
+  },
+  "image": "https://epochpilot.com/assets/og-image.png",
+  "wordCount": 3400,
+  "keywords": ["Intl.DateTimeFormat", "JavaScript timezone", "date formatting", "IANA timezone", "locale formatting"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Format Dates with Intl.DateTimeFormat in JavaScript",
+  "description": "Step-by-step guide to using the Intl.DateTimeFormat API for locale-aware date and time formatting with timezone support.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Create a formatter instance",
+      "text": "Call new Intl.DateTimeFormat(locale, options) with your desired locale string (e.g., 'en-US') and an options object specifying the date/time components you need."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose your formatting style",
+      "text": "Use dateStyle and timeStyle for quick presets ('full', 'long', 'medium', 'short'), or specify individual components like year, month, day, hour, minute, second for granular control."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Set the timezone",
+      "text": "Pass the timeZone option with an IANA timezone identifier like 'America/New_York' or 'Asia/Kolkata' to format the date in a specific timezone regardless of the user's local timezone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Format the date",
+      "text": "Call formatter.format(date) to get the formatted string, or use formatter.formatToParts(date) to get an array of typed tokens for custom assembly."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Reuse the formatter",
+      "text": "Intl.DateTimeFormat instances are designed for reuse. Create the formatter once and call .format() multiple times for better performance than creating new instances per call."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Intl.DateTimeFormat in JavaScript?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Intl.DateTimeFormat is a built-in JavaScript constructor that creates objects for language-sensitive date and time formatting. It uses the IANA timezone database and ICU locale data built into the JavaScript engine, so you get correct timezone conversions and locale-specific formatting (month names, date order, number systems) without any external libraries."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert a time to a different timezone using Intl.DateTimeFormat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pass the timeZone option with an IANA timezone name: new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'long' }).format(new Date()). This formats the current moment as it would appear in India Standard Time, regardless of where the code runs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use dateStyle and timeStyle together with individual options like month or hour?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. dateStyle and timeStyle are shorthand presets. If you pass dateStyle or timeStyle alongside individual component options (year, month, day, hour, minute, second), a TypeError is thrown. Use one approach or the other, not both."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Intl.DateTimeFormat handle Daylight Saving Time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Intl.DateTimeFormat automatically handles DST transitions. When you specify a timezone like 'America/New_York', the formatter checks the IANA timezone database for the given date and applies the correct UTC offset (EST or EDT). You never need to calculate DST offsets manually."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between format() and formatToParts()?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "format() returns a single formatted string like 'May 16, 2026, 3:30 PM'. formatToParts() returns an array of objects like [{type:'month',value:'May'},{type:'literal',value:' '},{type:'day',value:'16'},...], letting you rearrange, style, or filter individual components for custom output formats."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Intl.DateTimeFormat supported in all browsers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The core Intl.DateTimeFormat API is supported in all modern browsers (Chrome 24+, Firefox 29+, Safari 10+, Edge 12+, Node.js 0.12+). The dateStyle/timeStyle shorthand was added later (Chrome 76+, Firefox 79+, Safari 14.1+). For formatRange, support starts from Chrome 76+, Firefox 91+, Safari 14.1+."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I format a date in Asia/Kolkata timezone using Intl.DateTimeFormat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use: new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'long' }).format(new Date()). The 'en-IN' locale gives Indian English formatting conventions, and 'Asia/Kolkata' is the IANA timezone identifier for Indian Standard Time (IST, UTC+5:30)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert IST to UTC in JavaScript?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Format the same Date object with two different formatters: one with timeZone:'Asia/Kolkata' and one with timeZone:'UTC'. Since a JavaScript Date always holds a UTC instant, both formatters show the same moment in different timezones. Use formatToParts() if you need to extract the numeric values for computation."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://epochpilot.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://epochpilot.com/guides/"},{"@type":"ListItem","position":3,"name":"Intl.DateTimeFormat Guide"}]}
+</script>
+
+<style>
+/* Page-specific styles for the playground and tables */
+.playground-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+.playground-card h3 {
+  color: var(--accent);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.pg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.pg-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.pg-full { grid-column: 1 / -1; }
+.pg-output {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  min-height: 48px;
+  color: var(--accent);
+  word-break: break-word;
+}
+.pg-code-wrap {
+  position: relative;
+  margin-top: 0.75rem;
+}
+.pg-code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  padding-right: 5rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-x: auto;
+}
+.pg-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.pg-copy-btn:hover { opacity: 0.85; }
+.pg-label-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.pg-section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1rem 0 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.pg-section-title:first-of-type {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Options reference table */
+.ref-table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 600px;
+}
+.ref-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.ref-table td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.ref-table code {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  background: var(--bg-card);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+}
+.ref-table tr:hover td {
+  background: var(--bg-hover);
+}
+.compat-yes { color: #4ade80; }
+.compat-no { color: #f87171; }
+
+/* Browser support pills */
+.compat-table td:not(:first-child) {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+}
+
+/* Inline tabs for playground */
+.pg-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.pg-tab {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.pg-tab:hover { color: var(--text); }
+.pg-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.pg-panel { display: none; }
+.pg-panel.active { display: block; }
+
+/* TOC */
+.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0 2rem;
+}
+.toc-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+  padding: 0;
+  margin: 0;
+}
+.toc li {
+  counter-increment: toc;
+  margin-bottom: 0.35rem;
+}
+.toc li::before {
+  content: counter(toc) ".";
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+.toc a {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+.toc a:hover { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 700px) {
+  .pg-grid { grid-template-columns: 1fr; }
+  .pg-code { font-size: 0.75rem; padding-right: 1rem; }
+  .pg-copy-btn { position: static; margin-top: 0.5rem; display: block; width: 100%; text-align: center; }
+  .pg-code-wrap { display: flex; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/answers/">Answers</a>
+    <a href="/guides/">Guides</a>
+    <a href="/blog/">Blog</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Intl.DateTimeFormat</span></nav>
+    <h1>JavaScript Intl.DateTimeFormat Complete Guide</h1>
+    <p>Every option, every timezone, every pitfall. With a live playground you can test right here.</p>
+  </div>
+
+  <div class="article-content">
+    <p class="blog-meta">By <a href="https://zovo.one">Michael Lip</a> &middot; May 16, 2026 &middot; 18 min read</p>
+
+    <nav class="toc" aria-label="Table of Contents">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#what-is-intl-datetimeformat">What Is Intl.DateTimeFormat?</a></li>
+        <li><a href="#browser-support">Browser Support</a></li>
+        <li><a href="#playground">Live Playground</a></li>
+        <li><a href="#basic-usage">Basic Usage</a></li>
+        <li><a href="#options-reference">Complete Options Reference</a></li>
+        <li><a href="#datestyle-timestyle">dateStyle and timeStyle Shorthand</a></li>
+        <li><a href="#timezone-handling">Timezone Handling</a></li>
+        <li><a href="#locale-system">The Locale System</a></li>
+        <li><a href="#formattoparts">formatToParts() Deep Dive</a></li>
+        <li><a href="#formatrange">formatRange() for Date Spans</a></li>
+        <li><a href="#real-world-examples">15 Real-World Code Examples</a></li>
+        <li><a href="#common-mistakes">Common Mistakes and Fixes</a></li>
+        <li><a href="#performance">Performance Best Practices</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ol>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: What Is Intl.DateTimeFormat -->
+    <!-- ============================================================ -->
+    <h2 id="what-is-intl-datetimeformat">What Is Intl.DateTimeFormat?</h2>
+
+    <p><code>Intl.DateTimeFormat</code> is a built-in JavaScript constructor for creating locale-sensitive date and time formatters. It is part of the <a href="https://tc39.es/ecma402/" rel="nofollow">ECMAScript Internationalization API</a> (ECMA-402) and is available in every modern browser and Node.js without any library.</p>
+
+    <p>At its core, the API solves three problems that previously required external libraries like Moment.js or date-fns:</p>
+
+    <ol>
+      <li><strong>Locale-aware formatting</strong> &mdash; dates appear in the format expected by the reader (month/day/year in the US, day/month/year in Europe, year-month-day in Japan).</li>
+      <li><strong>Timezone conversion</strong> &mdash; the formatter reads the full IANA timezone database compiled into the JavaScript engine, so DST transitions, historical offset changes, and half-hour/quarter-hour timezones like <code>Asia/Kolkata</code> (UTC+5:30) are handled correctly.</li>
+      <li><strong>Consistent output</strong> &mdash; the same options object produces the same structure on every platform, because the behavior is specified in the ECMA-402 standard and backed by ICU (International Components for Unicode) data.</li>
+    </ol>
+
+    <p>The constructor signature is:</p>
+
+    <pre><code>const formatter = new Intl.DateTimeFormat(locales, options);
+const result   = formatter.format(date);</code></pre>
+
+    <p><code>locales</code> is a BCP 47 language tag string (like <code>"en-US"</code>, <code>"ja-JP"</code>, or <code>"ar-EG"</code>) or an array of tags in priority order. <code>options</code> is an object that controls which date/time components appear, how they appear, and which timezone to use. Both arguments are optional &mdash; if omitted, the formatter uses the runtime's default locale and timezone.</p>
+
+    <p>You can also call the static shorthand <code>Intl.DateTimeFormat().format(date)</code> for a quick one-off, but creating a named instance and reusing it is significantly faster when formatting multiple dates (see <a href="#performance">Performance</a> below).</p>
+
+    <p>Unlike <code>Date.prototype.toLocaleString()</code>, which creates and discards a new formatter on every call, <code>Intl.DateTimeFormat</code> lets you create a single formatter instance and reuse it across thousands of <code>.format()</code> calls. It also gives you <code>formatToParts()</code> for granular control and <code>formatRange()</code> for date spans &mdash; neither of which are available through <code>toLocaleString</code>.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: Browser Support -->
+    <!-- ============================================================ -->
+    <h2 id="browser-support">Browser Support</h2>
+
+    <p>The base <code>Intl.DateTimeFormat</code> API shipped years ago. Newer features like <code>dateStyle</code>/<code>timeStyle</code> and <code>formatRange</code> were added incrementally. Here is the current compatibility matrix:</p>
+
+    <div class="ref-table-wrap">
+      <table class="ref-table compat-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Chrome</th>
+            <th>Firefox</th>
+            <th>Safari</th>
+            <th>Edge</th>
+            <th>Node.js</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Core constructor</td>
+            <td class="compat-yes">24+</td>
+            <td class="compat-yes">29+</td>
+            <td class="compat-yes">10+</td>
+            <td class="compat-yes">12+</td>
+            <td class="compat-yes">0.12+</td>
+          </tr>
+          <tr>
+            <td><code>timeZone</code> (IANA names)</td>
+            <td class="compat-yes">24+</td>
+            <td class="compat-yes">52+</td>
+            <td class="compat-yes">10+</td>
+            <td class="compat-yes">14+</td>
+            <td class="compat-yes">4+</td>
+          </tr>
+          <tr>
+            <td><code>dateStyle</code> / <code>timeStyle</code></td>
+            <td class="compat-yes">76+</td>
+            <td class="compat-yes">79+</td>
+            <td class="compat-yes">14.1+</td>
+            <td class="compat-yes">79+</td>
+            <td class="compat-yes">12.9+</td>
+          </tr>
+          <tr>
+            <td><code>formatToParts()</code></td>
+            <td class="compat-yes">57+</td>
+            <td class="compat-yes">51+</td>
+            <td class="compat-yes">11+</td>
+            <td class="compat-yes">18+</td>
+            <td class="compat-yes">8+</td>
+          </tr>
+          <tr>
+            <td><code>formatRange()</code></td>
+            <td class="compat-yes">76+</td>
+            <td class="compat-yes">91+</td>
+            <td class="compat-yes">14.1+</td>
+            <td class="compat-yes">79+</td>
+            <td class="compat-yes">12.9+</td>
+          </tr>
+          <tr>
+            <td><code>fractionalSecondDigits</code></td>
+            <td class="compat-yes">84+</td>
+            <td class="compat-yes">84+</td>
+            <td class="compat-yes">14.1+</td>
+            <td class="compat-yes">84+</td>
+            <td class="compat-yes">14.1+</td>
+          </tr>
+          <tr>
+            <td><code>dayPeriod</code></td>
+            <td class="compat-yes">92+</td>
+            <td class="compat-yes">90+</td>
+            <td class="compat-yes">15+</td>
+            <td class="compat-yes">92+</td>
+            <td class="compat-yes">16.6+</td>
+          </tr>
+          <tr>
+            <td><code>hourCycle</code></td>
+            <td class="compat-yes">73+</td>
+            <td class="compat-yes">79+</td>
+            <td class="compat-yes">13+</td>
+            <td class="compat-yes">18+</td>
+            <td class="compat-yes">12+</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>In short: if your audience uses any browser released after 2021, every feature in this guide works. For Node.js, version 14+ covers everything. The only environment that requires polyfills is IE11, which is end-of-life and should not be targeted in new projects.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: Live Playground -->
+    <!-- ============================================================ -->
+    <h2 id="playground">Live Intl.DateTimeFormat Playground</h2>
+    <p>Configure every option below and see the formatted output in real time. The generated code snippet is ready to copy into your project.</p>
+
+    <div class="playground-card" id="pg">
+      <!-- Tabs: Style Mode vs. Component Mode -->
+      <div class="pg-tabs">
+        <button class="pg-tab active" data-tab="style" onclick="pgSwitchTab('style')">dateStyle / timeStyle</button>
+        <button class="pg-tab" data-tab="components" onclick="pgSwitchTab('components')">Individual Components</button>
+      </div>
+
+      <!-- Shared: locale + timezone -->
+      <div class="pg-grid" style="margin-bottom:0.75rem;">
+        <label>
+          <span class="pg-label-text">Locale</span>
+          <select id="pg-locale" onchange="pgUpdate()">
+            <option value="en-US">en-US (English, US)</option>
+            <option value="en-GB">en-GB (English, UK)</option>
+            <option value="en-IN">en-IN (English, India)</option>
+            <option value="en-AU">en-AU (English, Australia)</option>
+            <option value="de-DE">de-DE (German)</option>
+            <option value="fr-FR">fr-FR (French)</option>
+            <option value="es-ES">es-ES (Spanish)</option>
+            <option value="pt-BR">pt-BR (Portuguese, Brazil)</option>
+            <option value="it-IT">it-IT (Italian)</option>
+            <option value="ja-JP">ja-JP (Japanese)</option>
+            <option value="ko-KR">ko-KR (Korean)</option>
+            <option value="zh-CN">zh-CN (Chinese, Simplified)</option>
+            <option value="zh-TW">zh-TW (Chinese, Traditional)</option>
+            <option value="ar-SA">ar-SA (Arabic)</option>
+            <option value="hi-IN">hi-IN (Hindi)</option>
+            <option value="bn-IN">bn-IN (Bengali)</option>
+            <option value="ru-RU">ru-RU (Russian)</option>
+            <option value="uk-UA">uk-UA (Ukrainian)</option>
+            <option value="tr-TR">tr-TR (Turkish)</option>
+            <option value="th-TH">th-TH (Thai)</option>
+            <option value="vi-VN">vi-VN (Vietnamese)</option>
+            <option value="nl-NL">nl-NL (Dutch)</option>
+            <option value="sv-SE">sv-SE (Swedish)</option>
+            <option value="pl-PL">pl-PL (Polish)</option>
+            <option value="id-ID">id-ID (Indonesian)</option>
+            <option value="ms-MY">ms-MY (Malay)</option>
+            <option value="he-IL">he-IL (Hebrew)</option>
+            <option value="fa-IR">fa-IR (Persian)</option>
+          </select>
+        </label>
+        <label>
+          <span class="pg-label-text">Timezone</span>
+          <select id="pg-tz" onchange="pgUpdate()"></select>
+        </label>
+      </div>
+
+      <!-- Tab Panel: Style -->
+      <div class="pg-panel active" id="panel-style">
+        <div class="pg-grid">
+          <label>
+            <span class="pg-label-text">dateStyle</span>
+            <select id="pg-dateStyle" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="full">full</option>
+              <option value="long" selected>long</option>
+              <option value="medium">medium</option>
+              <option value="short">short</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">timeStyle</span>
+            <select id="pg-timeStyle" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="full">full</option>
+              <option value="long" selected>long</option>
+              <option value="medium">medium</option>
+              <option value="short">short</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Tab Panel: Components -->
+      <div class="pg-panel" id="panel-components">
+        <div class="pg-grid">
+          <label>
+            <span class="pg-label-text">year</span>
+            <select id="pg-year" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric" selected>numeric (2026)</option>
+              <option value="2-digit">2-digit (26)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">month</span>
+            <select id="pg-month" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric">numeric (5)</option>
+              <option value="2-digit">2-digit (05)</option>
+              <option value="long" selected>long (May)</option>
+              <option value="short">short (May)</option>
+              <option value="narrow">narrow (M)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">day</span>
+            <select id="pg-day" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric" selected>numeric (16)</option>
+              <option value="2-digit">2-digit (16)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">weekday</span>
+            <select id="pg-weekday" onchange="pgUpdate()">
+              <option value="" selected>(none)</option>
+              <option value="long">long (Friday)</option>
+              <option value="short">short (Fri)</option>
+              <option value="narrow">narrow (F)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">hour</span>
+            <select id="pg-hour" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric" selected>numeric</option>
+              <option value="2-digit">2-digit</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">minute</span>
+            <select id="pg-minute" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric" selected>numeric</option>
+              <option value="2-digit">2-digit</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">second</span>
+            <select id="pg-second" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="numeric">numeric</option>
+              <option value="2-digit">2-digit</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">fractionalSecondDigits</span>
+            <select id="pg-frac" onchange="pgUpdate()">
+              <option value="" selected>(none)</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">hourCycle</span>
+            <select id="pg-hourCycle" onchange="pgUpdate()">
+              <option value="">(locale default)</option>
+              <option value="h11">h11 (0-11 AM/PM)</option>
+              <option value="h12">h12 (1-12 AM/PM)</option>
+              <option value="h23">h23 (0-23)</option>
+              <option value="h24">h24 (1-24)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">timeZoneName</span>
+            <select id="pg-tzName" onchange="pgUpdate()">
+              <option value="">(none)</option>
+              <option value="short">short (EST)</option>
+              <option value="long">long (Eastern Standard Time)</option>
+              <option value="shortOffset">shortOffset (GMT-5)</option>
+              <option value="longOffset">longOffset (GMT-05:00)</option>
+              <option value="shortGeneric">shortGeneric (ET)</option>
+              <option value="longGeneric">longGeneric (Eastern Time)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">era</span>
+            <select id="pg-era" onchange="pgUpdate()">
+              <option value="" selected>(none)</option>
+              <option value="long">long (Anno Domini)</option>
+              <option value="short">short (AD)</option>
+              <option value="narrow">narrow (A)</option>
+            </select>
+          </label>
+          <label>
+            <span class="pg-label-text">dayPeriod</span>
+            <select id="pg-dayPeriod" onchange="pgUpdate()">
+              <option value="" selected>(none)</option>
+              <option value="narrow">narrow</option>
+              <option value="short">short</option>
+              <option value="long">long</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Output -->
+      <div class="pg-output" id="pg-output">Loading...</div>
+
+      <div class="pg-code-wrap">
+        <pre class="pg-code" id="pg-code"></pre>
+        <button class="pg-copy-btn" onclick="pgCopy()">Copy code</button>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: Basic Usage -->
+    <!-- ============================================================ -->
+    <h2 id="basic-usage">Basic Usage</h2>
+
+    <p>The simplest call uses no options at all. The formatter falls back to the user's operating system locale and timezone:</p>
+
+    <pre><code>// Uses the runtime's default locale and timezone
+new Intl.DateTimeFormat().format(new Date());
+// e.g. "5/16/2026" on a US-English system</code></pre>
+
+    <p>To control the output, pass a locale and options:</p>
+
+    <pre><code>const date = new Date('2026-05-16T10:30:00Z');
+
+// US English, long date + short time
+new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeStyle: 'short',
+  timeZone: 'America/New_York'
+}).format(date);
+// "May 16, 2026 at 6:30 AM"
+
+// German, full date in Berlin timezone
+new Intl.DateTimeFormat('de-DE', {
+  dateStyle: 'full',
+  timeStyle: 'long',
+  timeZone: 'Europe/Berlin'
+}).format(date);
+// "Samstag, 16. Mai 2026 um 12:30:00 MESZ"
+
+// Indian English, IST timezone
+new Intl.DateTimeFormat('en-IN', {
+  dateStyle: 'full',
+  timeStyle: 'long',
+  timeZone: 'Asia/Kolkata'
+}).format(date);
+// "Saturday, 16 May 2026 at 4:00:00 pm IST"</code></pre>
+
+    <p>Notice the three-part pattern: <strong>locale</strong> controls the language and formatting conventions, <strong>options</strong> control which components appear and how they appear, and <strong>timeZone</strong> controls which moment of the day is shown. The underlying <code>Date</code> object is always the same UTC instant.</p>
+
+    <p>The static shorthand <code>new Date().toLocaleString(locale, options)</code> uses the same engine internally but creates and discards a new formatter each time. When you format more than a few dates, constructing a reusable <code>Intl.DateTimeFormat</code> instance is the better approach.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: Complete Options Reference -->
+    <!-- ============================================================ -->
+    <h2 id="options-reference">Complete Options Reference</h2>
+
+    <p>Every property you can pass in the options object, with values and example output:</p>
+
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>Option</th><th>Values</th><th>Example Output (en-US)</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>dateStyle</code></td>
+            <td><code>"full"</code>, <code>"long"</code>, <code>"medium"</code>, <code>"short"</code></td>
+            <td>Saturday, May 16, 2026 / May 16, 2026 / May 16, 2026 / 5/16/26</td>
+            <td>Cannot combine with individual date/time component options</td>
+          </tr>
+          <tr>
+            <td><code>timeStyle</code></td>
+            <td><code>"full"</code>, <code>"long"</code>, <code>"medium"</code>, <code>"short"</code></td>
+            <td>10:30:00 AM Eastern Daylight Time / 10:30:00 AM EDT / 10:30:00 AM / 10:30 AM</td>
+            <td>Cannot combine with individual date/time component options</td>
+          </tr>
+          <tr>
+            <td><code>year</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code></td>
+            <td>2026 / 26</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><code>month</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code>, <code>"long"</code>, <code>"short"</code>, <code>"narrow"</code></td>
+            <td>5 / 05 / May / May / M</td>
+            <td><code>"narrow"</code> can be ambiguous (J = January, June, July)</td>
+          </tr>
+          <tr>
+            <td><code>day</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code></td>
+            <td>16 / 16</td>
+            <td>2-digit pads single digits: 5 becomes 05</td>
+          </tr>
+          <tr>
+            <td><code>weekday</code></td>
+            <td><code>"long"</code>, <code>"short"</code>, <code>"narrow"</code></td>
+            <td>Saturday / Sat / S</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><code>hour</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code></td>
+            <td>10 / 10</td>
+            <td>Automatically adds AM/PM for 12-hour locales</td>
+          </tr>
+          <tr>
+            <td><code>minute</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code></td>
+            <td>30 / 30</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><code>second</code></td>
+            <td><code>"numeric"</code>, <code>"2-digit"</code></td>
+            <td>0 / 00</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><code>fractionalSecondDigits</code></td>
+            <td><code>1</code>, <code>2</code>, <code>3</code></td>
+            <td>0.1 / 0.12 / 0.123</td>
+            <td>Millisecond precision. Requires <code>second</code> to be set.</td>
+          </tr>
+          <tr>
+            <td><code>timeZone</code></td>
+            <td>IANA name or <code>"UTC"</code></td>
+            <td>n/a (changes the output time)</td>
+            <td>Full list: <a href="/">EpochPilot timezone tool</a></td>
+          </tr>
+          <tr>
+            <td><code>timeZoneName</code></td>
+            <td><code>"short"</code>, <code>"long"</code>, <code>"shortOffset"</code>, <code>"longOffset"</code>, <code>"shortGeneric"</code>, <code>"longGeneric"</code></td>
+            <td>EST / Eastern Standard Time / GMT-5 / GMT-05:00 / ET / Eastern Time</td>
+            <td><code>shortOffset</code> and <code>longOffset</code> added in 2021</td>
+          </tr>
+          <tr>
+            <td><code>hourCycle</code></td>
+            <td><code>"h11"</code>, <code>"h12"</code>, <code>"h23"</code>, <code>"h24"</code></td>
+            <td>0-11 / 1-12 / 0-23 / 1-24</td>
+            <td>Overrides locale default. Use <code>h23</code> for 24-hour time.</td>
+          </tr>
+          <tr>
+            <td><code>hour12</code></td>
+            <td><code>true</code>, <code>false</code></td>
+            <td>12-hour / 24-hour</td>
+            <td>Legacy; prefer <code>hourCycle</code></td>
+          </tr>
+          <tr>
+            <td><code>era</code></td>
+            <td><code>"long"</code>, <code>"short"</code>, <code>"narrow"</code></td>
+            <td>Anno Domini / AD / A</td>
+            <td>Useful for historical dates or non-Gregorian calendars</td>
+          </tr>
+          <tr>
+            <td><code>dayPeriod</code></td>
+            <td><code>"narrow"</code>, <code>"short"</code>, <code>"long"</code></td>
+            <td>in the morning / AM / in the morning</td>
+            <td>Locale-dependent; not all locales distinguish periods beyond AM/PM</td>
+          </tr>
+          <tr>
+            <td><code>calendar</code></td>
+            <td><code>"gregory"</code>, <code>"islamic"</code>, <code>"persian"</code>, <code>"hebrew"</code>, etc.</td>
+            <td>Varies by calendar system</td>
+            <td>Defaults to locale's preferred calendar</td>
+          </tr>
+          <tr>
+            <td><code>numberingSystem</code></td>
+            <td><code>"latn"</code>, <code>"arab"</code>, <code>"deva"</code>, <code>"thai"</code>, etc.</td>
+            <td>1234 / &#1633;&#1634;&#1635;&#1636; / etc.</td>
+            <td>Controls digit characters used</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: dateStyle / timeStyle -->
+    <!-- ============================================================ -->
+    <h2 id="datestyle-timestyle">dateStyle and timeStyle Shorthand</h2>
+
+    <p>The <code>dateStyle</code> and <code>timeStyle</code> properties are convenience presets added in ES2020. They map to a predefined set of individual component options, chosen by the locale. The available values are <code>"full"</code>, <code>"long"</code>, <code>"medium"</code>, and <code>"short"</code>.</p>
+
+    <pre><code>// These two produce the same output in en-US:
+new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(date);
+// "May 16, 2026"
+
+new Intl.DateTimeFormat('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric'
+}).format(date);
+// "May 16, 2026"</code></pre>
+
+    <p>The critical rule: <strong>you cannot mix <code>dateStyle</code>/<code>timeStyle</code> with individual component options</strong>. This throws a <code>TypeError</code>:</p>
+
+    <pre><code>// WRONG: TypeError!
+new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  hour: 'numeric'  // Cannot mix with dateStyle
+});</code></pre>
+
+    <p>You <em>can</em> use <code>dateStyle</code> and <code>timeStyle</code> together, and you <em>can</em> combine them with <code>timeZone</code>, <code>hourCycle</code>, <code>calendar</code>, and <code>numberingSystem</code> &mdash; those are structural options, not component options.</p>
+
+    <p>Here is what each <code>dateStyle</code> level looks like across four locales:</p>
+
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>dateStyle</th><th>en-US</th><th>de-DE</th><th>ja-JP</th><th>ar-SA</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>full</code></td>
+            <td>Saturday, May 16, 2026</td>
+            <td>Samstag, 16. Mai 2026</td>
+            <td>2026&#24180;5&#26376;16&#26085;&#22303;&#26332;&#26085;</td>
+            <td>&#1575;&#1604;&#1587;&#1576;&#1578;&#1548; &#1633;&#1638; &#1605;&#1575;&#1610;&#1608; &#1634;&#1632;&#1634;&#1638;</td>
+          </tr>
+          <tr>
+            <td><code>long</code></td>
+            <td>May 16, 2026</td>
+            <td>16. Mai 2026</td>
+            <td>2026&#24180;5&#26376;16&#26085;</td>
+            <td>&#1633;&#1638; &#1605;&#1575;&#1610;&#1608; &#1634;&#1632;&#1634;&#1638;</td>
+          </tr>
+          <tr>
+            <td><code>medium</code></td>
+            <td>May 16, 2026</td>
+            <td>16.05.2026</td>
+            <td>2026/05/16</td>
+            <td>&#1633;&#1638;/&#1632;&#1637;/&#1634;&#1632;&#1634;&#1638;</td>
+          </tr>
+          <tr>
+            <td><code>short</code></td>
+            <td>5/16/26</td>
+            <td>16.05.26</td>
+            <td>2026/05/16</td>
+            <td>&#1633;&#1638;/&#1637;/&#1634;&#1638;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>When choosing between the style shorthand and individual components: use <code>dateStyle</code>/<code>timeStyle</code> when the locale's default layout is acceptable. Use individual components when you need specific control &mdash; for example, showing month and year without the day, or including the weekday but omitting the year.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7: Timezone Handling -->
+    <!-- ============================================================ -->
+    <h2 id="timezone-handling">Timezone Handling</h2>
+
+    <p>The <code>timeZone</code> option accepts any valid <a href="https://www.iana.org/time-zones" rel="nofollow">IANA timezone identifier</a>. The JavaScript engine's built-in timezone database contains hundreds of entries covering every region, including historical changes and DST rules. You can list all supported timezones with <code>Intl.supportedValuesOf('timeZone')</code> (Chrome 93+, Node.js 18+).</p>
+
+    <h3>UTC</h3>
+    <pre><code>new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  dateStyle: 'medium',
+  timeStyle: 'long'
+}).format(new Date());
+// "May 16, 2026 at 2:30:00 PM UTC"</code></pre>
+
+    <h3>Named Timezones</h3>
+    <pre><code>const now = new Date();
+
+// Asia/Kolkata (Indian Standard Time, UTC+5:30)
+new Intl.DateTimeFormat('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  dateStyle: 'full',
+  timeStyle: 'long'
+}).format(now);
+// "Saturday, 16 May 2026 at 8:00:00 pm IST"
+
+// America/Los_Angeles (Pacific Time)
+new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Los_Angeles',
+  dateStyle: 'full',
+  timeStyle: 'long'
+}).format(now);
+// "Saturday, May 16, 2026 at 7:30:00 AM PDT"
+
+// Pacific/Auckland (New Zealand)
+new Intl.DateTimeFormat('en-NZ', {
+  timeZone: 'Pacific/Auckland',
+  dateStyle: 'full',
+  timeStyle: 'long'
+}).format(now);
+// "Sunday, 17 May 2026 at 2:30:00 am NZST"</code></pre>
+
+    <h3>DST Transitions</h3>
+    <p><code>Intl.DateTimeFormat</code> handles Daylight Saving Time automatically. The same timezone identifier produces different abbreviations and offsets depending on the date:</p>
+
+    <pre><code>const fmt = (d) => new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  timeStyle: 'long'
+}).format(d);
+
+fmt(new Date('2026-01-15T12:00:00Z'));
+// "7:00:00 AM EST"  (standard time, UTC-5)
+
+fmt(new Date('2026-07-15T12:00:00Z'));
+// "8:00:00 AM EDT"  (daylight time, UTC-4)</code></pre>
+
+    <p>You never need to calculate offsets or detect DST yourself. The engine handles it. This is one of the primary reasons to use <code>Intl.DateTimeFormat</code> over manual offset arithmetic.</p>
+
+    <h3>IST to UTC Conversion</h3>
+    <p>A common search: "10pm IST to UTC." You format the same instant with two different timezone settings:</p>
+
+    <pre><code>// Create a date that represents 10:00 PM IST on May 16, 2026
+// IST = UTC+5:30, so 10:00 PM IST = 4:30 PM UTC
+const istDate = new Date('2026-05-16T16:30:00Z');
+
+const istFmt = new Intl.DateTimeFormat('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  dateStyle: 'medium',
+  timeStyle: 'short'
+});
+
+const utcFmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  dateStyle: 'medium',
+  timeStyle: 'short'
+});
+
+console.log('IST:', istFmt.format(istDate));
+// "IST: 16-May-2026, 10:00 pm"
+
+console.log('UTC:', utcFmt.format(istDate));
+// "UTC: May 16, 2026, 4:30 PM"</code></pre>
+
+    <p>For a visual timezone converter, use <a href="/">EpochPilot's main timezone tool</a>.</p>
+
+    <h3>Half-Hour and Quarter-Hour Offsets</h3>
+    <p>Several real-world timezones use offsets that are not whole hours. <code>Intl.DateTimeFormat</code> handles all of them correctly:</p>
+
+    <pre><code>// UTC+5:30 — India (Asia/Kolkata)
+// UTC+5:45 — Nepal (Asia/Kathmandu)
+// UTC+9:30 — Australia Central (Australia/Adelaide, with DST)
+// UTC+8:45 — Australia Western (Australia/Eucla)
+// UTC+6:30 — Myanmar (Asia/Yangon)
+// UTC+3:30 — Iran (Asia/Tehran, with DST)
+
+const zones = [
+  'Asia/Kolkata', 'Asia/Kathmandu', 'Australia/Adelaide',
+  'Asia/Yangon', 'Asia/Tehran'
+];
+
+zones.forEach(tz => {
+  const offset = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, timeZoneName: 'longOffset'
+  }).formatToParts(new Date())
+    .find(p => p.type === 'timeZoneName')?.value;
+  console.log(`${tz}: ${offset}`);
+});
+// Asia/Kolkata: GMT+05:30
+// Asia/Kathmandu: GMT+05:45
+// Australia/Adelaide: GMT+09:30 (or +10:30 during DST)
+// Asia/Yangon: GMT+06:30
+// Asia/Tehran: GMT+03:30 (or +04:30 during DST)</code></pre>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8: The Locale System -->
+    <!-- ============================================================ -->
+    <h2 id="locale-system">The Locale System</h2>
+
+    <p>The first argument to <code>Intl.DateTimeFormat</code> is a <a href="https://www.rfc-editor.org/info/bcp47" rel="nofollow">BCP 47</a> language tag. This tag has a structured format:</p>
+
+    <pre><code>language[-script][-region][-extension]
+// Examples:
+"en"       // English (any region)
+"en-US"    // English as used in the United States
+"en-GB"    // English as used in the United Kingdom
+"zh-Hans"  // Chinese, Simplified script
+"ar-EG"    // Arabic as used in Egypt
+"ja-JP-u-ca-japanese"  // Japanese with Japanese calendar</code></pre>
+
+    <p>The <code>-u</code> Unicode extension lets you embed options directly in the locale tag. This can be more convenient when passing locale strings through APIs that do not accept separate options objects:</p>
+
+    <pre><code>// These are equivalent:
+new Intl.DateTimeFormat('en-US-u-hc-h23');
+new Intl.DateTimeFormat('en-US', { hourCycle: 'h23' });
+
+// Calendar via locale tag:
+new Intl.DateTimeFormat('ar-SA-u-ca-islamic');
+// Same as:
+new Intl.DateTimeFormat('ar-SA', { calendar: 'islamic' });
+
+// Numbering system via locale tag:
+new Intl.DateTimeFormat('hi-IN-u-nu-deva');
+// Same as:
+new Intl.DateTimeFormat('hi-IN', { numberingSystem: 'deva' });</code></pre>
+
+    <p>You can pass an array of locales as a fallback chain. The engine picks the first one it fully supports:</p>
+
+    <pre><code>new Intl.DateTimeFormat(['zh-Hant-TW', 'zh-TW', 'zh', 'en-US'], {
+  dateStyle: 'long'
+}).format(date);</code></pre>
+
+    <p>To check which locale was actually selected and what the resolved options are, call <code>resolvedOptions()</code>:</p>
+
+    <pre><code>const fmt = new Intl.DateTimeFormat('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  dateStyle: 'full',
+  timeStyle: 'long'
+});
+
+console.log(fmt.resolvedOptions());
+// {
+//   locale: "en-IN",
+//   calendar: "gregory",
+//   numberingSystem: "latn",
+//   timeZone: "Asia/Calcutta",  // canonical name
+//   dateStyle: "full",
+//   timeStyle: "long",
+//   ...
+// }</code></pre>
+
+    <p>Note: some engines return the canonical (older) timezone name like <code>"Asia/Calcutta"</code> even when you pass <code>"Asia/Kolkata"</code>. Both refer to the same timezone and produce identical output.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9: formatToParts -->
+    <!-- ============================================================ -->
+    <h2 id="formattoparts">formatToParts() Deep Dive</h2>
+
+    <p>While <code>format()</code> returns a single string, <code>formatToParts()</code> returns an array of typed tokens. This is essential when you need to style, rearrange, or extract specific components:</p>
+
+    <pre><code>const fmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZoneName: 'short'
+});
+
+const parts = fmt.formatToParts(new Date('2026-05-16T14:30:00Z'));
+console.log(parts);
+// [
+//   { type: "weekday",      value: "Saturday" },
+//   { type: "literal",      value: ", " },
+//   { type: "month",        value: "May" },
+//   { type: "literal",      value: " " },
+//   { type: "day",          value: "16" },
+//   { type: "literal",      value: ", " },
+//   { type: "year",         value: "2026" },
+//   { type: "literal",      value: ", " },
+//   { type: "hour",         value: "10" },
+//   { type: "literal",      value: ":" },
+//   { type: "minute",       value: "30" },
+//   { type: "literal",      value: " " },
+//   { type: "dayPeriod",    value: "AM" },
+//   { type: "literal",      value: " " },
+//   { type: "timeZoneName", value: "EDT" }
+// ]</code></pre>
+
+    <p>Each object has a <code>type</code> (the component name) and a <code>value</code> (the formatted string for that component). Literal parts contain the separator characters (commas, spaces, colons) that the locale inserts between components.</p>
+
+    <h3>Practical Use: Custom Styled Output</h3>
+    <pre><code>// Wrap each part in a span with its type as a CSS class
+function styledDate(date, locale, options) {
+  const parts = new Intl.DateTimeFormat(locale, options)
+    .formatToParts(date);
+  return parts.map(p =>
+    p.type === 'literal'
+      ? p.value
+      : `&lt;span class="dt-${p.type}"&gt;${p.value}&lt;/span&gt;`
+  ).join('');
+}
+
+// Result: &lt;span class="dt-month"&gt;May&lt;/span&gt; &lt;span class="dt-day"&gt;16&lt;/span&gt;...
+// Now style .dt-month { color: blue; } .dt-day { font-weight: bold; }</code></pre>
+
+    <h3>Practical Use: Extract a Single Part</h3>
+    <pre><code>function getTimezoneName(date, tz) {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    timeZoneName: 'long'
+  }).formatToParts(date)
+    .find(p => p.type === 'timeZoneName')?.value;
+}
+
+getTimezoneName(new Date(), 'Asia/Kolkata');
+// "India Standard Time"
+
+getTimezoneName(new Date('2026-07-01'), 'America/New_York');
+// "Eastern Daylight Time"</code></pre>
+
+    <h3>Practical Use: Build an Object from Parts</h3>
+    <pre><code>function dateParts(date, tz) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date);
+
+  const obj = {};
+  parts.forEach(p => { if (p.type !== 'literal') obj[p.type] = p.value; });
+  return obj;
+}
+
+dateParts(new Date(), 'Asia/Kolkata');
+// { month: "05", day: "16", year: "2026", hour: "20", minute: "00", second: "00" }</code></pre>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 10: formatRange -->
+    <!-- ============================================================ -->
+    <h2 id="formatrange">formatRange() for Date Spans</h2>
+
+    <p><code>formatRange()</code> formats two dates as a human-readable range, automatically collapsing shared components when the dates fall in the same month or year:</p>
+
+    <pre><code>const fmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const start = new Date('2026-05-16');
+const end   = new Date('2026-05-22');
+
+fmt.formatRange(start, end);
+// "May 16 – 22, 2026"  (shared month + year)
+
+const end2 = new Date('2026-06-03');
+fmt.formatRange(start, end2);
+// "May 16 – June 3, 2026"  (shared year)
+
+const end3 = new Date('2027-01-10');
+fmt.formatRange(start, end3);
+// "May 16, 2026 – January 10, 2027"  (nothing shared)</code></pre>
+
+    <p>There is also <code>formatRangeToParts()</code> that returns typed tokens, with an additional <code>source</code> field (<code>"startRange"</code>, <code>"endRange"</code>, or <code>"shared"</code>) on each part. This is useful for building custom UI for calendar event displays or booking interfaces.</p>
+
+    <pre><code>const rangeParts = fmt.formatRangeToParts(start, end);
+// [
+//   { type: "month", value: "May", source: "shared" },
+//   { type: "literal", value: " ", source: "shared" },
+//   { type: "day", value: "16", source: "startRange" },
+//   { type: "literal", value: " – ", source: "shared" },
+//   { type: "day", value: "22", source: "endRange" },
+//   { type: "literal", value: ", ", source: "shared" },
+//   { type: "year", value: "2026", source: "shared" }
+// ]</code></pre>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 11: Real-World Code Examples -->
+    <!-- ============================================================ -->
+    <h2 id="real-world-examples">15 Real-World Code Examples</h2>
+
+    <h3>1. Display a user-friendly timestamp</h3>
+    <pre><code>function friendlyDate(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(date);
+}
+friendlyDate(new Date());
+// "May 16, 2026, 10:30 AM"</code></pre>
+
+    <h3>2. Format for an API (ISO 8601-like with timezone)</h3>
+    <pre><code>function apiDate(date, tz) {
+  return new Intl.DateTimeFormat('sv-SE', {
+    timeZone: tz,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hourCycle: 'h23'
+  }).format(date);
+}
+apiDate(new Date(), 'UTC');
+// "2026-05-16 14:30:00"  (sv-SE uses ISO-like separators natively)</code></pre>
+
+    <h3>3. Show time in multiple cities (world clock)</h3>
+    <pre><code>const cities = [
+  { name: 'New York',  tz: 'America/New_York' },
+  { name: 'London',    tz: 'Europe/London' },
+  { name: 'Mumbai',    tz: 'Asia/Kolkata' },
+  { name: 'Tokyo',     tz: 'Asia/Tokyo' },
+  { name: 'Sydney',    tz: 'Australia/Sydney' },
+];
+
+const now = new Date();
+cities.forEach(({ name, tz }) => {
+  const time = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  }).format(now);
+  console.log(`${name}: ${time}`);
+});
+// New York: 10:30 AM EDT
+// London: 3:30 PM BST
+// Mumbai: 8:00 PM IST
+// Tokyo: 11:30 PM JST
+// Sydney: 12:30 AM AEST</code></pre>
+
+    <h3>4. Get just the month name</h3>
+    <pre><code>function monthName(date, locale = 'en-US') {
+  return new Intl.DateTimeFormat(locale, { month: 'long' }).format(date);
+}
+monthName(new Date('2026-05-16'));       // "May"
+monthName(new Date('2026-05-16'), 'fr'); // "mai"
+monthName(new Date('2026-05-16'), 'ja'); // "5月"</code></pre>
+
+    <h3>5. Get the day of the week</h3>
+    <pre><code>function dayOfWeek(date, locale = 'en-US') {
+  return new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date);
+}
+dayOfWeek(new Date('2026-05-16'));         // "Saturday"
+dayOfWeek(new Date('2026-05-16'), 'de');   // "Samstag"
+dayOfWeek(new Date('2026-05-16'), 'hi');   // "शनिवार"</code></pre>
+
+    <h3>6. Format with milliseconds</h3>
+    <pre><code>new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric', minute: '2-digit', second: '2-digit',
+  fractionalSecondDigits: 3,
+  hourCycle: 'h23'
+}).format(new Date());
+// "14:30:45.123"</code></pre>
+
+    <h3>7. 24-hour time in any locale</h3>
+    <pre><code>new Intl.DateTimeFormat('en-US', {
+  hour: '2-digit', minute: '2-digit',
+  hourCycle: 'h23'
+}).format(new Date());
+// "14:30" (instead of "2:30 PM")</code></pre>
+
+    <h3>8. Relative time labels (today/yesterday)</h3>
+    <pre><code>function relativeDay(date) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diff = Math.round((today - target) / 86400000);
+
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  if (diff === -1) return 'Tomorrow';
+  if (diff > 1 && diff < 7) return `${diff} days ago`;
+
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium'
+  }).format(date);
+}
+// For recent dates: "Today", "Yesterday", "3 days ago"
+// For older dates: "May 10, 2026"</code></pre>
+
+    <h3>9. Islamic calendar</h3>
+    <pre><code>new Intl.DateTimeFormat('ar-SA', {
+  calendar: 'islamic',
+  dateStyle: 'full'
+}).format(new Date('2026-05-16'));
+// Full Hijri date in Arabic script</code></pre>
+
+    <h3>10. Japanese Imperial era</h3>
+    <pre><code>new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
+  dateStyle: 'full'
+}).format(new Date('2026-05-16'));
+// "令和8年5月16日土曜日"</code></pre>
+
+    <h3>11. Thai Buddhist calendar</h3>
+    <pre><code>new Intl.DateTimeFormat('th-TH', {
+  calendar: 'buddhist',
+  dateStyle: 'long'
+}).format(new Date('2026-05-16'));
+// Shows year 2569 (Buddhist Era = Gregorian + 543)</code></pre>
+
+    <h3>12. Format with Devanagari numerals</h3>
+    <pre><code>new Intl.DateTimeFormat('hi-IN', {
+  numberingSystem: 'deva',
+  dateStyle: 'long',
+  timeStyle: 'short',
+  timeZone: 'Asia/Kolkata'
+}).format(new Date());
+// Displays Hindi date with Devanagari digits (&#2407;&#2412;, &#2414;&#2406;&#2414;&#2412;, etc.)</code></pre>
+
+    <h3>13. Build a UTC offset string programmatically</h3>
+    <pre><code>function getUTCOffset(tz) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, timeZoneName: 'longOffset'
+  }).formatToParts(new Date());
+  return parts.find(p => p.type === 'timeZoneName')?.value;
+}
+getUTCOffset('Asia/Kolkata');       // "GMT+05:30"
+getUTCOffset('America/New_York');   // "GMT-04:00" or "GMT-05:00"
+getUTCOffset('Pacific/Chatham');    // "GMT+12:45"</code></pre>
+
+    <h3>14. React hook for locale-aware formatting</h3>
+    <pre><code>import { useMemo, useCallback } from 'react';
+
+function useDateFormatter(locale, options) {
+  const formatter = useMemo(
+    () => new Intl.DateTimeFormat(locale, options),
+    [locale, JSON.stringify(options)]
+  );
+  return useCallback((date) => formatter.format(date), [formatter]);
+}
+
+// Usage in a component:
+function EventCard({ event }) {
+  const formatDate = useDateFormatter('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: event.timezone
+  });
+  return &lt;time dateTime={event.date.toISOString()}&gt;
+    {formatDate(event.date)}
+  &lt;/time&gt;;
+}</code></pre>
+
+    <h3>15. Server-side rendering with consistent timezone</h3>
+    <pre><code>// In SSR (Node.js), the server's system timezone differs from
+// the user's. Always pass an explicit timeZone to avoid
+// hydration mismatch in Next.js, Remix, or Astro:
+
+function renderDate(date, userTimezone) {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: userTimezone, // from user session or cookie
+    dateStyle: 'long',
+    timeStyle: 'short'
+  }).format(date);
+}
+
+// Both server and client produce identical output because
+// both use the same explicit timezone, not the system default.</code></pre>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 12: Common Mistakes and Fixes -->
+    <!-- ============================================================ -->
+    <h2 id="common-mistakes">Common Mistakes and Fixes</h2>
+
+    <h3>Mistake 1: Mixing dateStyle with component options</h3>
+    <pre><code>// WRONG: throws TypeError
+new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  hour: 'numeric'
+});
+
+// FIX option A: use timeStyle alongside dateStyle
+new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeStyle: 'short'
+});
+
+// FIX option B: use individual components for everything
+new Intl.DateTimeFormat('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+  hour: 'numeric'
+});</code></pre>
+
+    <h3>Mistake 2: Using offset strings instead of timezone names</h3>
+    <pre><code>// WRONG: "+05:30" is not a valid timeZone value
+new Intl.DateTimeFormat('en-US', {
+  timeZone: '+05:30'  // RangeError!
+});
+
+// FIX: use the IANA timezone name
+new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Kolkata'
+});</code></pre>
+
+    <h3>Mistake 3: Assuming Date months are 1-indexed</h3>
+    <pre><code>// The Date constructor uses 0-indexed months:
+new Date(2026, 4, 16); // May 16 (month 4 = May, not April)
+new Date(2026, 0, 1);  // January 1 (month 0 = January)
+
+// Intl output is always human-readable (1-indexed):
+// "May 16, 2026" or "5/16/2026"
+
+// Tip: use ISO strings to avoid confusion:
+new Date('2026-05-16'); // May 16 — month is 1-indexed in ISO strings</code></pre>
+
+    <h3>Mistake 4: Creating a new formatter on every render</h3>
+    <pre><code>// SLOW: creates a new Intl.DateTimeFormat on every iteration
+items.forEach(item => {
+  const fmt = new Intl.DateTimeFormat('en-US', opts);
+  item.displayDate = fmt.format(item.date);
+});
+
+// FAST: create once, reuse many times (~18x faster)
+const fmt = new Intl.DateTimeFormat('en-US', opts);
+items.forEach(item => {
+  item.displayDate = fmt.format(item.date);
+});</code></pre>
+
+    <h3>Mistake 5: Relying on Date.toString() for display</h3>
+    <pre><code>// FRAGILE: output format is implementation-defined
+new Date().toString();
+// "Sat May 16 2026 10:30:00 GMT-0400 (Eastern Daylight Time)"
+// This varies between V8, SpiderMonkey, and JavaScriptCore.
+
+// STABLE: Intl produces consistent, spec-driven output
+new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'full', timeStyle: 'long',
+  timeZone: 'America/New_York'
+}).format(new Date());
+// Always "Saturday, May 16, 2026 at 10:30:00 AM EDT"</code></pre>
+
+    <h3>Mistake 6: Forgetting that Date objects are always UTC internally</h3>
+    <pre><code>// A Date object does NOT store a timezone.
+// It stores milliseconds since the Unix epoch (always UTC).
+const d = new Date('2026-05-16T22:00:00+05:30');
+console.log(d.toISOString());
+// "2026-05-16T16:30:00.000Z" — stored as UTC
+
+// The timeZone option changes the *display*, not the Date:
+new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Kolkata', timeStyle: 'short'
+}).format(d);
+// "10:00 PM"
+
+new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC', timeStyle: 'short'
+}).format(d);
+// "4:30 PM"</code></pre>
+
+    <h3>Mistake 7: Using deprecated timezone identifiers</h3>
+    <pre><code>// These old names still work but are deprecated:
+// "US/Eastern"       → use "America/New_York"
+// "Asia/Calcutta"    → use "Asia/Kolkata"
+// "Pacific/Samoa"    → use "Pacific/Pago_Pago"
+// "GB"               → use "Europe/London"
+
+// Always use the canonical IANA name.
+// List them all:
+const allZones = Intl.supportedValuesOf('timeZone');
+console.log(allZones.length); // ~400+</code></pre>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 13: Performance -->
+    <!-- ============================================================ -->
+    <h2 id="performance">Performance Best Practices</h2>
+
+    <p>Creating an <code>Intl.DateTimeFormat</code> instance is expensive relative to calling <code>.format()</code> on an existing one. The constructor resolves the locale, loads ICU data, and compiles the format pattern. In benchmarks, constructor time is roughly 10-50x the cost of a single <code>.format()</code> call.</p>
+
+    <pre><code>// Benchmark: constructor per call vs. reuse
+console.time('constructor');
+for (let i = 0; i &lt; 10000; i++) {
+  new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date());
+}
+console.timeEnd('constructor');
+// ~150ms
+
+console.time('reuse');
+const fmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
+for (let i = 0; i &lt; 10000; i++) {
+  fmt.format(new Date());
+}
+console.timeEnd('reuse');
+// ~8ms  (roughly 18x faster)</code></pre>
+
+    <p>Best practices:</p>
+    <ul>
+      <li><strong>Cache formatters</strong> by a locale+options key. In React, use <code>useMemo</code>. On a server, use a module-level <code>Map</code>.</li>
+      <li><strong>Move construction out of loops</strong>. Create the formatter before the loop and call <code>.format()</code> inside it.</li>
+      <li><strong>Use <code>resolvedOptions()</code></strong> to inspect what the engine actually chose, rather than guessing. This is essentially free after construction.</li>
+      <li><strong>Batch extraction with <code>formatToParts()</code></strong> when you need multiple components from the same date &mdash; one call gives you every component.</li>
+    </ul>
+
+    <p>For a utility to manage formatter caching automatically, use a factory pattern:</p>
+    <pre><code>const formatters = new Map();
+
+function getFormatter(locale, options) {
+  const key = locale + JSON.stringify(options);
+  if (!formatters.has(key)) {
+    formatters.set(key, new Intl.DateTimeFormat(locale, options));
+  }
+  return formatters.get(key);
+}
+
+// Usage — formatter is created once and cached:
+getFormatter('en-US', { dateStyle: 'long' }).format(someDate);
+getFormatter('en-US', { dateStyle: 'long' }).format(otherDate); // cache hit</code></pre>
+
+    <p>Note: <code>Date.prototype.toLocaleString(locale, options)</code> internally creates a new <code>Intl.DateTimeFormat</code> on every call. If you call <code>toLocaleString</code> in a loop, you pay the constructor cost every iteration. Switching to an explicit, cached <code>Intl.DateTimeFormat</code> instance can speed up table rendering by an order of magnitude.</p>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 14: FAQ -->
+    <!-- ============================================================ -->
+    <h2 id="faq">Frequently Asked Questions</h2>
+
+    <section class="faq-section">
+      <details open>
+        <summary>What is Intl.DateTimeFormat in JavaScript?</summary>
+        <p><code>Intl.DateTimeFormat</code> is a built-in constructor that creates objects for language-sensitive date and time formatting. It uses the IANA timezone database and ICU locale data built into the JavaScript engine, giving you correct timezone conversions and locale-specific formatting without any external library.</p>
+      </details>
+
+      <details>
+        <summary>How do I convert a time to a different timezone?</summary>
+        <p>Pass the <code>timeZone</code> option with an IANA timezone name: <code>new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'long' }).format(new Date())</code>. This formats the current moment as it appears in Indian Standard Time, regardless of where the code runs.</p>
+      </details>
+
+      <details>
+        <summary>Can I mix dateStyle with individual component options?</summary>
+        <p>No. If you pass <code>dateStyle</code> or <code>timeStyle</code> alongside individual options like <code>month</code> or <code>hour</code>, a <code>TypeError</code> is thrown. Use one approach or the other. You <em>can</em> combine <code>dateStyle</code>/<code>timeStyle</code> with structural options like <code>timeZone</code> and <code>hourCycle</code>.</p>
+      </details>
+
+      <details>
+        <summary>How does it handle Daylight Saving Time?</summary>
+        <p>Automatically. When you specify a timezone like <code>America/New_York</code>, the engine checks the IANA timezone database for the given date and applies the correct offset (EST or EDT). You never calculate DST offsets manually.</p>
+      </details>
+
+      <details>
+        <summary>What is the difference between format() and formatToParts()?</summary>
+        <p><code>format()</code> returns a single string. <code>formatToParts()</code> returns an array of objects with <code>type</code> and <code>value</code> fields, letting you rearrange, style, or filter individual components for custom output.</p>
+      </details>
+
+      <details>
+        <summary>How do I format dates in Asia/Kolkata (IST)?</summary>
+        <p>Use <code>new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'long' }).format(new Date())</code>. The <code>en-IN</code> locale gives Indian English formatting, and <code>Asia/Kolkata</code> is the IANA identifier for IST (UTC+5:30).</p>
+      </details>
+
+      <details>
+        <summary>How do I convert 10 PM IST to UTC?</summary>
+        <p>Format the same <code>Date</code> object with two formatters: one with <code>timeZone: 'Asia/Kolkata'</code> and one with <code>timeZone: 'UTC'</code>. Since IST is UTC+5:30, 10:00 PM IST = 4:30 PM UTC. A JavaScript <code>Date</code> always holds a UTC instant internally, so both formatters display the same moment in different timezones.</p>
+      </details>
+
+      <details>
+        <summary>Is Intl.DateTimeFormat supported in all browsers?</summary>
+        <p>The core API works in Chrome 24+, Firefox 29+, Safari 10+, Edge 12+, and Node.js 0.12+. Newer features like <code>dateStyle</code>/<code>timeStyle</code> need Chrome 76+, Firefox 79+, Safari 14.1+. See the <a href="#browser-support">full browser support table</a> above.</p>
+      </details>
+
+      <details>
+        <summary>Do I still need Moment.js or date-fns for formatting?</summary>
+        <p>For formatting and timezone display, <code>Intl.DateTimeFormat</code> replaces both libraries entirely. For date <em>arithmetic</em> (adding days, diffing months, parsing arbitrary strings), you may still benefit from a library like <code>date-fns</code>, <code>luxon</code>, or the upcoming TC39 <code>Temporal</code> API. Moment.js is in maintenance mode and should not be used in new projects.</p>
+      </details>
+
+      <details>
+        <summary>How do I list all available IANA timezones?</summary>
+        <p>In modern engines: <code>Intl.supportedValuesOf('timeZone')</code> returns a sorted array of all supported IANA timezone identifiers (400+). Available in Chrome 93+, Firefox 93+, Safari 15.4+, Node.js 18+.</p>
+      </details>
+    </section>
+
+    <div style="margin-top:3rem; padding:1.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);">
+      <h3 style="margin-top:0;">Related Tools and Guides</h3>
+      <section class="related-links">
+        <div class="related-grid">
+          <a href="/" class="related-card">Epoch & Timestamp Converter</a>
+          <a href="/answers/cron-last-day-of-month.html" class="related-card">Cron: Last Day of Month</a>
+        </div>
+      </section>
+    </div>
+
+  </div><!-- .article-content -->
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a></div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; AI Code Tools &amp; Fixes</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://heytensor.com">HeyTensor &mdash; ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+// =====================================================
+// Intl.DateTimeFormat Live Playground
+// =====================================================
+
+// Populate timezone dropdown with all IANA timezones grouped by region
+(function populateTimezones() {
+  const sel = document.getElementById('pg-tz');
+  let tzList;
+  try {
+    tzList = Intl.supportedValuesOf('timeZone');
+  } catch (e) {
+    // Fallback for older engines
+    tzList = [
+      'UTC',
+      'America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+      'America/Anchorage','America/Sao_Paulo','America/Argentina/Buenos_Aires',
+      'America/Mexico_City','America/Toronto','America/Vancouver','America/Bogota',
+      'America/Lima','America/Santiago','America/Phoenix',
+      'Europe/London','Europe/Berlin','Europe/Paris','Europe/Madrid',
+      'Europe/Rome','Europe/Amsterdam','Europe/Moscow','Europe/Istanbul',
+      'Europe/Warsaw','Europe/Stockholm','Europe/Zurich','Europe/Athens',
+      'Europe/Lisbon','Europe/Prague','Europe/Helsinki','Europe/Bucharest',
+      'Europe/Kiev','Europe/Dublin',
+      'Asia/Kolkata','Asia/Tokyo','Asia/Shanghai','Asia/Hong_Kong',
+      'Asia/Singapore','Asia/Seoul','Asia/Bangkok','Asia/Dubai',
+      'Asia/Karachi','Asia/Dhaka','Asia/Jakarta','Asia/Taipei',
+      'Asia/Manila','Asia/Riyadh','Asia/Tehran','Asia/Ho_Chi_Minh',
+      'Asia/Kathmandu','Asia/Yangon','Asia/Kuala_Lumpur','Asia/Colombo',
+      'Asia/Baghdad','Asia/Beirut','Asia/Jerusalem',
+      'Australia/Sydney','Australia/Melbourne','Australia/Perth',
+      'Australia/Brisbane','Australia/Adelaide','Australia/Hobart',
+      'Pacific/Auckland','Pacific/Fiji','Pacific/Honolulu',
+      'Pacific/Guam','Pacific/Tongatapu','Pacific/Chatham',
+      'Africa/Cairo','Africa/Johannesburg','Africa/Lagos','Africa/Nairobi',
+      'Africa/Casablanca','Africa/Accra','Africa/Addis_Ababa',
+      'Indian/Maldives','Indian/Mauritius'
+    ];
+  }
+
+  // Group by region
+  const groups = {};
+  tzList.forEach(tz => {
+    const slash = tz.indexOf('/');
+    const region = slash > -1 ? tz.substring(0, slash) : 'Other';
+    if (!groups[region]) groups[region] = [];
+    groups[region].push(tz);
+  });
+
+  // Add UTC first
+  const utcOpt = document.createElement('option');
+  utcOpt.value = 'UTC';
+  utcOpt.textContent = 'UTC';
+  sel.appendChild(utcOpt);
+
+  const regionOrder = ['America','Europe','Asia','Africa','Australia','Pacific','Indian','Antarctica','Arctic','Atlantic','Other'];
+  regionOrder.forEach(region => {
+    if (!groups[region]) return;
+    const og = document.createElement('optgroup');
+    og.label = region;
+    groups[region].forEach(tz => {
+      if (tz === 'UTC') return;
+      const opt = document.createElement('option');
+      opt.value = tz;
+      opt.textContent = tz.replace(/_/g, ' ');
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+
+  // Set default to user's timezone
+  try {
+    const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (userTz) sel.value = userTz;
+  } catch (e) { /* ignore */ }
+})();
+
+let activeTab = 'style';
+
+function pgSwitchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.pg-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  document.querySelectorAll('.pg-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'panel-' + tab);
+  });
+  pgUpdate();
+}
+
+function pgUpdate() {
+  var locale = document.getElementById('pg-locale').value;
+  var tz = document.getElementById('pg-tz').value;
+
+  var options = {};
+  var optLines = [];
+
+  if (tz) {
+    options.timeZone = tz;
+    optLines.push("  timeZone: '" + tz + "'");
+  }
+
+  if (activeTab === 'style') {
+    var ds = document.getElementById('pg-dateStyle').value;
+    var ts = document.getElementById('pg-timeStyle').value;
+    if (ds) { options.dateStyle = ds; optLines.push("  dateStyle: '" + ds + "'"); }
+    if (ts) { options.timeStyle = ts; optLines.push("  timeStyle: '" + ts + "'"); }
+  } else {
+    var fields = [
+      { id: 'pg-year', key: 'year' },
+      { id: 'pg-month', key: 'month' },
+      { id: 'pg-day', key: 'day' },
+      { id: 'pg-weekday', key: 'weekday' },
+      { id: 'pg-hour', key: 'hour' },
+      { id: 'pg-minute', key: 'minute' },
+      { id: 'pg-second', key: 'second' },
+      { id: 'pg-era', key: 'era' },
+      { id: 'pg-dayPeriod', key: 'dayPeriod' },
+      { id: 'pg-tzName', key: 'timeZoneName' },
+      { id: 'pg-hourCycle', key: 'hourCycle' }
+    ];
+
+    fields.forEach(function(f) {
+      var val = document.getElementById(f.id).value;
+      if (val) {
+        options[f.key] = val;
+        optLines.push("  " + f.key + ": '" + val + "'");
+      }
+    });
+
+    var frac = document.getElementById('pg-frac').value;
+    if (frac) {
+      options.fractionalSecondDigits = parseInt(frac, 10);
+      optLines.push("  fractionalSecondDigits: " + frac);
+    }
+  }
+
+  // Format
+  var output;
+  try {
+    var fmt = new Intl.DateTimeFormat(locale, options);
+    output = fmt.format(new Date());
+  } catch (e) {
+    output = 'Error: ' + e.message;
+  }
+
+  document.getElementById('pg-output').textContent = output;
+
+  // Generate code
+  var optStr = optLines.length > 0 ? '{\n' + optLines.join(',\n') + '\n}' : '{}';
+  var code = "new Intl.DateTimeFormat('" + locale + "', " + optStr + ").format(new Date());\n// \"" + output + "\"";
+  document.getElementById('pg-code').textContent = code;
+}
+
+function pgCopy() {
+  var code = document.getElementById('pg-code').textContent;
+  navigator.clipboard.writeText(code).then(function() {
+    var btn = document.querySelector('.pg-copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = 'Copy code'; }, 2000);
+  });
+}
+
+// Initial render
+pgUpdate();
+
+// Update every second for a live feel
+setInterval(pgUpdate, 1000);
+</script>
+
+</body>
+</html>
