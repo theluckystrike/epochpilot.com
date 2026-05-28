@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Progress Visualizer — Plot Loss, Accuracy &amp; Learning Rate | EpochPilot</title>
+<meta name="description" content="Visualize neural network training progress in real time. Plot train/val loss, accuracy, and learning rate on a Canvas chart. Detects overfitting automatically and exports PNG.">
+<meta name="keywords" content="training progress visualizer, loss curve plot, accuracy chart, learning rate schedule, overfitting detection, machine learning tools">
+<link rel="canonical" href="https://epochpilot.com/tools/training-progress-visualizer.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/training-progress-visualizer.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/training-progress-visualizer.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Training Progress Visualizer — Plot Loss, Accuracy &amp; Learning Rate | EpochPilot">
+<meta property="og:description" content="Visualize neural network training progress in real time. Plot train/val loss, accuracy, and learning rate on a Canvas chart. Detects overfitting automatically and exports PNG.">
+<meta property="og:url" content="https://epochpilot.com/tools/training-progress-visualizer.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Training Progress Visualizer | EpochPilot">
+<meta name="twitter:description" content="Plot loss, accuracy, and learning rate curves. Automatic overfitting detection with annotations. Export as PNG.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Training Progress Visualizer",
+  "url": "https://epochpilot.com/tools/training-progress-visualizer.html",
+  "description": "Visualize neural network training progress. Plot train/val loss, accuracy, and learning rate. Automatic overfitting detection. Export chart as PNG.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Training Progress Visualizer — Plot Loss, Accuracy & Learning Rate",
+  "description": "An interactive browser tool for visualizing neural network training metrics. Paste CSV epoch data and get instant multi-line charts with automatic overfitting detection.",
+  "url": "https://epochpilot.com/tools/training-progress-visualizer.html",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com"
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://epochpilot.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://epochpilot.com/tools/"},{"@type":"ListItem","position":3,"name":"Training Progress Visualizer"}]}</script>
+<style>
+/* ── Tool-specific styles (no external deps) ── */
+:root {
+  --c-loss:   #f38ba8;
+  --c-vloss:  #fab387;
+  --c-acc:    #a6e3a1;
+  --c-vacc:   #89dceb;
+  --c-lr:     #cba6f7;
+  --c-grid:   #2a2a2a;
+  --c-annot:  #f9e2af;
+}
+
+.tool-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ctrl-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ctrl-group label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ctrl-group select,
+.ctrl-group input[type="number"] {
+  background: #141414;
+  border: 1px solid #333;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.88rem;
+  min-width: 120px;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  background: #141414;
+  border: 1px solid #333;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.btn:hover { border-color: var(--accent); background: #1f1f1f; }
+.btn.primary { border-color: var(--accent); color: var(--accent); }
+.btn.primary:hover { background: rgba(234,179,8,0.1); }
+
+.csv-area {
+  width: 100%;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  color: #cdd6f4;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.5;
+}
+.csv-area:focus { outline: 1px solid var(--accent); }
+
+.canvas-wrap {
+  position: relative;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  user-select: none;
+}
+
+#mainCanvas {
+  display: block;
+  width: 100%;
+  cursor: crosshair;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.legend-item.hidden { opacity: 0.35; }
+.legend-dot {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.status-val { color: var(--text); font-weight: 500; }
+
+.annot-box {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(249,226,175,0.06);
+  border-left: 3px solid var(--c-annot);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: var(--c-annot);
+  display: none;
+}
+.annot-box.show { display: block; }
+
+/* ── Zoom/pan tooltip ── */
+.crosshair-tip {
+  position: absolute;
+  background: rgba(20,20,20,0.95);
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span>
+      <span>Training Progress Visualizer</span>
+    </nav>
+    <h1>Training Progress Visualizer</h1>
+    <p>Plot loss, accuracy, and learning rate curves for any training run. Paste CSV epoch data or use the built-in demo. Overfitting is flagged automatically.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section tool-wrap">
+
+    <!-- CSV input -->
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.4rem;">
+      Paste CSV — header: <code>epoch,loss,val_loss,accuracy,val_accuracy,lr</code>
+      (omit columns you don't have; only <code>epoch</code> and at least one metric required)
+    </p>
+    <textarea class="csv-area" id="csvInput" spellcheck="false" placeholder="epoch,loss,val_loss,accuracy,val_accuracy,lr
+1,0.92,0.95,0.62,0.60,0.01
+2,0.75,0.78,0.71,0.69,0.01
+..."></textarea>
+
+    <div class="btn-row" style="margin-top:0.5rem;">
+      <button class="btn primary" id="btnPlot">Plot</button>
+      <button class="btn" id="btnDemo">Load Demo Data</button>
+      <button class="btn" id="btnClear">Clear</button>
+      <button class="btn" id="btnExport">Export PNG</button>
+      <button class="btn" id="btnZoomReset">Reset Zoom</button>
+    </div>
+
+    <div class="ctrl-row">
+      <div class="ctrl-group">
+        <label>Overfitting threshold (val/train ratio)</label>
+        <input type="number" id="overfitThresh" value="1.15" step="0.05" min="1.0" max="3.0">
+      </div>
+      <div class="ctrl-group">
+        <label>LR schedule overlay</label>
+        <select id="lrSchedule">
+          <option value="none">None (use data)</option>
+          <option value="step">Step decay (halve every 10 epochs)</option>
+          <option value="cosine">Cosine annealing</option>
+          <option value="warmup">Linear warmup + cosine</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>Smoothing (0 = off)</label>
+        <input type="number" id="smoothing" value="0" step="0.1" min="0" max="0.99">
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legend">
+      <div class="legend-item" data-series="loss"><div class="legend-dot" style="background:var(--c-loss)"></div>Train Loss</div>
+      <div class="legend-item" data-series="val_loss"><div class="legend-dot" style="background:var(--c-vloss)"></div>Val Loss</div>
+      <div class="legend-item" data-series="accuracy"><div class="legend-dot" style="background:var(--c-acc)"></div>Train Acc</div>
+      <div class="legend-item" data-series="val_accuracy"><div class="legend-dot" style="background:var(--c-vacc)"></div>Val Acc</div>
+      <div class="legend-item" data-series="lr"><div class="legend-dot" style="background:var(--c-lr)"></div>LR (×1000)</div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="mainCanvas" height="400"></canvas>
+      <div class="crosshair-tip" id="tip"></div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar" id="statusBar">
+      <span>Epochs: <span class="status-val" id="stEpochs">—</span></span>
+      <span>Best Val Loss: <span class="status-val" id="stBestVL">—</span></span>
+      <span>Best Val Acc: <span class="status-val" id="stBestVA">—</span></span>
+      <span>Min LR: <span class="status-val" id="stMinLR">—</span></span>
+      <span>Max LR: <span class="status-val" id="stMaxLR">—</span></span>
+      <span>Zoom: <span class="status-val" id="stZoom">1×</span></span>
+    </div>
+
+    <!-- Overfitting annotation -->
+    <div class="annot-box" id="annotBox"></div>
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What CSV format does this tool accept?</summary>
+      <p>The first row must be a header. Required column: <code>epoch</code>. Optional columns (any combination): <code>loss</code>, <code>val_loss</code>, <code>accuracy</code>, <code>val_accuracy</code>, <code>lr</code>. Columns in any order. Extra columns are ignored. Values must be numeric.</p>
+    </details>
+
+    <details>
+      <summary>How is overfitting detected?</summary>
+      <p>When val_loss and loss are both present, the tool computes the ratio <code>val_loss / loss</code> at each epoch. When this ratio exceeds the configured threshold (default 1.15) for 3 or more consecutive epochs, an overfitting annotation is drawn on the chart at the first divergence point.</p>
+    </details>
+
+    <details>
+      <summary>What does the smoothing parameter do?</summary>
+      <p>Smoothing applies exponential moving average (EMA) to each series before plotting. A value of 0 means no smoothing. A value of 0.9 applies heavy smoothing. This matches the smoothing slider in TensorBoard.</p>
+    </details>
+
+    <details>
+      <summary>How do I zoom and pan the chart?</summary>
+      <p>Scroll the mouse wheel over the chart to zoom in/out along the epoch axis. Click and drag left/right to pan. Press Reset Zoom or use the button to return to full view.</p>
+    </details>
+
+    <details>
+      <summary>What LR schedules are available?</summary>
+      <p>If your CSV includes a <code>lr</code> column the actual values are plotted. The dropdown overlays a synthetic schedule on top: step decay (halve every 10 epochs), cosine annealing, or linear warmup followed by cosine decay. This is useful for planning before a run.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>All rendering uses the browser's native Canvas 2D API — no external charting library is loaded. The chart engine handles multi-axis scaling (loss/accuracy on the left, LR on the right), zoom/pan state, and PNG export via <code>canvas.toDataURL()</code>.</p>
+    <p>Overfitting detection scans for sustained val/train divergence above your chosen threshold. The annotation marker is drawn directly on the canvas and included in exported images.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/hyperparameter-search-tool.html" class="btn btn-outline" style="font-size:0.85rem;">Hyperparameter Search Tool</a>
+      <a href="/tools/epoch-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch Converter</a>
+      <a href="/tools/python-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">Python Timestamps</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>All data stays in your browser. No CSV rows are sent anywhere. Source is on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is maintained by <a href="https://zovo.one">Michael Lip</a>. Questions: <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Learn about timestamp edge cases in <a href="/research/timestamp-gotchas.html" style="color:#58a6ff;">Timestamp Bugs You'll Hit</a> — 15 real-world bugs documented</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — AI Code Tools &amp; Fixes</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── Demo data ─────────────────────────────────────────────── */
+  const DEMO_CSV = `epoch,loss,val_loss,accuracy,val_accuracy,lr
+1,0.9200,0.9450,0.6180,0.6050,0.010000
+2,0.7510,0.7840,0.7120,0.6940,0.010000
+3,0.6320,0.6750,0.7650,0.7430,0.010000
+4,0.5480,0.6020,0.8010,0.7750,0.010000
+5,0.4810,0.5430,0.8260,0.8010,0.010000
+6,0.4230,0.4980,0.8440,0.8190,0.010000
+7,0.3780,0.4700,0.8590,0.8290,0.010000
+8,0.3390,0.4570,0.8710,0.8350,0.010000
+9,0.3070,0.4620,0.8820,0.8360,0.010000
+10,0.2800,0.4780,0.8910,0.8320,0.005000
+11,0.2560,0.5120,0.9000,0.8280,0.005000
+12,0.2340,0.5530,0.9070,0.8230,0.005000
+13,0.2150,0.5980,0.9140,0.8180,0.005000
+14,0.1980,0.6410,0.9200,0.8130,0.005000
+15,0.1830,0.6920,0.9260,0.8070,0.005000
+16,0.1700,0.7380,0.9310,0.8010,0.005000
+17,0.1590,0.7830,0.9350,0.7970,0.005000
+18,0.1490,0.8270,0.9390,0.7930,0.002500
+19,0.1400,0.8690,0.9420,0.7890,0.002500
+20,0.1320,0.9080,0.9460,0.7850,0.002500`;
+
+  /* ─── State ──────────────────────────────────────────────────── */
+  const SERIES_COLORS = {
+    loss: '#f38ba8',
+    val_loss: '#fab387',
+    accuracy: '#a6e3a1',
+    val_accuracy: '#89dceb',
+    lr: '#cba6f7'
+  };
+
+  let data = null;           // parsed rows
+  let hidden = new Set();    // hidden series keys
+  let zoom = { minEpoch: null, maxEpoch: null };
+  let panStart = null;       // { x, minEpoch }
+  let isDragging = false;
+
+  /* ─── DOM refs ───────────────────────────────────────────────── */
+  const canvas = document.getElementById('mainCanvas');
+  const ctx = canvas.getContext('2d');
+  const wrap = document.getElementById('canvasWrap');
+  const tip = document.getElementById('tip');
+  const csvInput = document.getElementById('csvInput');
+  const annotBox = document.getElementById('annotBox');
+
+  /* ─── Parse CSV ──────────────────────────────────────────────── */
+  function parseCSV(raw) {
+    const lines = raw.trim().split('\n').filter(l => l.trim());
+    if (lines.length < 2) throw new Error('Need header + at least 1 data row.');
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const epochIdx = headers.indexOf('epoch');
+    if (epochIdx === -1) throw new Error('Missing "epoch" column.');
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const vals = lines[i].split(',').map(v => v.trim());
+      const row = {};
+      headers.forEach((h, j) => {
+        row[h] = parseFloat(vals[j] ?? 'NaN');
+      });
+      if (isNaN(row.epoch)) continue;
+      rows.push(row);
+    }
+    rows.sort((a, b) => a.epoch - b.epoch);
+    return { headers, rows };
+  }
+
+  /* ─── EMA smoothing ─────────────────────────────────────────── */
+  function smooth(arr, alpha) {
+    if (!alpha || alpha <= 0) return arr.slice();
+    const out = [];
+    let ema = arr[0];
+    for (let i = 0; i < arr.length; i++) {
+      ema = alpha * ema + (1 - alpha) * arr[i];
+      out.push(ema);
+    }
+    return out;
+  }
+
+  /* ─── LR schedule synthesizer ───────────────────────────────── */
+  function syntheticLR(epochs, schedule, initLR) {
+    const n = epochs.length;
+    if (schedule === 'none' || !schedule) return null;
+    return epochs.map((_, i) => {
+      if (schedule === 'step') {
+        return initLR * Math.pow(0.5, Math.floor(i / 10));
+      } else if (schedule === 'cosine') {
+        return initLR * 0.5 * (1 + Math.cos(Math.PI * i / n));
+      } else if (schedule === 'warmup') {
+        const warmSteps = Math.max(1, Math.round(n * 0.1));
+        if (i < warmSteps) return initLR * (i + 1) / warmSteps;
+        const t = (i - warmSteps) / Math.max(1, n - warmSteps);
+        return initLR * 0.5 * (1 + Math.cos(Math.PI * t));
+      }
+      return initLR;
+    });
+  }
+
+  /* ─── Detect overfitting ─────────────────────────────────────── */
+  function detectOverfitting(rows, threshold) {
+    if (!rows[0] || rows[0].val_loss == null || isNaN(rows[0].val_loss)) return null;
+    let streak = 0;
+    let firstEpoch = null;
+    for (const row of rows) {
+      if (isNaN(row.loss) || isNaN(row.val_loss) || row.loss <= 0) { streak = 0; continue; }
+      if (row.val_loss / row.loss > threshold) {
+        streak++;
+        if (streak === 3 && firstEpoch === null) firstEpoch = row.epoch - 2;
+      } else {
+        streak = 0;
+      }
+    }
+    if (firstEpoch === null && streak >= 3) firstEpoch = rows[rows.length - streak].epoch;
+    return firstEpoch;
+  }
+
+  /* ─── Main draw function ─────────────────────────────────────── */
+  function draw() {
+    if (!data) { drawEmpty(); return; }
+
+    const { rows } = data;
+    const alphaSmooth = parseFloat(document.getElementById('smoothing').value) || 0;
+    const lrSchedule = document.getElementById('lrSchedule').value;
+    const overfitThresh = parseFloat(document.getElementById('overfitThresh').value) || 1.15;
+
+    /* Resolve visible epoch range */
+    const allEpochs = rows.map(r => r.epoch);
+    const eMin = zoom.minEpoch ?? allEpochs[0];
+    const eMax = zoom.maxEpoch ?? allEpochs[allEpochs.length - 1];
+    const visRows = rows.filter(r => r.epoch >= eMin && r.epoch <= eMax);
+
+    /* Determine which series exist */
+    const seriesKeys = ['loss', 'val_loss', 'accuracy', 'val_accuracy'];
+    const hasLR = rows.some(r => !isNaN(r.lr));
+    const lrSched = lrSchedule !== 'none' ? syntheticLR(rows.map(r => r.epoch), lrSchedule, rows[0]?.lr ?? 0.01) : null;
+    const useLR = hasLR || !!lrSched;
+
+    /* Canvas sizing */
+    const W = canvas.offsetWidth;
+    const H = 400;
+    canvas.width = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const PAD_L = 60, PAD_R = useLR ? 60 : 20, PAD_T = 20, PAD_B = 45;
+    const plotW = W - PAD_L - PAD_R;
+    const plotH = H - PAD_T - PAD_B;
+
+    ctx.clearRect(0, 0, W, H);
+
+    /* Compute y-ranges for loss/acc and lr */
+    let lossMin = Infinity, lossMax = -Infinity;
+    let accMin = Infinity, accMax = -Infinity;
+    let lrMin = Infinity, lrMax = -Infinity;
+
+    const seriesData = {};
+    seriesKeys.forEach(k => {
+      const arr = visRows.map(r => r[k]).filter(v => !isNaN(v));
+      if (arr.length === 0) return;
+      const s = smooth(visRows.map(r => isNaN(r[k]) ? null : r[k]).filter(v => v !== null), alphaSmooth);
+      seriesData[k] = { raw: arr, smoothed: s, epochs: visRows.filter(r => !isNaN(r[k])).map(r => r.epoch) };
+      if (k.includes('accuracy')) {
+        accMin = Math.min(accMin, ...s); accMax = Math.max(accMax, ...s);
+      } else {
+        lossMin = Math.min(lossMin, ...s); lossMax = Math.max(lossMax, ...s);
+      }
+    });
+
+    if (useLR) {
+      const lrArr = lrSched
+        ? rows.map((r, i) => lrSched[i]).filter(v => v != null)
+        : rows.filter(r => !isNaN(r.lr)).map(r => r.lr);
+      lrMin = Math.min(...lrArr); lrMax = Math.max(...lrArr);
+      if (lrMin === lrMax) { lrMin *= 0.5; lrMax *= 1.5; }
+    }
+
+    /* Pad ranges */
+    const padRange = (mn, mx) => {
+      if (!isFinite(mn)) return [0, 1];
+      const pad = (mx - mn) * 0.08 || 0.1;
+      return [mn - pad, mx + pad];
+    };
+    const [lMin, lMax] = padRange(lossMin, lossMax);
+    const [aMin, aMax] = padRange(accMin, accMax);
+    const [rMin, rMax] = padRange(lrMin, lrMax);
+
+    /* Coordinate helpers */
+    const xOf = epoch => PAD_L + ((epoch - eMin) / Math.max(1, eMax - eMin)) * plotW;
+    const yOfLoss = v => PAD_T + (1 - (v - lMin) / (lMax - lMin)) * plotH;
+    const yOfAcc = v => PAD_T + (1 - (v - aMin) / (aMax - aMin)) * plotH;
+    const yOfLR = v => PAD_T + (1 - (v - rMin) / (rMax - rMin)) * plotH;
+
+    /* ── Draw grid ── */
+    ctx.strokeStyle = '#2a2a2a';
+    ctx.lineWidth = 1;
+    const gridLines = 6;
+    for (let i = 0; i <= gridLines; i++) {
+      const y = PAD_T + (i / gridLines) * plotH;
+      ctx.beginPath(); ctx.moveTo(PAD_L, y); ctx.lineTo(PAD_L + plotW, y); ctx.stroke();
+    }
+    // vertical grid
+    const epochSpan = eMax - eMin;
+    const epochStep = epochSpan <= 10 ? 1 : epochSpan <= 20 ? 2 : epochSpan <= 50 ? 5 : 10;
+    const firstE = Math.ceil(eMin / epochStep) * epochStep;
+    for (let e = firstE; e <= eMax; e += epochStep) {
+      const x = xOf(e);
+      ctx.beginPath(); ctx.moveTo(x, PAD_T); ctx.lineTo(x, PAD_T + plotH); ctx.stroke();
+    }
+
+    /* ── Draw axes ── */
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(PAD_L, PAD_T); ctx.lineTo(PAD_L, PAD_T + plotH);
+    ctx.lineTo(PAD_L + plotW, PAD_T + plotH);
+    if (useLR) { ctx.moveTo(PAD_L + plotW, PAD_T); ctx.lineTo(PAD_L + plotW, PAD_T + plotH); }
+    ctx.stroke();
+
+    /* ── Left axis labels (loss + acc share left axis region) ── */
+    ctx.fillStyle = '#666';
+    ctx.font = '11px IBM Plex Sans, sans-serif';
+    ctx.textAlign = 'right';
+    const hasLoss = seriesData.loss || seriesData.val_loss;
+    const hasAcc = seriesData.accuracy || seriesData.val_accuracy;
+    for (let i = 0; i <= gridLines; i++) {
+      const frac = i / gridLines;
+      const y = PAD_T + (1 - frac) * plotH;
+      if (hasLoss) {
+        const v = lMin + frac * (lMax - lMin);
+        ctx.fillText(v.toFixed(3), PAD_L - 4, y + 4);
+      }
+    }
+
+    /* ── Right axis labels (LR) ── */
+    if (useLR) {
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#9a8bbc';
+      for (let i = 0; i <= gridLines; i++) {
+        const frac = i / gridLines;
+        const y = PAD_T + (1 - frac) * plotH;
+        const v = rMin + frac * (rMax - rMin);
+        ctx.fillText(v.toExponential(2), PAD_L + plotW + 5, y + 4);
+      }
+    }
+
+    /* ── X axis labels ── */
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.font = '11px IBM Plex Sans, sans-serif';
+    for (let e = firstE; e <= eMax; e += epochStep) {
+      ctx.fillText(e, xOf(e), PAD_T + plotH + 16);
+    }
+    ctx.fillText('Epoch', PAD_L + plotW / 2, PAD_T + plotH + 34);
+
+    /* ── Draw series ── */
+    function drawLine(epochs, values, yFn, color, dashed) {
+      if (!epochs || epochs.length < 2) return;
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      if (dashed) ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      epochs.forEach((ep, i) => {
+        const x = xOf(ep); const y = yFn(values[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (!hidden.has('loss') && seriesData.loss)
+      drawLine(seriesData.loss.epochs, seriesData.loss.smoothed, yOfLoss, SERIES_COLORS.loss, false);
+    if (!hidden.has('val_loss') && seriesData.val_loss)
+      drawLine(seriesData.val_loss.epochs, seriesData.val_loss.smoothed, yOfLoss, SERIES_COLORS.val_loss, true);
+    if (!hidden.has('accuracy') && seriesData.accuracy)
+      drawLine(seriesData.accuracy.epochs, seriesData.accuracy.smoothed, yOfAcc, SERIES_COLORS.accuracy, false);
+    if (!hidden.has('val_accuracy') && seriesData.val_accuracy)
+      drawLine(seriesData.val_accuracy.epochs, seriesData.val_accuracy.smoothed, yOfAcc, SERIES_COLORS.val_accuracy, true);
+
+    /* LR line */
+    if (!hidden.has('lr') && useLR) {
+      const lrEpochs = lrSched ? rows.map(r => r.epoch) : rows.filter(r => !isNaN(r.lr)).map(r => r.epoch);
+      const lrVals = lrSched ? rows.map((_, i) => lrSched[i]) : rows.filter(r => !isNaN(r.lr)).map(r => r.lr);
+      const visE = lrEpochs.filter(e => e >= eMin && e <= eMax);
+      const visV = lrEpochs.reduce((acc, e, i) => { if (e >= eMin && e <= eMax) acc.push(lrVals[i]); return acc; }, []);
+      drawLine(visE, visV, yOfLR, SERIES_COLORS.lr, false);
+    }
+
+    /* ── Overfitting annotation ── */
+    const ovEpoch = detectOverfitting(rows, overfitThresh);
+    if (ovEpoch !== null && ovEpoch >= eMin && ovEpoch <= eMax) {
+      const x = xOf(ovEpoch);
+      ctx.save();
+      ctx.strokeStyle = '#f9e2af';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(x, PAD_T); ctx.lineTo(x, PAD_T + plotH); ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = '#f9e2af';
+      ctx.font = 'bold 11px IBM Plex Sans, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('Overfitting', x + 4, PAD_T + 14);
+
+      annotBox.className = 'annot-box show';
+      annotBox.textContent = `Overfitting detected starting at epoch ${ovEpoch}: val_loss / loss ratio exceeded ${overfitThresh}x for 3+ consecutive epochs. Consider early stopping, dropout, or weight decay.`;
+    } else {
+      annotBox.className = 'annot-box';
+    }
+
+    /* ── Status bar ── */
+    document.getElementById('stEpochs').textContent = rows.length;
+    const vlArr = rows.map(r => r.val_loss).filter(v => !isNaN(v));
+    const vaArr = rows.map(r => r.val_accuracy).filter(v => !isNaN(v));
+    const lrArr2 = rows.map(r => r.lr).filter(v => !isNaN(v));
+    document.getElementById('stBestVL').textContent = vlArr.length ? Math.min(...vlArr).toFixed(4) : '—';
+    document.getElementById('stBestVA').textContent = vaArr.length ? (Math.max(...vaArr) * 100).toFixed(2) + '%' : '—';
+    document.getElementById('stMinLR').textContent = lrArr2.length ? Math.min(...lrArr2).toExponential(3) : '—';
+    document.getElementById('stMaxLR').textContent = lrArr2.length ? Math.max(...lrArr2).toExponential(3) : '—';
+    document.getElementById('stZoom').textContent = (zoom.minEpoch !== null)
+      ? `${eMin}–${eMax}` : '1×';
+  }
+
+  function drawEmpty() {
+    const W = canvas.offsetWidth || 700;
+    const H = 400;
+    canvas.width = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#333';
+    ctx.font = '14px IBM Plex Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Paste CSV data above and click Plot, or try the Demo.', W / 2, H / 2);
+  }
+
+  /* ─── Buttons ────────────────────────────────────────────────── */
+  document.getElementById('btnPlot').addEventListener('click', () => {
+    try {
+      data = parseCSV(csvInput.value);
+      zoom = { minEpoch: null, maxEpoch: null };
+      draw();
+    } catch (e) {
+      alert('Parse error: ' + e.message);
+    }
+  });
+
+  document.getElementById('btnDemo').addEventListener('click', () => {
+    csvInput.value = DEMO_CSV;
+    data = parseCSV(DEMO_CSV);
+    zoom = { minEpoch: null, maxEpoch: null };
+    draw();
+  });
+
+  document.getElementById('btnClear').addEventListener('click', () => {
+    csvInput.value = '';
+    data = null;
+    zoom = { minEpoch: null, maxEpoch: null };
+    annotBox.className = 'annot-box';
+    drawEmpty();
+  });
+
+  document.getElementById('btnExport').addEventListener('click', () => {
+    if (!data) { alert('Plot something first.'); return; }
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = 'training-progress.png';
+    a.click();
+  });
+
+  document.getElementById('btnZoomReset').addEventListener('click', () => {
+    zoom = { minEpoch: null, maxEpoch: null };
+    draw();
+  });
+
+  /* ─── Legend toggle ─────────────────────────────────────────── */
+  document.getElementById('legend').addEventListener('click', e => {
+    const item = e.target.closest('.legend-item');
+    if (!item) return;
+    const k = item.dataset.series;
+    if (hidden.has(k)) hidden.delete(k); else hidden.add(k);
+    item.classList.toggle('hidden');
+    draw();
+  });
+
+  /* ─── Zoom (scroll) ─────────────────────────────────────────── */
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (!data) return;
+    const rows = data.rows;
+    const allEpochs = rows.map(r => r.epoch);
+    const eMin0 = zoom.minEpoch ?? allEpochs[0];
+    const eMax0 = zoom.maxEpoch ?? allEpochs[allEpochs.length - 1];
+    const span = eMax0 - eMin0;
+    const factor = e.deltaY < 0 ? 0.85 : 1.15;
+    const newSpan = Math.max(3, Math.min(allEpochs[allEpochs.length - 1] - allEpochs[0], span * factor));
+    const center = (eMin0 + eMax0) / 2;
+    zoom.minEpoch = Math.max(allEpochs[0], Math.round(center - newSpan / 2));
+    zoom.maxEpoch = Math.min(allEpochs[allEpochs.length - 1], Math.round(center + newSpan / 2));
+    draw();
+  }, { passive: false });
+
+  /* ─── Pan (drag) ────────────────────────────────────────────── */
+  canvas.addEventListener('mousedown', e => {
+    if (!data) return;
+    isDragging = true;
+    const rows = data.rows;
+    panStart = {
+      x: e.clientX,
+      minEpoch: zoom.minEpoch ?? rows[0].epoch,
+      maxEpoch: zoom.maxEpoch ?? rows[rows.length - 1].epoch
+    };
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!data) return;
+    if (isDragging && panStart) {
+      const dx = e.clientX - panStart.x;
+      const rows = data.rows;
+      const allEpochs = rows.map(r => r.epoch);
+      const plotW = canvas.offsetWidth - 80;
+      const span = panStart.maxEpoch - panStart.minEpoch;
+      const epochDelta = -(dx / plotW) * span;
+      let newMin = Math.round(panStart.minEpoch + epochDelta);
+      let newMax = Math.round(panStart.maxEpoch + epochDelta);
+      const absMin = allEpochs[0], absMax = allEpochs[allEpochs.length - 1];
+      if (newMin < absMin) { newMax += absMin - newMin; newMin = absMin; }
+      if (newMax > absMax) { newMin -= newMax - absMax; newMax = absMax; }
+      zoom.minEpoch = newMin; zoom.maxEpoch = newMax;
+      draw();
+    }
+
+    /* Tooltip */
+    if (!data || isDragging) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const PAD_L = 60, PAD_R = 60, PAD_T = 20, PAD_B = 45;
+    const W = canvas.offsetWidth;
+    const plotW = W - PAD_L - PAD_R;
+    const rows = data.rows;
+    const eMin = zoom.minEpoch ?? rows[0].epoch;
+    const eMax = zoom.maxEpoch ?? rows[rows.length - 1].epoch;
+    if (mx < PAD_L || mx > W - PAD_R || my < PAD_T || my > 400 - PAD_B) {
+      tip.style.display = 'none'; return;
+    }
+    const fracX = (mx - PAD_L) / plotW;
+    const hovEpoch = eMin + fracX * (eMax - eMin);
+    const nearest = rows.reduce((a, b) => Math.abs(b.epoch - hovEpoch) < Math.abs(a.epoch - hovEpoch) ? b : a);
+    const lines = [`Epoch ${nearest.epoch}`];
+    if (!isNaN(nearest.loss)) lines.push(`Loss: ${nearest.loss.toFixed(4)}`);
+    if (!isNaN(nearest.val_loss)) lines.push(`Val Loss: ${nearest.val_loss.toFixed(4)}`);
+    if (!isNaN(nearest.accuracy)) lines.push(`Acc: ${(nearest.accuracy * 100).toFixed(2)}%`);
+    if (!isNaN(nearest.val_accuracy)) lines.push(`Val Acc: ${(nearest.val_accuracy * 100).toFixed(2)}%`);
+    if (!isNaN(nearest.lr)) lines.push(`LR: ${nearest.lr.toExponential(4)}`);
+    tip.innerHTML = lines.join('<br>');
+    const tipX = Math.min(mx + 12, W - 160);
+    tip.style.left = tipX + 'px';
+    tip.style.top = (my - 10) + 'px';
+    tip.style.display = 'block';
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+  canvas.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+
+  /* ─── Responsive redraw ─────────────────────────────────────── */
+  window.addEventListener('resize', () => { draw(); });
+
+  /* ─── Initial render ────────────────────────────────────────── */
+  drawEmpty();
+
+})();
+</script>
+
+<script src="/assets/js/share.js"></script>
+<script src="/assets/js/pro-nudge.js"></script>
+</body>
+</html>

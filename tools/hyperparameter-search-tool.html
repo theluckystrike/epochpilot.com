@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyperparameter Search Tool — Grid, Random &amp; Bayesian Comparison | EpochPilot</title>
+<meta name="description" content="Plan hyperparameter searches interactively. Define learning rate, batch size, and dropout ranges. Compare Grid, Random, and Bayesian strategies with 2D scatter plots and runtime estimates.">
+<meta name="keywords" content="hyperparameter search tool, grid search, random search, bayesian optimization, learning rate tuning, machine learning hyperparameters">
+<link rel="canonical" href="https://epochpilot.com/tools/hyperparameter-search-tool.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/tools/hyperparameter-search-tool.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/tools/hyperparameter-search-tool.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hyperparameter Search Tool — Grid, Random &amp; Bayesian Comparison | EpochPilot">
+<meta property="og:description" content="Plan hyperparameter searches interactively. Compare Grid, Random, and Bayesian strategies with 2D scatter plots and runtime estimates.">
+<meta property="og:url" content="https://epochpilot.com/tools/hyperparameter-search-tool.html">
+<meta property="og:site_name" content="EpochPilot">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hyperparameter Search Tool | EpochPilot">
+<meta name="twitter:description" content="Compare Grid, Random, and Bayesian hyperparameter search strategies with interactive 2D scatter plots.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Hyperparameter Search Tool",
+  "url": "https://epochpilot.com/tools/hyperparameter-search-tool.html",
+  "description": "Plan and visualize hyperparameter search strategies. Define search space, compare Grid vs Random vs Bayesian approaches, estimate runtime, and see interactive 2D coverage scatter plots.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Hyperparameter Search Tool — Grid, Random & Bayesian Comparison",
+  "description": "An interactive browser tool for planning neural network hyperparameter searches. Compare grid, random, and Bayesian strategies with visual scatter plots and estimated runtimes.",
+  "url": "https://epochpilot.com/tools/hyperparameter-search-tool.html",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com"
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://epochpilot.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://epochpilot.com/tools/"},{"@type":"ListItem","position":3,"name":"Hyperparameter Search Tool"}]}</script>
+<style>
+/* ── Tool-specific styles ── */
+:root {
+  --c-grid-pt:   #89b4fa;
+  --c-rand-pt:   #a6e3a1;
+  --c-bayes-pt:  #f9e2af;
+  --c-acq:       #cba6f7;
+}
+
+.tool-wrap { max-width: 940px; margin: 0 auto; }
+
+/* Two-column layout for search space + results */
+.hp-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .hp-layout { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1.1rem 1.2rem;
+}
+
+.panel h3 {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid #1f1f1f;
+  padding-bottom: 0.5rem;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+
+.field-row label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.field-row input[type="number"],
+.field-row input[type="text"],
+.field-row select {
+  background: #141414;
+  border: 1px solid #2e2e2e;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 0.32rem 0.55rem;
+  font-size: 0.84rem;
+  width: 100%;
+  font-family: inherit;
+}
+
+.field-row input:focus,
+.field-row select:focus { outline: 1px solid var(--accent); }
+
+.range-pair {
+  display: flex;
+  gap: 0.4rem;
+  width: 100%;
+}
+.range-pair input { flex: 1; min-width: 0; }
+
+.strategy-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.stab {
+  flex: 1;
+  min-width: 80px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  color: var(--text-muted);
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.83rem;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.stab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(234,179,8,0.08);
+}
+
+.stab:hover:not(.active) { border-color: #555; color: var(--text); }
+
+.btn {
+  background: #141414;
+  border: 1px solid #333;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 0.42rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.btn:hover { border-color: var(--accent); background: #1f1f1f; }
+.btn.primary { border-color: var(--accent); color: var(--accent); }
+.btn.primary:hover { background: rgba(234,179,8,0.1); }
+
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* Stats strip */
+.stats-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.stats-strip strong { color: var(--text); }
+
+/* Canvas */
+.canvas-wrap {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+canvas { display: block; width: 100%; cursor: default; }
+
+/* Acquisition function demo */
+.acq-section {
+  margin-top: 1rem;
+}
+
+.acq-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.81rem;
+}
+.legend-item { display: flex; align-items: center; gap: 0.35rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Budget table */
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  margin-top: 0.5rem;
+}
+.budget-table th {
+  color: var(--text-muted);
+  text-align: left;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid #1e1e1e;
+  font-weight: 500;
+}
+.budget-table td {
+  padding: 0.3rem 0.5rem;
+  color: var(--text);
+  border-bottom: 1px solid #141414;
+}
+.budget-table tr:last-child td { border-bottom: none; }
+
+.rec-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(234,179,8,0.15);
+  color: var(--accent);
+  margin-left: 0.4rem;
+}
+
+/* Tooltip */
+.tip {
+  position: absolute;
+  background: rgba(15,15,15,0.96);
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.78rem;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/tools/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+    <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+      <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span>
+      <span>Hyperparameter Search Tool</span>
+    </nav>
+    <h1>Hyperparameter Search Tool</h1>
+    <p>Define your search space, choose a strategy (Grid, Random, or Bayesian), and visualize coverage on a 2D scatter plot — with estimated trial counts and runtime budgets.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+  </div>
+
+  <div class="tool-section tool-wrap">
+
+    <div class="hp-layout">
+
+      <!-- LEFT: Search space config -->
+      <div>
+        <div class="panel" style="margin-bottom:1rem;">
+          <h3>Search Space</h3>
+
+          <div class="field-row">
+            <label>LR (log scale)</label>
+            <div class="range-pair">
+              <input type="number" id="lrMin" value="-5" step="0.5" title="log10 min">
+              <input type="number" id="lrMax" value="-2" step="0.5" title="log10 max">
+            </div>
+          </div>
+          <div style="font-size:0.75rem;color:#555;margin-top:-0.5rem;margin-bottom:0.6rem;margin-left:100px;">log10 range (e.g. -5 = 1e-5, -2 = 0.01)</div>
+
+          <div class="field-row">
+            <label>LR grid steps</label>
+            <input type="number" id="lrSteps" value="5" min="2" max="20">
+          </div>
+
+          <div class="field-row">
+            <label>Batch size</label>
+            <input type="text" id="batchSizes" value="16,32,64,128,256" placeholder="comma-separated">
+          </div>
+
+          <div class="field-row">
+            <label>Dropout range</label>
+            <div class="range-pair">
+              <input type="number" id="dropMin" value="0.0" step="0.05" min="0" max="1">
+              <input type="number" id="dropMax" value="0.5" step="0.05" min="0" max="1">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label>Dropout steps</label>
+            <input type="number" id="dropSteps" value="6" min="2" max="20">
+          </div>
+
+          <div class="field-row">
+            <label>Epochs / trial</label>
+            <input type="number" id="epochsPerTrial" value="20" min="1">
+          </div>
+
+          <div class="field-row">
+            <label>Sec / epoch</label>
+            <input type="number" id="secPerEpoch" value="30" min="1">
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Strategy</h3>
+          <div class="strategy-tabs" id="stratTabs">
+            <button class="stab active" data-strat="grid">Grid</button>
+            <button class="stab" data-strat="random">Random</button>
+            <button class="stab" data-strat="bayesian">Bayesian</button>
+            <button class="stab" data-strat="all">All 3</button>
+          </div>
+
+          <div id="randBudgetRow" class="field-row" style="display:none;">
+            <label>Random trials</label>
+            <input type="number" id="randTrials" value="30" min="1">
+          </div>
+
+          <div id="bayesBudgetRow" class="field-row" style="display:none;">
+            <label>Bayesian trials</label>
+            <input type="number" id="bayesTrials" value="20" min="1">
+          </div>
+
+          <div class="btn-row">
+            <button class="btn primary" id="btnGenerate">Generate</button>
+            <button class="btn" id="btnReset">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Visualization -->
+      <div>
+        <!-- Stats -->
+        <div class="stats-strip" id="statsStrip">
+          <span>Total combinations: <strong id="stTotal">—</strong></span>
+          <span>Trials: <strong id="stTrials">—</strong></span>
+          <span>Est. runtime: <strong id="stRuntime">—</strong></span>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend" id="legend">
+          <div class="legend-item" id="leg-grid" style="display:none;"><div class="legend-dot" style="background:var(--c-grid-pt)"></div>Grid</div>
+          <div class="legend-item" id="leg-random" style="display:none;"><div class="legend-dot" style="background:var(--c-rand-pt)"></div>Random</div>
+          <div class="legend-item" id="leg-bayesian" style="display:none;"><div class="legend-dot" style="background:var(--c-bayes-pt)"></div>Bayesian (EI approx)</div>
+        </div>
+
+        <!-- 2D scatter: LR vs Batch Size (x=LR, y=BatchSize) -->
+        <div class="canvas-wrap" id="scatterWrap">
+          <canvas id="scatterCanvas" height="320"></canvas>
+          <div class="tip" id="scatterTip"></div>
+        </div>
+
+        <!-- Budget table -->
+        <div id="budgetWrap" style="display:none;">
+          <table class="budget-table" id="budgetTable">
+            <thead><tr><th>Strategy</th><th>Trials</th><th>Est. Runtime</th><th>Coverage %</th><th></th></tr></thead>
+            <tbody id="budgetBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Bayesian acquisition function demo -->
+        <div class="acq-section" id="acqSection" style="display:none;">
+          <div class="panel">
+            <h3>Bayesian Acquisition Function — Expected Improvement (EI)</h3>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem;">
+              The demo below shows how EI focuses sampling. Observed points (red dots) define a surrogate.
+              The acquisition curve (purple) peaks where improvement is most expected.
+              Hover to read EI values. Each Bayesian trial in the scatter above uses this logic along the LR axis.
+            </p>
+            <div class="canvas-wrap">
+              <canvas id="acqCanvas" height="200"></canvas>
+              <div class="tip" id="acqTip"></div>
+            </div>
+            <p style="font-size:0.75rem;color:#555;margin-top:0.4rem;">
+              EI = E[max(f(x) - f*, 0)] where f* = best observed value. Computed via Gaussian process surrogate approximation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq-section" style="max-width:720px;margin:2rem auto;">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What is the difference between Grid Search and Random Search?</summary>
+      <p>Grid search exhaustively tries every combination of the specified hyperparameter values. Random search samples uniformly at random from the search space for a fixed number of trials. For high-dimensional spaces, random search finds good configurations faster because it explores more diverse values of each dimension per trial.</p>
+    </details>
+
+    <details>
+      <summary>How does Bayesian hyperparameter optimization work?</summary>
+      <p>Bayesian optimization builds a probabilistic surrogate model (typically a Gaussian process) of the objective function. After each trial it updates the model and uses an acquisition function — such as Expected Improvement (EI) — to select the next point most likely to improve on the best result so far. This is more sample-efficient than random search for expensive evaluations.</p>
+    </details>
+
+    <details>
+      <summary>What does the 2D scatter plot show?</summary>
+      <p>The horizontal axis is log10(learning rate) and the vertical axis is batch size. Each dot is one trial. Grid trials form a regular lattice; random trials are scattered uniformly; Bayesian trials cluster progressively toward promising regions based on the EI acquisition function.</p>
+    </details>
+
+    <details>
+      <summary>How is "Coverage %" calculated?</summary>
+      <p>The 2D space (LR × batch size) is divided into a 10×10 grid of cells. Coverage is the percentage of cells that contain at least one trial point. Grid search always achieves 100% on its own axes. Random and Bayesian coverage depends on the number of trials relative to the grid dimension.</p>
+    </details>
+
+    <details>
+      <summary>Should I use log scale for learning rate?</summary>
+      <p>Yes. Learning rates typically span several orders of magnitude (e.g., 1e-5 to 1e-1). Sampling uniformly on a log scale gives equal probability to each order of magnitude, which means random search explores the space proportionally rather than being dominated by large values.</p>
+    </details>
+  </section>
+
+  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+    <h2>How It Works</h2>
+    <p>All computation runs client-side in vanilla JavaScript. Grid points are generated from Cartesian products of the defined values. Random points use <code>Math.random()</code> with log-uniform sampling on LR. Bayesian points use a simplified Gaussian surrogate with squared-exponential kernel and analytical EI, re-fitted after each trial.</p>
+    <p>The acquisition function canvas renders EI over the 1D LR axis to illustrate the exploration-exploitation trade-off visually.</p>
+
+    <h3>Related Tools</h3>
+    <div class="related-tools" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+      <a href="/tools/training-progress-visualizer.html" class="btn btn-outline" style="font-size:0.85rem;">Training Progress Visualizer</a>
+      <a href="/tools/epoch-converter.html" class="btn btn-outline" style="font-size:0.85rem;">Epoch Converter</a>
+      <a href="/tools/python-timestamp.html" class="btn btn-outline" style="font-size:0.85rem;">Python Timestamps</a>
+    </div>
+
+    <h3>Privacy</h3>
+    <p>All data stays in your browser. Source is on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>
+
+    <h3>Contact</h3>
+    <p>EpochPilot is maintained by <a href="https://zovo.one">Michael Lip</a>. Questions: <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+  </section>
+</main>
+
+<div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+  <span style="font-size:0.85rem;color:#8b949e;">Learn about timestamp edge cases in <a href="/research/timestamp-gotchas.html" style="color:#58a6ff;">Timestamp Bugs You'll Hit</a> — 15 real-world bugs documented</span>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — AI Code Tools &amp; Fixes</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── DOM refs ───────────────────────────────────────────────── */
+  const scatterCanvas = document.getElementById('scatterCanvas');
+  const sCtx = scatterCanvas.getContext('2d');
+  const acqCanvas = document.getElementById('acqCanvas');
+  const aCtx = acqCanvas.getContext('2d');
+  const scatterTip = document.getElementById('scatterTip');
+  const acqTip = document.getElementById('acqTip');
+
+  let currentStrat = 'grid';
+  let lastPoints = []; // {x (log10 LR), y (batch idx), strat, lr, batch, drop}
+
+  /* ─── Strategy tab ───────────────────────────────────────────── */
+  document.getElementById('stratTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.stab');
+    if (!btn) return;
+    document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentStrat = btn.dataset.strat;
+    // Show/hide budget rows
+    document.getElementById('randBudgetRow').style.display =
+      (currentStrat === 'random' || currentStrat === 'all') ? 'flex' : 'none';
+    document.getElementById('bayesBudgetRow').style.display =
+      (currentStrat === 'bayesian' || currentStrat === 'all') ? 'flex' : 'none';
+  });
+
+  /* ─── Read inputs ────────────────────────────────────────────── */
+  function getConfig() {
+    const lrMin = parseFloat(document.getElementById('lrMin').value) || -5;
+    const lrMax = parseFloat(document.getElementById('lrMax').value) || -2;
+    const lrSteps = Math.max(2, parseInt(document.getElementById('lrSteps').value) || 5);
+    const batchRaw = document.getElementById('batchSizes').value.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v) && v > 0);
+    const batchSizes = batchRaw.length > 0 ? batchRaw : [16, 32, 64, 128];
+    const dropMin = parseFloat(document.getElementById('dropMin').value) || 0;
+    const dropMax = parseFloat(document.getElementById('dropMax').value) || 0.5;
+    const dropSteps = Math.max(2, parseInt(document.getElementById('dropSteps').value) || 6);
+    const epochsPerTrial = Math.max(1, parseInt(document.getElementById('epochsPerTrial').value) || 20);
+    const secPerEpoch = Math.max(1, parseInt(document.getElementById('secPerEpoch').value) || 30);
+    const randTrials = Math.max(1, parseInt(document.getElementById('randTrials').value) || 30);
+    const bayesTrials = Math.max(1, parseInt(document.getElementById('bayesTrials').value) || 20);
+    return { lrMin, lrMax, lrSteps, batchSizes, dropMin, dropMax, dropSteps, epochsPerTrial, secPerEpoch, randTrials, bayesTrials };
+  }
+
+  /* ─── Generate points ───────────────────────────────────────── */
+  function linspace(a, b, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1));
+    return out;
+  }
+
+  function generateGrid(cfg) {
+    const lrVals = linspace(cfg.lrMin, cfg.lrMax, cfg.lrSteps);
+    const pts = [];
+    lrVals.forEach(lr => {
+      cfg.batchSizes.forEach((bs, bi) => {
+        pts.push({ strat: 'grid', lr10: lr, lr: Math.pow(10, lr), batchIdx: bi, batch: bs, drop: (cfg.dropMin + cfg.dropMax) / 2 });
+      });
+    });
+    return pts;
+  }
+
+  function generateRandom(cfg, n) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const lr10 = cfg.lrMin + Math.random() * (cfg.lrMax - cfg.lrMin);
+      const bi = Math.floor(Math.random() * cfg.batchSizes.length);
+      const drop = cfg.dropMin + Math.random() * (cfg.dropMax - cfg.dropMin);
+      pts.push({ strat: 'random', lr10, lr: Math.pow(10, lr10), batchIdx: bi, batch: cfg.batchSizes[bi], drop });
+    }
+    return pts;
+  }
+
+  /* ─── Gaussian surrogate for Bayesian ──────────────────────── */
+  function squaredExp(x1, x2, lengthScale) {
+    return Math.exp(-0.5 * Math.pow((x1 - x2) / lengthScale, 2));
+  }
+
+  function gaussianSurrogate(xs, ys, xQuery, noise) {
+    // Returns mean and variance at xQuery given observations (xs, ys)
+    if (xs.length === 0) return { mean: 0, variance: 1 };
+    const ls = 0.5; // length scale in log10 space
+    const K = xs.map(xi => xs.map(xj => squaredExp(xi, xj, ls) + (xi === xj ? noise : 0)));
+    const k_star = xs.map(xi => squaredExp(xi, xQuery, ls));
+    // Solve K * alpha = ys via Cholesky (simplified: direct inversion for small n)
+    const n = xs.length;
+    // Naive matrix inversion for n <= ~30
+    const Kinv = invertMatrix(K);
+    if (!Kinv) return { mean: 0, variance: 1 };
+    let mean = 0;
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      for (let j = 0; j < n; j++) s += Kinv[i][j] * ys[j];
+      mean += k_star[i] * s;
+    }
+    let v = 1.0;
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      for (let j = 0; j < n; j++) s += Kinv[i][j] * k_star[j];
+      v -= k_star[i] * s;
+    }
+    return { mean, variance: Math.max(1e-8, v) };
+  }
+
+  function invertMatrix(M) {
+    const n = M.length;
+    // Augment with identity
+    const A = M.map((row, i) => [...row, ...Array.from({ length: n }, (_, j) => i === j ? 1 : 0)]);
+    for (let col = 0; col < n; col++) {
+      let pivot = -1;
+      for (let row = col; row < n; row++) { if (Math.abs(A[row][col]) > 1e-10) { pivot = row; break; } }
+      if (pivot === -1) return null;
+      [A[col], A[pivot]] = [A[pivot], A[col]];
+      const div = A[col][col];
+      A[col] = A[col].map(v => v / div);
+      for (let row = 0; row < n; row++) {
+        if (row === col) continue;
+        const factor = A[row][col];
+        A[row] = A[row].map((v, k) => v - factor * A[col][k]);
+      }
+    }
+    return A.map(row => row.slice(n));
+  }
+
+  function expectedImprovement(mean, variance, fBest) {
+    const sigma = Math.sqrt(variance);
+    if (sigma < 1e-8) return 0;
+    const z = (mean - fBest) / sigma;
+    // Normal CDF and PDF approximation
+    const phi = x => Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+    const Phi = x => 0.5 * (1 + erf(x / Math.SQRT2));
+    return (mean - fBest) * Phi(z) + sigma * phi(z);
+  }
+
+  function erf(x) {
+    const t = 1 / (1 + 0.3275911 * Math.abs(x));
+    const poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+    const r = 1 - poly * Math.exp(-x * x);
+    return x >= 0 ? r : -r;
+  }
+
+  function generateBayesian(cfg, n) {
+    const pts = [];
+    // Observed xs and simulated objectives (maximize negative loss ~ accuracy proxy)
+    const obsX = [];
+    const obsY = [];
+    const noise = 0.05;
+
+    // Simulate objective: peak near lr=-3, batch=64
+    const objective = (lr10, batchIdx) => {
+      const batchScore = 1 - Math.abs(batchIdx - 2) / cfg.batchSizes.length;
+      return -0.5 * Math.pow(lr10 + 3, 2) + 0.3 * batchScore + 0.05 * (Math.random() - 0.5);
+    };
+
+    for (let i = 0; i < n; i++) {
+      let nextLr10;
+      const bi = Math.floor(Math.random() * cfg.batchSizes.length);
+
+      if (obsX.length < 3) {
+        // Initial random exploration
+        nextLr10 = cfg.lrMin + Math.random() * (cfg.lrMax - cfg.lrMin);
+      } else {
+        // EI maximization over LR axis (fix batch for simplicity)
+        const candidates = linspace(cfg.lrMin, cfg.lrMax, 60);
+        const fBest = Math.max(...obsY);
+        let bestEI = -Infinity;
+        let bestX = candidates[0];
+        for (const c of candidates) {
+          const { mean, variance } = gaussianSurrogate(obsX, obsY, c, noise);
+          const ei = expectedImprovement(mean, variance, fBest);
+          if (ei > bestEI) { bestEI = ei; bestX = c; }
+        }
+        // Add small jitter so points don't fully collapse
+        nextLr10 = bestX + (Math.random() - 0.5) * 0.1;
+        nextLr10 = Math.max(cfg.lrMin, Math.min(cfg.lrMax, nextLr10));
+      }
+
+      const y = objective(nextLr10, bi);
+      obsX.push(nextLr10);
+      obsY.push(y);
+
+      pts.push({
+        strat: 'bayesian', lr10: nextLr10, lr: Math.pow(10, nextLr10),
+        batchIdx: bi, batch: cfg.batchSizes[bi],
+        drop: cfg.dropMin + Math.random() * (cfg.dropMax - cfg.dropMin),
+        acqVal: i
+      });
+    }
+    return { pts, obsX, obsY };
+  }
+
+  /* ─── Coverage computation ──────────────────────────────────── */
+  function coverage(pts, cfg) {
+    const cellsX = 10, cellsY = 10;
+    const set = new Set();
+    pts.forEach(p => {
+      const cx = Math.floor((p.lr10 - cfg.lrMin) / (cfg.lrMax - cfg.lrMin) * (cellsX - 0.001));
+      const cy = Math.floor(p.batchIdx / cfg.batchSizes.length * (cellsY - 0.001));
+      set.add(`${cx},${cy}`);
+    });
+    return (set.size / (cellsX * cellsY) * 100).toFixed(1);
+  }
+
+  /* ─── Format runtime ────────────────────────────────────────── */
+  function formatTime(seconds) {
+    if (seconds < 60) return seconds.toFixed(0) + 's';
+    if (seconds < 3600) return (seconds / 60).toFixed(1) + 'm';
+    return (seconds / 3600).toFixed(2) + 'h';
+  }
+
+  /* ─── Draw scatter ──────────────────────────────────────────── */
+  function drawScatter(allGroups, cfg) {
+    const W = scatterCanvas.offsetWidth || 500;
+    const H = 320;
+    scatterCanvas.width = W * window.devicePixelRatio;
+    scatterCanvas.height = H * window.devicePixelRatio;
+    sCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const PAD = { l: 58, r: 20, t: 16, b: 42 };
+    const plotW = W - PAD.l - PAD.r;
+    const plotH = H - PAD.t - PAD.b;
+
+    sCtx.clearRect(0, 0, W, H);
+
+    // Grid
+    sCtx.strokeStyle = '#1e1e1e';
+    sCtx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = PAD.t + (i / 5) * plotH;
+      sCtx.beginPath(); sCtx.moveTo(PAD.l, y); sCtx.lineTo(PAD.l + plotW, y); sCtx.stroke();
+      const x = PAD.l + (i / 5) * plotW;
+      sCtx.beginPath(); sCtx.moveTo(x, PAD.t); sCtx.lineTo(x, PAD.t + plotH); sCtx.stroke();
+    }
+
+    // Axes
+    sCtx.strokeStyle = '#333';
+    sCtx.lineWidth = 1;
+    sCtx.beginPath();
+    sCtx.moveTo(PAD.l, PAD.t); sCtx.lineTo(PAD.l, PAD.t + plotH);
+    sCtx.lineTo(PAD.l + plotW, PAD.t + plotH); sCtx.stroke();
+
+    // X axis labels (LR log10)
+    sCtx.fillStyle = '#555';
+    sCtx.font = '11px IBM Plex Sans, sans-serif';
+    sCtx.textAlign = 'center';
+    const lrRange = cfg.lrMax - cfg.lrMin;
+    for (let v = Math.ceil(cfg.lrMin); v <= Math.floor(cfg.lrMax); v++) {
+      const x = PAD.l + ((v - cfg.lrMin) / lrRange) * plotW;
+      sCtx.fillText('1e' + v, x, PAD.t + plotH + 14);
+    }
+    sCtx.fillStyle = '#444';
+    sCtx.fillText('Learning Rate', PAD.l + plotW / 2, PAD.t + plotH + 30);
+
+    // Y axis labels (batch sizes)
+    sCtx.textAlign = 'right';
+    cfg.batchSizes.forEach((bs, i) => {
+      const y = PAD.t + (1 - (i + 0.5) / cfg.batchSizes.length) * plotH;
+      sCtx.fillStyle = '#555';
+      sCtx.fillText(bs, PAD.l - 5, y + 4);
+    });
+    sCtx.save();
+    sCtx.translate(14, PAD.t + plotH / 2);
+    sCtx.rotate(-Math.PI / 2);
+    sCtx.textAlign = 'center';
+    sCtx.fillStyle = '#444';
+    sCtx.fillText('Batch Size', 0, 0);
+    sCtx.restore();
+
+    // Points
+    const colors = { grid: '#89b4fa', random: '#a6e3a1', bayesian: '#f9e2af' };
+    const POINT_R = 5;
+
+    allGroups.forEach(({ pts, strat }) => {
+      sCtx.fillStyle = colors[strat];
+      sCtx.globalAlpha = currentStrat === 'all' ? 0.7 : 0.85;
+      pts.forEach(p => {
+        const x = PAD.l + ((p.lr10 - cfg.lrMin) / lrRange) * plotW;
+        const y = PAD.t + (1 - (p.batchIdx + 0.5) / cfg.batchSizes.length) * plotH;
+        sCtx.beginPath();
+        sCtx.arc(x, y, POINT_R, 0, Math.PI * 2);
+        sCtx.fill();
+      });
+    });
+    sCtx.globalAlpha = 1;
+
+    // Store for tooltip
+    lastPoints = allGroups.flatMap(({ pts, strat }) => pts.map(p => {
+      const x = PAD.l + ((p.lr10 - cfg.lrMin) / lrRange) * plotW;
+      const y = PAD.t + (1 - (p.batchIdx + 0.5) / cfg.batchSizes.length) * plotH;
+      return { ...p, px: x, py: y };
+    }));
+    window._hpConfig = cfg;
+  }
+
+  /* ─── Draw acquisition function ────────────────────────────── */
+  function drawAcq(obsX, obsY, cfg) {
+    const W = acqCanvas.offsetWidth || 500;
+    const H = 200;
+    acqCanvas.width = W * window.devicePixelRatio;
+    acqCanvas.height = H * window.devicePixelRatio;
+    aCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const PAD = { l: 50, r: 20, t: 16, b: 36 };
+    const plotW = W - PAD.l - PAD.r;
+    const plotH = H - PAD.t - PAD.b;
+
+    aCtx.clearRect(0, 0, W, H);
+
+    const xs = linspace(cfg.lrMin, cfg.lrMax, 120);
+    const fBest = obsY.length ? Math.max(...obsY) : 0;
+    const noise = 0.05;
+
+    // Surrogate mean + uncertainty
+    const means = xs.map(x => gaussianSurrogate(obsX, obsY, x, noise).mean);
+    const vars = xs.map(x => gaussianSurrogate(obsX, obsY, x, noise).variance);
+    const acqs = xs.map((x, i) => expectedImprovement(means[i], vars[i], fBest));
+
+    const meanMin = Math.min(...means); const meanMax = Math.max(...means);
+    const acqMax = Math.max(...acqs, 0.01);
+
+    const xOf = v => PAD.l + ((v - cfg.lrMin) / (cfg.lrMax - cfg.lrMin)) * plotW;
+    const yOfM = v => PAD.t + (1 - (v - meanMin) / (meanMax - meanMin + 0.001)) * plotH;
+    const yOfA = v => PAD.t + (1 - v / acqMax) * plotH;
+
+    // Grid
+    aCtx.strokeStyle = '#1a1a1a';
+    aCtx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = PAD.t + (i / 4) * plotH;
+      aCtx.beginPath(); aCtx.moveTo(PAD.l, y); aCtx.lineTo(PAD.l + plotW, y); aCtx.stroke();
+    }
+
+    // Axis
+    aCtx.strokeStyle = '#2a2a2a';
+    aCtx.beginPath();
+    aCtx.moveTo(PAD.l, PAD.t); aCtx.lineTo(PAD.l, PAD.t + plotH);
+    aCtx.lineTo(PAD.l + plotW, PAD.t + plotH); aCtx.stroke();
+
+    // Surrogate uncertainty fill
+    aCtx.save();
+    aCtx.globalAlpha = 0.15;
+    aCtx.fillStyle = '#89b4fa';
+    aCtx.beginPath();
+    xs.forEach((x, i) => {
+      const px = xOf(x); const py = yOfM(means[i] + Math.sqrt(vars[i]));
+      if (i === 0) aCtx.moveTo(px, py); else aCtx.lineTo(px, py);
+    });
+    for (let i = xs.length - 1; i >= 0; i--) {
+      const px = xOf(xs[i]); const py = yOfM(means[i] - Math.sqrt(vars[i]));
+      aCtx.lineTo(px, py);
+    }
+    aCtx.closePath(); aCtx.fill();
+    aCtx.restore();
+
+    // Surrogate mean
+    aCtx.strokeStyle = '#89b4fa';
+    aCtx.lineWidth = 1.5;
+    aCtx.beginPath();
+    xs.forEach((x, i) => {
+      const px = xOf(x); const py = yOfM(means[i]);
+      if (i === 0) aCtx.moveTo(px, py); else aCtx.lineTo(px, py);
+    });
+    aCtx.stroke();
+
+    // Acquisition function
+    aCtx.strokeStyle = '#cba6f7';
+    aCtx.lineWidth = 2;
+    aCtx.beginPath();
+    xs.forEach((x, i) => {
+      const px = xOf(x); const py = yOfA(acqs[i]);
+      if (i === 0) aCtx.moveTo(px, py); else aCtx.lineTo(px, py);
+    });
+    aCtx.stroke();
+
+    // Observed points
+    aCtx.fillStyle = '#f38ba8';
+    obsX.forEach((ox, i) => {
+      const px = xOf(ox); const py = yOfM(obsY[i]);
+      aCtx.beginPath(); aCtx.arc(px, py, 4, 0, Math.PI * 2); aCtx.fill();
+    });
+
+    // Peak EI marker
+    const peakIdx = acqs.indexOf(Math.max(...acqs));
+    const peakX = xOf(xs[peakIdx]);
+    aCtx.strokeStyle = '#cba6f7';
+    aCtx.lineWidth = 1;
+    aCtx.setLineDash([3, 3]);
+    aCtx.beginPath(); aCtx.moveTo(peakX, PAD.t); aCtx.lineTo(peakX, PAD.t + plotH); aCtx.stroke();
+    aCtx.setLineDash([]);
+
+    // X labels
+    aCtx.fillStyle = '#555';
+    aCtx.font = '11px IBM Plex Sans, sans-serif';
+    aCtx.textAlign = 'center';
+    for (let v = Math.ceil(cfg.lrMin); v <= Math.floor(cfg.lrMax); v++) {
+      aCtx.fillText('1e' + v, xOf(v), PAD.t + plotH + 14);
+    }
+    aCtx.fillText('Learning Rate', PAD.l + plotW / 2, PAD.t + plotH + 30);
+
+    // Legend
+    aCtx.textAlign = 'left';
+    aCtx.fillStyle = '#89b4fa'; aCtx.fillText('Surrogate mean ± σ', PAD.l + 4, PAD.t + 14);
+    aCtx.fillStyle = '#cba6f7'; aCtx.fillText('EI acquisition', PAD.l + 170, PAD.t + 14);
+    aCtx.fillStyle = '#f38ba8'; aCtx.fillText('Observations', PAD.l + 310, PAD.t + 14);
+
+    // Store for tooltip
+    window._acqData = { xs, acqs, means, cfg };
+  }
+
+  /* ─── Main generate ─────────────────────────────────────────── */
+  document.getElementById('btnGenerate').addEventListener('click', () => {
+    const cfg = getConfig();
+    const totalGrid = cfg.lrSteps * cfg.batchSizes.length * cfg.dropSteps;
+
+    const allGroups = [];
+    let obsX = [], obsY = [];
+
+    if (currentStrat === 'grid' || currentStrat === 'all') {
+      allGroups.push({ pts: generateGrid(cfg), strat: 'grid' });
+    }
+    if (currentStrat === 'random' || currentStrat === 'all') {
+      allGroups.push({ pts: generateRandom(cfg, cfg.randTrials), strat: 'random' });
+    }
+    if (currentStrat === 'bayesian' || currentStrat === 'all') {
+      const res = generateBayesian(cfg, cfg.bayesTrials);
+      allGroups.push({ pts: res.pts, strat: 'bayesian' });
+      obsX = res.obsX; obsY = res.obsY;
+    }
+
+    drawScatter(allGroups, cfg);
+
+    // Stats
+    const allPts = allGroups.flatMap(g => g.pts);
+    const totalTrials = allPts.length;
+    const runtime = totalTrials * cfg.epochsPerTrial * cfg.secPerEpoch;
+    document.getElementById('stTotal').textContent = totalGrid.toLocaleString();
+    document.getElementById('stTrials').textContent = totalTrials.toLocaleString();
+    document.getElementById('stRuntime').textContent = formatTime(runtime);
+
+    // Legend visibility
+    ['grid', 'random', 'bayesian'].forEach(s => {
+      document.getElementById('leg-' + s).style.display =
+        allGroups.find(g => g.strat === s) ? 'flex' : 'none';
+    });
+
+    // Budget table
+    const tbody = document.getElementById('budgetBody');
+    tbody.innerHTML = '';
+    const gridTrials = cfg.lrSteps * cfg.batchSizes.length;
+    const recommendations = [];
+
+    const rows = [
+      { strat: 'Grid', trials: gridTrials, coverage: coverage(generateGrid(cfg), cfg) },
+      { strat: 'Random', trials: cfg.randTrials, coverage: coverage(generateRandom(cfg, cfg.randTrials), cfg) },
+      { strat: 'Bayesian', trials: cfg.bayesTrials, coverage: '~focused' }
+    ];
+
+    rows.forEach(r => {
+      const rt = r.trials * cfg.epochsPerTrial * cfg.secPerEpoch;
+      let rec = '';
+      if (totalGrid <= 20) rec = r.strat === 'Grid' ? 'Recommended' : '';
+      else if (totalGrid <= 200) rec = r.strat === 'Random' ? 'Recommended' : '';
+      else rec = r.strat === 'Bayesian' ? 'Recommended' : '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${r.strat}${rec ? `<span class="rec-badge">${rec}</span>` : ''}</td><td>${r.trials}</td><td>${formatTime(rt)}</td><td>${r.coverage}%</td><td></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('budgetWrap').style.display = 'block';
+
+    // Acquisition demo (always show for bayesian/all)
+    if (currentStrat === 'bayesian' || currentStrat === 'all') {
+      document.getElementById('acqSection').style.display = 'block';
+      drawAcq(obsX, obsY, cfg);
+    } else {
+      document.getElementById('acqSection').style.display = 'none';
+    }
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    document.getElementById('statsStrip').querySelectorAll('strong').forEach(el => el.textContent = '—');
+    document.getElementById('budgetWrap').style.display = 'none';
+    document.getElementById('acqSection').style.display = 'none';
+    lastPoints = [];
+    drawEmptyScatter();
+  });
+
+  /* ─── Scatter tooltip ───────────────────────────────────────── */
+  scatterCanvas.addEventListener('mousemove', e => {
+    if (!lastPoints.length) return;
+    const rect = scatterCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const nearest = lastPoints.reduce((a, b) =>
+      Math.hypot(b.px - mx, b.py - my) < Math.hypot(a.px - mx, a.py - my) ? b : a
+    );
+    const dist = Math.hypot(nearest.px - mx, nearest.py - my);
+    if (dist > 18) { scatterTip.style.display = 'none'; return; }
+    scatterTip.innerHTML = [
+      `Strategy: ${nearest.strat}`,
+      `LR: ${nearest.lr.toExponential(3)}`,
+      `Batch: ${nearest.batch}`,
+      `Dropout: ${nearest.drop.toFixed(3)}`
+    ].join('<br>');
+    const tipX = Math.min(mx + 12, scatterCanvas.offsetWidth - 170);
+    scatterTip.style.left = tipX + 'px';
+    scatterTip.style.top = (my - 10) + 'px';
+    scatterTip.style.display = 'block';
+  });
+  scatterCanvas.addEventListener('mouseleave', () => { scatterTip.style.display = 'none'; });
+
+  /* ─── Acquisition tooltip ───────────────────────────────────── */
+  acqCanvas.addEventListener('mousemove', e => {
+    if (!window._acqData) return;
+    const rect = acqCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const { xs, acqs, means, cfg } = window._acqData;
+    const PAD_L = 50, PAD_R = 20;
+    const plotW = acqCanvas.offsetWidth - PAD_L - PAD_R;
+    if (mx < PAD_L || mx > PAD_L + plotW) { acqTip.style.display = 'none'; return; }
+    const frac = (mx - PAD_L) / plotW;
+    const idx = Math.floor(frac * xs.length);
+    const i = Math.max(0, Math.min(xs.length - 1, idx));
+    acqTip.innerHTML = `LR: 1e${xs[i].toFixed(2)}<br>EI: ${acqs[i].toFixed(5)}<br>Mean: ${means[i].toFixed(4)}`;
+    acqTip.style.left = (mx + 10) + 'px';
+    acqTip.style.top = '10px';
+    acqTip.style.display = 'block';
+  });
+  acqCanvas.addEventListener('mouseleave', () => { acqTip.style.display = 'none'; });
+
+  /* ─── Empty scatter ─────────────────────────────────────────── */
+  function drawEmptyScatter() {
+    const W = scatterCanvas.offsetWidth || 500;
+    const H = 320;
+    scatterCanvas.width = W * window.devicePixelRatio;
+    scatterCanvas.height = H * window.devicePixelRatio;
+    sCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    sCtx.clearRect(0, 0, W, H);
+    sCtx.fillStyle = '#333';
+    sCtx.font = '13px IBM Plex Sans, sans-serif';
+    sCtx.textAlign = 'center';
+    sCtx.fillText('Configure your search space and click Generate.', W / 2, H / 2);
+  }
+
+  /* ─── Responsive redraw ─────────────────────────────────────── */
+  window.addEventListener('resize', () => {
+    if (lastPoints.length === 0) { drawEmptyScatter(); return; }
+    const cfg = getConfig();
+    const allGroups = [...new Set(lastPoints.map(p => p.strat))].map(s => ({
+      pts: lastPoints.filter(p => p.strat === s), strat: s
+    }));
+    drawScatter(allGroups, cfg);
+    if (window._acqData) drawAcq(window._acqData.obsX || [], window._acqData.obsY || [], cfg);
+  });
+
+  drawEmptyScatter();
+
+})();
+</script>
+
+<script src="/assets/js/share.js"></script>
+<script src="/assets/js/pro-nudge.js"></script>
+</body>
+</html>
