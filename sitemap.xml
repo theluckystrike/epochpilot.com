@@ -148,4 +148,10 @@
   <url><loc>https://epochpilot.com/tools/week-number.html</loc></url>
   <url><loc>https://epochpilot.com/tools/weeks-between-dates.html</loc></url>
   <url><loc>https://epochpilot.com/tools/work-hours-calculator.html</loc></url>
+  <url>
+    <loc>https://epochpilot.com/tools/time-zone-meeting-planner-find-the-best-overlap</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
