@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Pomodoro Timer — Focus & Break Timer with Stats</title>
+  <meta name="description" content="Full-featured Pomodoro timer with adjustable work/break durations, circular progress, session stats, keyboard shortcuts, and persistent storage. Free...">
+  <meta name="keywords" content="pomodoro, timer, focus, break, productivity, epochpilot">
+  <link rel="canonical" href="https://epochpilot.com/tools/pomodoro-timer">
+  <!-- JSON-LD FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the Pomodoro timer work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Work for a set period (default 25 min), then take a short break (default 5 min). After 4 pomodoros, take a longer break (default 15 min). Repeat."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change the durations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Work duration can be set from 15 to 60 minutes, short break 3–10 min, long break 10–30 min. Long break interval is adjustable (default 4 pomodoros)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are my stats saved?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, your session stats (total focus time, pomodoros completed, breaks taken) are saved in your browser's local storage."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: #1e293b;
+      border-radius: 2.5rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      transition: all 0.2s;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      text-align: center;
+      color: #f1f5f9;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 0.75rem;
+    }
+    .phase-label {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: #0f172a;
+      display: inline-block;
+      padding: 0.3rem 1.5rem;
+      border-radius: 40px;
+      margin: 0 auto 1rem;
+      letter-spacing: 0.3px;
+      border: 1px solid #334155;
+    }
+    .phase-work { color: #38bdf8; border-color: #38bdf8; }
+    .phase-short { color: #a3e635; border-color: #a3e635; }
+    .phase-long { color: #facc15; border-color: #facc15; }
+
+    .timer-canvas-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 0.5rem 0 0.2rem;
+    }
+    canvas {
+      width: 240px;
+      height: 240px;
+      display: block;
+      background: transparent;
+    }
+    .time-display {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-top: -0.5rem;
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .session-count {
+      text-align: center;
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1.2rem 0 1.8rem;
+    }
+    .btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.6rem 1.6rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      min-width: 90px;
+    }
+    .btn-primary {
+      background: #38bdf8;
+      border-color: #38bdf8;
+      color: #0f172a;
+    }
+    .btn-primary:hover { background: #7dd3fc; }
+    .btn-outline:hover { background: #334155; }
+    .btn:active { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.5; pointer-events: none; }
+
+    .settings {
+      background: #0f172a;
+      border-radius: 2rem;
+      padding: 1.2rem 1rem;
+      margin: 1.2rem 0 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 1.8rem;
+      border: 1px solid #1e293b;
+    }
+    .setting-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .setting-item label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+    }
+    .setting-item input {
+      width: 70px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.3rem 0.5rem;
+      border-radius: 30px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .setting-item input:focus { outline: 2px solid #38bdf8; border-color: transparent; }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      background: #0f172a;
+      border-radius: 2rem;
+      padding: 0.9rem 0.5rem;
+      margin: 1rem 0 0.5rem;
+      border: 1px solid #1e293b;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #475569;
+      font-size: 0.8rem;
+      margin-top: 1.8rem;
+      border-top: 1px solid #1e293b;
+      padding-top: 1.2rem;
+    }
+    .keyhint {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 0.3rem;
+    }
+    @media (max-width: 480px) {
+      .container { padding: 1.5rem 1rem; }
+      h1 { font-size: 1.5rem; }
+      canvas { width: 180px; height: 180px; }
+      .time-display { font-size: 2.2rem; }
+      .settings { gap: 0.8rem; }
+      .setting-item input { width: 60px; }
+    }
+  </style>
+
+    <meta property="og:title" content="Pomodoro Timer — Focus & Break Timer with Stats">
+    <meta property="og:description" content="Full-featured Pomodoro timer with adjustable work/break durations, circular progress, session stats, keyboard shortcuts, and persistent storage. Free...">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/pomodoro-timer">
+</head>
+<body>
+<div class="container">
+  <h1>🍅 Pomodoro Timer</h1>
+  <div class="subhead">Focus & break with stats</div>
+
+  <!-- phase label -->
+  <div style="text-align: center;"><span id="phaseLabel" class="phase-label phase-work">Work</span></div>
+
+  <!-- canvas + time -->
+  <div class="timer-canvas-wrapper">
+    <canvas id="timerCanvas" width="240" height="240"></canvas>
+  </div>
+  <div class="time-display" id="timeDisplay">25:00</div>
+  <div class="session-count" id="sessionCount">Pomodoro #0</div>
+
+  <!-- controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="startPauseBtn">▶ Start</button>
+    <button class="btn btn-outline" id="resetBtn">↺ Reset</button>
+  </div>
+  <div class="keyhint">Space = start/pause · R = reset</div>
+
+  <!-- settings -->
+  <div class="settings">
+    <div class="setting-item">
+      <label>Work (min)</label>
+      <input type="number" id="workDuration" min="15" max="60" value="25" step="1">
+    </div>
+    <div class="setting-item">
+      <label>Short break</label>
+      <input type="number" id="shortBreak" min="3" max="10" value="5" step="1">
+    </div>
+    <div class="setting-item">
+      <label>Long break</label>
+      <input type="number" id="longBreak" min="10" max="30" value="15" step="1">
+    </div>
+    <div class="setting-item">
+      <label>Pomodoros / long</label>
+      <input type="number" id="longAfter" min="2" max="10" value="4" step="1">
+    </div>
+  </div>
+
+  <!-- stats -->
+  <div class="stats">
+    <div class="stat-item"><div class="stat-value" id="statFocus">0</div><div class="stat-label">Focus min</div></div>
+    <div class="stat-item"><div class="stat-value" id="statPomodoros">0</div><div class="stat-label">Pomodoros</div></div>
+    <div class="stat-item"><div class="stat-value" id="statBreaks">0</div><div class="stat-label">Breaks</div></div>
+  </div>
+
+  <div class="footer">© 2025 epochpilot.com</div>
+</div>
+
+<script>
+  (function() {
+    // ----- DOM refs -----
+    const canvas = document.getElementById('timerCanvas');
+    const ctx = canvas.getContext('2d');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const phaseLabel = document.getElementById('phaseLabel');
+    const sessionCount = document.getElementById('sessionCount');
+    const startPauseBtn = document.getElementById('startPauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const workInput = document.getElementById('workDuration');
+    const shortInput = document.getElementById('shortBreak');
+    const longInput = document.getElementById('longBreak');
+    const longAfterInput = document.getElementById('longAfter');
+
+    const statFocus = document.getElementById('statFocus');
+    const statPomodoros = document.getElementById('statPomodoros');
+    const statBreaks = document.getElementById('statBreaks');
+
+    // ----- State -----
+    let phase = 'work'; // 'work' | 'short' | 'long'
+    let timeLeft = 25 * 60; // seconds
+    let totalTime = 25 * 60;
+    let isRunning = false;
+    let timerInterval = null;
+
+    // stats (current session, persisted)
+    let stats = {
+      focusSeconds: 0,   // total focus seconds in session
+      pomodoros: 0,
+      breaks: 0
+    };
+
+    // counters
+    let pomodorosUntilLong = 4; // from input
+    let pomodoroCount = 0;      // how many work cycles completed in this session
+
+    // ----- Load stats from localStorage -----
+    function loadStats() {
+      try {
+        const saved = localStorage.getItem('epochpilot_pomodoro_stats');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed.focusSeconds === 'number') {
+            stats = parsed;
+          }
+        }
+      } catch (e) { /* ignore */ }
+    }
+    function saveStats() {
+      localStorage.setItem('epochpilot_pomodoro_stats', JSON.stringify(stats));
+    }
+
+    // ----- helpers -----
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function getPhaseDuration() {
+      const w = parseInt(workInput.value, 10) || 25;
+      const s = parseInt(shortInput.value, 10) || 5;
+      const l = parseInt(longInput.value, 10) || 15;
+      if (phase === 'work') return Math.min(60, Math.max(15, w)) * 60;
+      if (phase === 'short') return Math.min(10, Math.max(3, s)) * 60;
+      return Math.min(30, Math.max(10, l)) * 60;
+    }
+
+    function updateUI() {
+      // time
+      timeDisplay.textContent = formatTime(timeLeft);
+      // phase label
+      phaseLabel.textContent = phase === 'work' ? 'Work' : (phase === 'short' ? 'Short Break' : 'Long Break');
+      phaseLabel.className = 'phase-label ' + (phase === 'work' ? 'phase-work' : phase === 'short' ? 'phase-short' : 'phase-long');
+      // session count
+      sessionCount.textContent = `Pomodoro #${pomodoroCount}`;
+      // stats
+      statFocus.textContent = Math.floor(stats.focusSeconds / 60);
+      statPomodoros.textContent = stats.pomodoros;
+      statBreaks.textContent = stats.breaks;
+      // draw canvas
+      drawCanvas();
+    }
+
+    // ----- Canvas drawing (circular progress) -----
+    function drawCanvas() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const centerX = w/2, centerY = h/2;
+      const radius = 100;
+      const lineWidth = 12;
+
+      // background circle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+
+      // progress arc
+      const progress = totalTime > 0 ? (totalTime - timeLeft) / totalTime : 0;
+      const startAngle = -Math.PI / 2;
+      const endAngle = startAngle + (2 * Math.PI * progress);
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // inner dot
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+    }
+
+    // ----- Audio notification (Web Audio API) -----
+    function playBeep() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 880;
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.3);
+      } catch (e) { /* silent fail */ }
+    }
+
+    // ----- Phase transition -----
+    function switchPhase(newPhase) {
+      phase = newPhase;
+      totalTime = getPhaseDuration();
+      timeLeft = totalTime;
+      isRunning = false;
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      startPauseBtn.textContent = '▶ Start';
+      updateUI();
+      drawCanvas();
+    }
+
+    // ----- Timer tick -----
+    function tick() {
+      if (!isRunning) return;
+      if (timeLeft <= 0) {
+        // phase ended
+        isRunning = false;
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        startPauseBtn.textContent = '▶ Start';
+        playBeep();
+
+        // update stats & counters
+        if (phase === 'work') {
+          stats.pomodoros += 1;
+          pomodoroCount += 1;
+          // add focus time (duration of work phase)
+          const workSec = getPhaseDuration(); // work duration in seconds
+          stats.focusSeconds += workSec;
+          // decide next phase
+          const longAfter = parseInt(longAfterInput.value, 10) || 4;
+          if (pomodoroCount % longAfter === 0) {
+            switchPhase('long');
+          } else {
+            switchPhase('short');
+          }
+          stats.breaks += 1; // count break (will be taken)
+        } else {
+          // break ended -> go to work
+          stats.breaks += 1; // count break taken
+          switchPhase('work');
+        }
+        saveStats();
+        updateUI();
+        return;
+      }
+
+      timeLeft -= 1;
+      // track focus seconds (only when work phase)
+      if (phase === 'work') {
+        stats.focusSeconds += 1;
+      }
+      updateUI();
+      // save stats periodically (every 5 sec)
+      if (stats.focusSeconds % 5 === 0) saveStats();
+    }
+
+    // ----- Start / Pause -----
+    function toggleStartPause() {
+      if (isRunning) {
+        // pause
+        isRunning = false;
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        startPauseBtn.textContent = '▶ Start';
+      } else {
+        // start
+        isRunning = true;
+        startPauseBtn.textContent = '⏸ Pause';
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(tick, 1000);
+        // ensure audio context unlocks on user gesture
+        try {
+          const dummy = new (window.AudioContext || window.webkitAudioContext)();
+          dummy.close();
+        } catch(e) {}
+      }
+    }
+
+    // ----- Reset -----
+    function resetTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      isRunning = false;
+      // reset to work phase, keep durations from inputs
+      phase = 'work';
+      totalTime = getPhaseDuration();
+      timeLeft = totalTime;
+      pomodoroCount = 0;
+      // reset stats (session) but keep persisted? we reset session stats to zero but keep localStorage as new session
+      stats = { focusSeconds: 0, pomodoros: 0, breaks: 0 };
+      saveStats();
+      startPauseBtn.textContent = '▶ Start';
+      updateUI();
+    }
+
+    // ----- Re-read durations (when input changes) -----
+    function reapplyDurations() {
+      if (!isRunning) {
+        // only reset if not running, to avoid disruption
+        const oldPhase = phase;
+        totalTime = getPhaseDuration();
+        if (timeLeft > totalTime) timeLeft = totalTime;
+        updateUI();
+      }
+    }
+
+    // ----- Keyboard shortcuts -----
+    function handleKey(e) {
+      if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        toggleStartPause();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        resetTimer();
+      }
+    }
+
+    // ----- Init -----
+    function init() {
+      loadStats();
+      // set initial durations
+      const w = parseInt(workInput.value, 10) || 25;
+      const s = parseInt(shortInput.value, 10) || 5;
+      const l = parseInt(longInput.value, 10) || 15;
+      phase = 'work';
+      totalTime = Math.min(60, Math.max(15, w)) * 60;
+      timeLeft = totalTime;
+      pomodoroCount = 0;
+      pomodorosUntilLong = parseInt(longAfterInput.value, 10) || 4;
+      updateUI();
+
+      // event listeners
+      startPauseBtn.addEventListener('click', toggleStartPause);
+      resetBtn.addEventListener('click', resetTimer);
+      document.addEventListener('keydown', handleKey);
+
+      // input changes: reapply durations only if not running
+      [workInput, shortInput, longInput, longAfterInput].forEach(inp => {
+        inp.addEventListener('change', function() {
+          if (!isRunning) {
+            const oldPhase = phase;
+            totalTime = getPhaseDuration();
+            if (timeLeft > totalTime) timeLeft = totalTime;
+            updateUI();
+          }
+        });
+      });
+
+      // extra: save stats on page unload
+      window.addEventListener('beforeunload', function() {
+        if (isRunning) {
+          // save current focus seconds
+          saveStats();
+        }
+      });
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>

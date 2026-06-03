@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>ISO 8601 Duration Calculator — Parse & Convert Durations</title>
+  <meta name="description" content="Parse, convert, and compute ISO 8601 durations. Total seconds, minutes, hours, days, human-readable, cron intervals. Add, subtract, multiply durations.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://epochpilot.com/tools/iso-duration-calculator">
+  <!-- JSON-LD FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is ISO 8601 duration format?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ISO 8601 durations use the pattern P[n]Y[n]M[n]DT[n]H[n]M[n]S. Example: P1Y2M3DT4H5M6S = 1 year, 2 months, 3 days, 4 hours, 5 minutes, 6 seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you convert ISO 8601 to total seconds?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Parse each component and sum: (years * 31536000) + (months * 2592000) + (days * 86400) + (hours * 3600) + (minutes * 60) + seconds. Months and years are approximate (30.44 days/month, 365.25 days/year)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I add or subtract two durations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Enter two valid ISO 8601 durations and choose add or subtract. The result is shown as a new ISO 8601 duration and total seconds."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+    }
+    h1, h2, h3 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.25rem;
+      color: #f1f5f9;
+      border-left: 5px solid #38bdf8;
+      padding-left: 1rem;
+    }
+    .subhead {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      padding-left: 1.2rem;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 24px;
+      padding: 1.8rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border: 1px solid #2d3a52;
+    }
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.8rem;
+      align-items: flex-end;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex: 1 0 140px;
+    }
+    .input-group label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #94a3b8;
+    }
+    input, select, button {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.65rem 1rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      transition: 0.2s;
+      outline: none;
+      width: 100%;
+    }
+    input:focus, select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+    }
+    .input-error {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+    }
+    .btn {
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 600;
+      border: none;
+      padding: 0.65rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+      width: auto;
+      min-width: 100px;
+    }
+    .btn:hover {
+      background: #7dd3fc;
+      transform: scale(0.97);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+    }
+    .btn-outline:hover {
+      background: #1e3a5f;
+    }
+    .btn-sm {
+      padding: 0.4rem 1.2rem;
+      font-size: 0.9rem;
+    }
+    .tag {
+      background: #2d3a52;
+      border-radius: 30px;
+      padding: 0.2rem 1rem;
+      font-size: 0.8rem;
+      color: #b9c9e0;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .result-item {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 0.8rem 1rem;
+      text-align: center;
+      border: 1px solid #2a3a52;
+    }
+    .result-item .value {
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+    .result-item .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #94a3b8;
+      letter-spacing: 0.04em;
+    }
+    .human-readable {
+      background: #0f172a;
+      border-radius: 30px;
+      padding: 0.8rem 1.5rem;
+      border: 1px solid #38bdf8;
+      color: #b9e6ff;
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .ref-table td {
+      padding: 0.5rem 0.3rem;
+      border-bottom: 1px solid #2a3a52;
+    }
+    .ref-table tr:last-child td { border: none; }
+    .ref-table code {
+      background: #0f172a;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      color: #7dd3fc;
+    }
+    .inline-code {
+      background: #1e293b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-family: monospace;
+      color: #b9e6ff;
+    }
+    .error-msg {
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+      min-height: 1.2rem;
+    }
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: #475569;
+      font-size: 0.9rem;
+      border-top: 1px solid #1e293b;
+      padding-top: 2rem;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .card { padding: 1.2rem; }
+      .flex-row { gap: 0.8rem; }
+      .input-group { flex: 1 0 100%; }
+    }
+  </style>
+
+    <meta property="og:title" content="ISO 8601 Duration Calculator — Parse & Convert Durations">
+    <meta property="og:description" content="Parse, convert, and compute ISO 8601 durations. Total seconds, minutes, hours, days, human-readable, cron intervals. Add, subtract, multiply durations.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/iso-duration-calculator">
+</head>
+<body>
+<div class="container">
+  <h1>⏳ ISO 8601 Duration Calculator</h1>
+  <div class="subhead">Parse · Convert · Add · Subtract · Multiply</div>
+
+  <!-- PARSER / BUILDER -->
+  <div class="card">
+    <div class="card-title">🔍 Parse or build duration</div>
+    <div class="flex-row" style="align-items: flex-start;">
+      <div class="input-group" style="flex:3;">
+        <label>ISO 8601 string</label>
+        <input type="text" id="isoInput" value="P1Y2M3DT4H5M6S" placeholder="e.g. P1Y2M3DT4H5M6S">
+        <div id="parseError" class="error-msg"></div>
+      </div>
+      <div class="input-group" style="flex:0 0 auto;">
+        <label> </label>
+        <button class="btn" id="parseBtn">Parse</button>
+      </div>
+    </div>
+    <div style="margin: 1rem 0 0.5rem; border-top: 1px solid #2a3a52; padding-top: 1rem;">
+      <span class="tag">build from components</span>
+    </div>
+    <div class="flex-row">
+      <div class="input-group"><label>Years</label><input type="number" id="y" value="1" min="0" step="1"></div>
+      <div class="input-group"><label>Months</label><input type="number" id="mo" value="2" min="0" step="1"></div>
+      <div class="input-group"><label>Days</label><input type="number" id="d" value="3" min="0" step="1"></div>
+      <div class="input-group"><label>Hours</label><input type="number" id="h" value="4" min="0" step="1"></div>
+      <div class="input-group"><label>Minutes</label><input type="number" id="min" value="5" min="0" step="1"></div>
+      <div class="input-group"><label>Seconds</label><input type="number" id="s" value="6" min="0" step="1"></div>
+      <div class="input-group" style="flex:0 0 auto;">
+        <label> </label>
+        <button class="btn btn-outline btn-sm" id="buildBtn">Build ISO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS: parsed values -->
+  <div class="card">
+    <div class="card-title">📊 Parsed values</div>
+    <div id="parsedDisplay">
+      <div class="result-grid" id="resultGrid">
+        <div class="result-item"><div class="value" id="totalSeconds">0</div><div class="label">total seconds</div></div>
+        <div class="result-item"><div class="value" id="totalMinutes">0</div><div class="label">total minutes</div></div>
+        <div class="result-item"><div class="value" id="totalHours">0</div><div class="label">total hours</div></div>
+        <div class="result-item"><div class="value" id="totalDays">0</div><div class="label">total days (approx)</div></div>
+      </div>
+      <div class="human-readable" id="humanReadable">1 year, 2 months, 3 days, 4 hours, 5 minutes, 6 seconds</div>
+      <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.8rem;">
+        <span class="tag" id="cronDisplay">cron: N/A</span>
+        <span class="tag" id="millisecondsDisplay">ms: 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARITHMETIC: add/subtract/multiply -->
+  <div class="card">
+    <div class="card-title">🧮 Duration arithmetic</div>
+    <div class="flex-row">
+      <div class="input-group"><label>Duration A</label><input type="text" id="durA" value="P1M5D" placeholder="P1M5D"></div>
+      <div class="input-group"><label>Duration B</label><input type="text" id="durB" value="P2DT3H" placeholder="P2DT3H"></div>
+      <div class="input-group" style="flex:0 0 auto;">
+        <label>Operation</label>
+        <select id="opSelect">
+          <option value="add">A + B</option>
+          <option value="subtract">A − B</option>
+        </select>
+      </div>
+      <div class="input-group" style="flex:0 0 auto;">
+        <label> </label>
+        <button class="btn btn-sm" id="calcArith">Calculate</button>
+      </div>
+    </div>
+    <div id="arithResult" style="margin-top: 1rem; background: #0f172a; border-radius: 30px; padding: 0.8rem 1.5rem; min-height: 3rem; border:1px solid #2a3a52;">
+      <span id="arithText">Result: P1M7DT3H (approx)</span>
+    </div>
+    <div style="margin-top: 1.2rem; border-top: 1px solid #2a3a52; padding-top: 1rem;">
+      <div class="flex-row">
+        <div class="input-group"><label>Duration to multiply</label><input type="text" id="multDur" value="P1DT2H" placeholder="P1DT2H"></div>
+        <div class="input-group"><label>Multiplier (number)</label><input type="number" id="multFactor" value="3" min="0" step="0.5"></div>
+        <div class="input-group" style="flex:0 0 auto;">
+          <label> </label>
+          <button class="btn btn-sm" id="multBtn">Multiply</button>
+        </div>
+      </div>
+      <div id="multResult" style="margin-top: 0.8rem; background: #0f172a; border-radius: 30px; padding: 0.8rem 1.5rem; border:1px solid #2a3a52;">
+        <span id="multText">Result: P3DT6H</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ISO 8601 REFERENCE -->
+  <div class="card">
+    <div class="card-title">📖 ISO 8601 duration reference</div>
+    <table class="ref-table">
+      <tr><td><code>P1Y</code></td><td>1 year (365.25 days)</td><td><code>P1M</code></td><td>1 month (30.44 days)</td></tr>
+      <tr><td><code>P1D</code></td><td>1 day</td><td><code>PT1H</code></td><td>1 hour</td></tr>
+      <tr><td><code>PT1M</code></td><td>1 minute</td><td><code>PT1S</code></td><td>1 second</td></tr>
+      <tr><td><code>P1Y2M3DT4H5M6S</code></td><td colspan="3">1y 2m 3d 4h 5min 6s</td></tr>
+      <tr><td><code>P1DT12H</code></td><td colspan="3">1 day 12 hours</td></tr>
+    </table>
+    <div style="margin-top: 0.8rem; font-size: 0.9rem; color: #94a3b8;">⚠️ Months/years are approximate: 1 month = 30.44 days, 1 year = 365.25 days.</div>
+  </div>
+
+  <div class="footer">© 2025 epochpilot.com</div>
+</div>
+
+<script>
+  (function() {
+    // ----- helpers -----
+    function parseISO(iso) {
+      if (!iso || typeof iso !== 'string') return null;
+      const re = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/;
+      const m = iso.match(re);
+      if (!m) return null;
+      return {
+        years: parseInt(m[1] || '0', 10),
+        months: parseInt(m[2] || '0', 10),
+        days: parseInt(m[3] || '0', 10),
+        hours: parseInt(m[4] || '0', 10),
+        minutes: parseInt(m[5] || '0', 10),
+        seconds: parseInt(m[6] || '0', 10)
+      };
+    }
+
+    function toTotalSeconds(comp) {
+      return comp.years * 31536000 + comp.months * 2592000 + comp.days * 86400 +
+             comp.hours * 3600 + comp.minutes * 60 + comp.seconds;
+    }
+
+    function fromTotalSeconds(sec) {
+      if (sec < 0) sec = 0;
+      const years = Math.floor(sec / 31536000);
+      sec %= 31536000;
+      const months = Math.floor(sec / 2592000);
+      sec %= 2592000;
+      const days = Math.floor(sec / 86400);
+      sec %= 86400;
+      const hours = Math.floor(sec / 3600);
+      sec %= 3600;
+      const minutes = Math.floor(sec / 60);
+      const seconds = sec % 60;
+      return { years, months, days, hours, minutes, seconds };
+    }
+
+    function toISO(comp) {
+      let iso = 'P';
+      if (comp.years) iso += comp.years + 'Y';
+      if (comp.months) iso += comp.months + 'M';
+      if (comp.days) iso += comp.days + 'D';
+      if (comp.hours || comp.minutes || comp.seconds) {
+        iso += 'T';
+        if (comp.hours) iso += comp.hours + 'H';
+        if (comp.minutes) iso += comp.minutes + 'M';
+        if (comp.seconds) iso += comp.seconds + 'S';
+      }
+      if (iso === 'P') iso = 'PT0S';
+      return iso;
+    }
+
+    function humanReadable(comp) {
+      const parts = [];
+      if (comp.years) parts.push(comp.years + ' year' + (comp.years>1?'s':''));
+      if (comp.months) parts.push(comp.months + ' month' + (comp.months>1?'s':''));
+      if (comp.days) parts.push(comp.days + ' day' + (comp.days>1?'s':''));
+      if (comp.hours) parts.push(comp.hours + ' hour' + (comp.hours>1?'s':''));
+      if (comp.minutes) parts.push(comp.minutes + ' minute' + (comp.minutes>1?'s':''));
+      if (comp.seconds) parts.push(comp.seconds + ' second' + (comp.seconds>1?'s':''));
+      return parts.length ? parts.join(', ') : '0 seconds';
+    }
+
+    function cronCompatible(comp) {
+      // return something like "*/5 * * * *" if only minutes? but we show interval.
+      const totalMin = comp.minutes + comp.hours*60 + comp.days*1440 + comp.months*43800 + comp.years*525600;
+      if (totalMin === 0) return 'cron: now';
+      if (totalMin < 60) return `*/${totalMin} * * * * (every ${totalMin} min)`;
+      return `cron: ${totalMin} min interval (approx)`;
+    }
+
+    // ----- update UI from component -----
+    function updateDisplay(comp) {
+      if (!comp) {
+        document.getElementById('totalSeconds').textContent = '—';
+        document.getElementById('totalMinutes').textContent = '—';
+        document.getElementById('totalHours').textContent = '—';
+        document.getElementById('totalDays').textContent = '—';
+        document.getElementById('humanReadable').textContent = 'invalid duration';
+        document.getElementById('cronDisplay').textContent = 'cron: —';
+        document.getElementById('millisecondsDisplay').textContent = 'ms: —';
+        return;
+      }
+      const totalSec = toTotalSeconds(comp);
+      document.getElementById('totalSeconds').textContent = totalSec;
+      document.getElementById('totalMinutes').textContent = (totalSec / 60).toFixed(2);
+      document.getElementById('totalHours').textContent = (totalSec / 3600).toFixed(2);
+      document.getElementById('totalDays').textContent = (totalSec / 86400).toFixed(2);
+      document.getElementById('humanReadable').textContent = humanReadable(comp);
+      document.getElementById('cronDisplay').textContent = cronCompatible(comp);
+      document.getElementById('millisecondsDisplay').textContent = `ms: ${totalSec * 1000}`;
+    }
+
+    function setInputError(msg) {
+      const el = document.getElementById('isoInput');
+      const errEl = document.getElementById('parseError');
+      if (msg) {
+        el.classList.add('input-error');
+        errEl.textContent = msg;
+      } else {
+        el.classList.remove('input-error');
+        errEl.textContent = '';
+      }
+    }
+
+    function parseFromInput() {
+      const iso = document.getElementById('isoInput').value.trim();
+      const comp = parseISO(iso);
+      if (!comp) {
+        setInputError('Invalid ISO 8601 format. Example: P1Y2M3DT4H5M6S');
+        updateDisplay(null);
+        return null;
+      }
+      setInputError('');
+      updateDisplay(comp);
+      // sync component inputs
+      document.getElementById('y').value = comp.years;
+      document.getElementById('mo').value = comp.months;
+      document.getElementById('d').value = comp.days;
+      document.getElementById('h').value = comp.hours;
+      document.getElementById('min').value = comp.minutes;
+      document.getElementById('s').value = comp.seconds;
+      return comp;
+    }
+
+    function buildFromComponents() {
+      const comp = {
+        years: parseInt(document.getElementById('y').value) || 0,
+        months: parseInt(document.getElementById('mo').value) || 0,
+        days: parseInt(document.getElementById('d').value) || 0,
+        hours: parseInt(document.getElementById('h').value) || 0,
+        minutes: parseInt(document.getElementById('min').value) || 0,
+        seconds: parseInt(document.getElementById('s').value) || 0
+      };
+      const iso = toISO(comp);
+      document.getElementById('isoInput').value = iso;
+      setInputError('');
+      updateDisplay(comp);
+      return comp;
+    }
+
+    // ----- arithmetic -----
+    function getCompFromInput(id) {
+      const val = document.getElementById(id).value.trim();
+      const comp = parseISO(val);
+      if (!comp) {
+        document.getElementById(id).classList.add('input-error');
+        return null;
+      }
+      document.getElementById(id).classList.remove('input-error');
+      return comp;
+    }
+
+    function computeArith() {
+      const a = getCompFromInput('durA');
+      const b = getCompFromInput('durB');
+      if (!a || !b) {
+        document.getElementById('arithText').textContent = 'Error: invalid duration(s)';
+        return;
+      }
+      const secA = toTotalSeconds(a);
+      const secB = toTotalSeconds(b);
+      const op = document.getElementById('opSelect').value;
+      let resultSec = (op === 'add') ? secA + secB : secA - secB;
+      if (resultSec < 0) resultSec = 0;
+      const compRes = fromTotalSeconds(resultSec);
+      const isoRes = toISO(compRes);
+      document.getElementById('arithText').textContent = `Result: ${isoRes} (${humanReadable(compRes)})`;
+    }
+
+    function multiplyDur() {
+      const dur = getCompFromInput('multDur');
+      const factor = parseFloat(document.getElementById('multFactor').value);
+      if (!dur) {
+        document.getElementById('multText').textContent = 'Error: invalid duration';
+        return;
+      }
+      if (isNaN(factor) || factor < 0) {
+        document.getElementById('multText').textContent = 'Error: multiplier must be >= 0';
+        return;
+      }
+      const totalSec = toTotalSeconds(dur) * factor;
+      const compRes = fromTotalSeconds(Math.round(totalSec));
+      const isoRes = toISO(compRes);
+      document.getElementById('multText').textContent = `Result: ${isoRes} (${humanReadable(compRes)})`;
+    }
+
+    // ----- init and event binding -----
+    document.addEventListener('DOMContentLoaded', function() {
+      // initial parse
+      parseFromInput();
+
+      document.getElementById('parseBtn').addEventListener('click', parseFromInput);
+      document.getElementById('buildBtn').addEventListener('click', buildFromComponents);
+      document.getElementById('calcArith').addEventListener('click', computeArith);
+      document.getElementById('multBtn').addEventListener('click', multiplyDur);
+
+      // also parse on Enter in isoInput
+      document.getElementById('isoInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') parseFromInput();
+      });
+      // real-time validation on input
+      document.getElementById('isoInput').addEventListener('input', function() {
+        const iso = this.value.trim();
+        const comp = parseISO(iso);
+        if (comp) {
+          setInputError('');
+          updateDisplay(comp);
+          document.getElementById('y').value = comp.years;
+          document.getElementById('mo').value = comp.months;
+          document.getElementById('d').value = comp.days;
+          document.getElementById('h').value = comp.hours;
+          document.getElementById('min').value = comp.minutes;
+          document.getElementById('s').value = comp.seconds;
+        } else {
+          if (iso.length > 0) setInputError('Invalid format');
+          else setInputError('');
+          // don't clear display if empty
+          if (iso.length === 0) {
+            setInputError('');
+            updateDisplay({years:0,months:0,days:0,hours:0,minutes:0,seconds:0});
+          } else {
+            updateDisplay(null);
+          }
+        }
+      });
+
+      // sync from components to iso on change (optional)
+      ['y','mo','d','h','min','s'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+          // but we don't auto-update iso to avoid confusion; user can click build
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
