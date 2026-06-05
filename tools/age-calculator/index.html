@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator - epochpilot</title>
+    <meta name="description" content="Calculate exact age in years, months, days, hours and more with zodiac signs.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/age-calculator">
+
+    <meta property="og:title" content="Age Calculator - epochpilot">
+    <meta property="og:description" content="Calculate exact age with life milestones and zodiac signs.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/age-calculator">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Age Calculator",
+        "description": "Calculate exact age in years, months, days, hours and more.",
+        "url": "https://epochpilot.com/tools/age-calculator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background-color: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ddd;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0a0a0a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .result-card {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background-color: #0a0a0a;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .countdown-section {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .countdown-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .countdown-unit {
+            background-color: #1a1a1a;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .countdown-number {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .countdown-label-small {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .milestones {
+            margin-top: 25px;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+            font-size: 0.9rem;
+        }
+
+        .milestone-item:last-child {
+            border-bottom: none;
+        }
+
+        .milestone-age {
+            color: #3b82f6;
+            font-weight: bold;
+            width: 40px;
+        }
+
+        .milestone-status {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .milestone-done {
+            color: #10b981;
+        }
+
+        .fun-facts {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 3px solid #10b981;
+        }
+
+        .fact-item {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        .fact-item strong {
+            color: #10b981;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown-display {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Age Calculator</h1>
+        <p class="subtitle">Calculate exact age with milestones and zodiac signs</p>
+
+        <div class="input-grid">
+            <div class="section">
+                <div class="form-group">
+                    <label for="birthDate">Date of Birth</label>
+                    <input type="date" id="birthDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="currentDate">Calculate Age As Of (optional)</label>
+                    <input type="date" id="currentDate">
+                </div>
+
+                <button class="button" onclick="calculateAge()">Calculate</button>
+            </div>
+
+            <div class="section">
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Years</div>
+                        <div class="result-value" id="years">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Months</div>
+                        <div class="result-value" id="months">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Days</div>
+                        <div class="result-value" id="days">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Days</div>
+                        <div class="result-value" id="totalDays">-</div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Born On (Day)</div>
+                        <div class="info-value" id="dayOfWeek">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Zodiac</div>
+                        <div class="info-value" id="zodiac">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 style="margin-bottom: 20px; color: #3b82f6;">Additional Statistics</h3>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-label">Total Months</div>
+                    <div class="result-value" id="totalMonths">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Total Weeks</div>
+                    <div class="result-value" id="totalWeeks">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Total Hours</div>
+                    <div class="result-value" id="totalHours">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Total Minutes</div>
+                    <div class="result-value" id="totalMinutes">-</div>
+                </div>
+            </div>
+
+            <div class="countdown-section">
+                <div class="countdown-label">Next Birthday Countdown</div>
+                <div class="countdown-display">
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="daysUntil">-</div>
+                        <div class="countdown-label-small">DAYS</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="hoursUntil">-</div>
+                        <div class="countdown-label-small">HOURS</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="minutesUntil">-</div>
+                        <div class="countdown-label-small">MINS</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="secondsUntil">-</div>
+                        <div class="countdown-label-small">SECS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="milestones">
+                <h4 style="color: #3b82f6; margin-bottom: 15px;">Life Milestones</h4>
+                <div id="milestonesContent"></div>
+            </div>
+
+            <div class="fun-facts">
+                <h4 style="color: #10b981; margin-bottom: 10px;">Fun Facts</h4>
+                <div id="funFacts"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 epochpilot.com
+    </div>
+
+    <script>
+        const zodiacSigns = [
+            { name: 'Capricorn', start: [12, 22], end: [1, 19] },
+            { name: 'Aquarius', start: [1, 20], end: [2, 18] },
+            { name: 'Pisces', start: [2, 19], end: [3, 20] },
+            { name: 'Aries', start: [3, 21], end: [4, 19] },
+            { name: 'Taurus', start: [4, 20], end: [5, 20] },
+            { name: 'Gemini', start: [5, 21], end: [6, 20] },
+            { name: 'Cancer', start: [6, 21], end: [7, 22] },
+            { name: 'Leo', start: [7, 23], end: [8, 22] },
+            { name: 'Virgo', start: [8, 23], end: [9, 22] },
+            { name: 'Libra', start: [9, 23], end: [10, 22] },
+            { name: 'Scorpio', start: [10, 23], end: [11, 21] },
+            { name: 'Sagittarius', start: [11, 22], end: [12, 21] }
+        ];
+
+        const milestoneAges = [18, 21, 25, 30, 40, 50, 60, 65, 70];
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function getZodiacSign(month, day) {
+            for (let sign of zodiacSigns) {
+                const [startMonth, startDay] = sign.start;
+                const [endMonth, endDay] = sign.end;
+
+                if (startMonth === endMonth) {
+                    if (month === startMonth && day >= startDay && day <= endDay) return sign.name;
+                } else if (startMonth < endMonth) {
+                    if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) return sign.name;
+                } else {
+                    if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) return sign.name;
+                }
+            }
+            return 'Unknown';
+        }
+
+        function calculateAge() {
+            const birthDateStr = document.getElementById('birthDate').value;
+            if (!birthDateStr) return;
+
+            const birthDate = new Date(birthDateStr + 'T00:00:00');
+            const currentDateStr = document.getElementById('currentDate').value;
+            const today = currentDateStr ? new Date(currentDateStr + 'T00:00:00') : new Date();
+
+            // Calculate age in years, months, days
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Total calculations
+            const totalDays = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+            const totalMonths = years * 12 + months;
+            const totalWeeks = Math.floor(totalDays / 7);
+            const totalHours = totalDays * 24;
+            const totalMinutes = totalHours * 60;
+
+            // Day of week born
+            const dayOfWeek = dayNames[birthDate.getDay()];
+
+            // Zodiac
+            const zodiac = getZodiacSign(birthDate.getMonth() + 1, birthDate.getDate());
+
+            // Next birthday
+            let nextBday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (nextBday < today) {
+                nextBday = new Date(today.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
+            }
+
+            const msUntilBday = nextBday - today;
+            const daysUntilBday = Math.floor(msUntilBday / (1000 * 60 * 60 * 24));
+            const hoursUntilBday = Math.floor((msUntilBday / (1000 * 60 * 60)) % 24);
+            const minutesUntilBday = Math.floor((msUntilBday / (1000 * 60)) % 60);
+            const secondsUntilBday = Math.floor((msUntilBday / 1000) % 60);
+
+            // Update DOM
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('totalDays').textContent = totalDays.toLocaleString();
+            document.getElementById('totalMonths').textContent = totalMonths.toLocaleString();
+            document.getElementById('totalWeeks').textContent = totalWeeks.toLocaleString();
+            document.getElementById('totalHours').textContent = totalHours.toLocaleString();
+            document.getElementById('totalMinutes').textContent = totalMinutes.toLocaleString();
+            document.getElementById('dayOfWeek').textContent = dayOfWeek;
+            document.getElementById('zodiac').textContent = zodiac;
+
+            document.getElementById('daysUntil').textContent = daysUntilBday;
+            document.getElementById('hoursUntil').textContent = hoursUntilBday;
+            document.getElementById('minutesUntil').textContent = minutesUntilBday;
+            document.getElementById('secondsUntil').textContent = secondsUntilBday;
+
+            // Milestones
+            let milestonesHTML = '';
+            milestoneAges.forEach(age => {
+                const isPassed = years >= age;
+                const status = isPassed ? `<span class="milestone-status milestone-done">✓ Age ${age}</span>` : `<span class="milestone-status">In ${age - years} years</span>`;
+                milestonesHTML += `<div class="milestone-item"><div class="milestone-age">${age}</div><div style="flex: 1;"></div>${status}</div>`;
+            });
+            document.getElementById('milestonesContent').innerHTML = milestonesHTML;
+
+            // Fun facts
+            const heartbeats = Math.floor(totalDays * 100 * 60 * 24);
+            const breaths = Math.floor(totalDays * 20 * 60 * 24);
+            const meals = Math.floor(totalDays * 3);
+
+            document.getElementById('funFacts').innerHTML = `
+                <div class="fact-item"><strong>${heartbeats.toLocaleString()}</strong> estimated heartbeats</div>
+                <div class="fact-item"><strong>${breaths.toLocaleString()}</strong> estimated breaths</div>
+                <div class="fact-item"><strong>${meals.toLocaleString()}</strong> meals eaten (avg 3/day)</div>
+                <div class="fact-item">You've lived <strong>${totalWeeks.toLocaleString()}</strong> weeks</div>
+            `;
+        }
+
+        // Initialize with a default date
+        const today = new Date();
+        const defaultBirth = new Date(today.getFullYear() - 30, today.getMonth(), today.getDate());
+        document.getElementById('birthDate').value = defaultBirth.toISOString().split('T')[0];
+        document.getElementById('currentDate').value = today.toISOString().split('T')[0];
+        calculateAge();
+    </script>
+</body>
+</html>

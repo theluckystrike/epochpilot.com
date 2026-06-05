@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer Generator - epochpilot</title>
+    <meta name="description" content="Create embeddable countdown timers to any future date with multiple styles.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/countdown-timer-generator">
+
+    <meta property="og:title" content="Countdown Timer Generator - epochpilot">
+    <meta property="og:description" content="Generate embeddable countdown timers to any future date.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/countdown-timer-generator">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Countdown Timer Generator",
+        "description": "Create embeddable countdown timers to any future date.",
+        "url": "https://epochpilot.com/tools/countdown-timer-generator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background-color: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ddd;
+        }
+
+        input[type="datetime-local"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background-color: #0a0a0a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            background-color: #1a1a1a;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        .preview-section {
+            background-color: #0a0a0a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Timer Styles */
+        .flip-clock {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .flip-item {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px 20px;
+            min-width: 70px;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .flip-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3b82f6;
+            font-family: 'Courier New', monospace;
+            display: block;
+        }
+
+        .flip-label {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        .digital-timer {
+            text-align: center;
+            font-size: 3rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #3b82f6;
+            letter-spacing: 5px;
+        }
+
+        .minimal-timer {
+            text-align: center;
+            font-size: 2rem;
+            color: #3b82f6;
+        }
+
+        .circle-timer {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(#3b82f6 0deg, #3b82f6 var(--progress), #222 var(--progress), #222 360deg);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .circle-timer-inner {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background-color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .circle-timer-text {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.3s;
+        }
+
+        .embed-section {
+            background-color: #0a0a0a;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .embed-label {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .embed-code {
+            background-color: #1a1a1a;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            color: #3b82f6;
+            border: 1px solid #333;
+            max-height: 100px;
+        }
+
+        .copy-btn {
+            background-color: #10b981;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: #059669;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .digital-timer {
+                font-size: 2rem;
+            }
+
+            .circle-timer {
+                width: 150px;
+                height: 150px;
+            }
+
+            .circle-timer-inner {
+                width: 130px;
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer Generator</h1>
+        <p class="subtitle">Create embeddable countdown timers to any future date</p>
+
+        <div class="main-grid">
+            <div class="section">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" placeholder="e.g., New Year 2027">
+                </div>
+
+                <div class="form-group">
+                    <label for="targetDateTime">Target Date & Time</label>
+                    <input type="datetime-local" id="targetDateTime">
+                </div>
+
+                <div class="form-group">
+                    <label for="timerStyle">Timer Style</label>
+                    <select id="timerStyle" onchange="updatePreview()">
+                        <option value="flip">Flip Clock</option>
+                        <option value="digital">Digital</option>
+                        <option value="minimal">Minimal</option>
+                        <option value="circle">Circle Progress</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="colorScheme">Color Scheme</label>
+                    <select id="colorScheme" onchange="updateColorOptions()">
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                        <option value="red">Red</option>
+                    </select>
+                    <div class="color-grid" id="colorGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="finishMessage">Finish Message</label>
+                    <input type="text" id="finishMessage" placeholder="Event Started!">
+                </div>
+
+                <button class="button" onclick="updatePreview()">Generate Preview</button>
+
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setNewYear()">New Year 2027</button>
+                    <button class="preset-btn" onclick="setNextChristmas()">Next Christmas</button>
+                    <button class="preset-btn" onclick="set100Days()">100 Days</button>
+                    <button class="preset-btn" onclick="setNextMonth()">Next Month</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3 style="margin-bottom: 20px; color: #3b82f6;">Preview</h3>
+                <div class="preview-section" id="preview">
+                    <!-- Timer preview shown here -->
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+
+                <div class="embed-section">
+                    <div class="embed-label">Embeddable HTML Code</div>
+                    <div class="embed-code" id="embedCode">Click Generate to create code</div>
+                    <button class="copy-btn" onclick="copyEmbedCode()">Copy Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 epochpilot.com
+    </div>
+
+    <script>
+        const colors = {
+            blue: '#3b82f6',
+            green: '#10b981',
+            purple: '#a855f7',
+            orange: '#f97316',
+            red: '#ef4444'
+        };
+
+        function updateColorOptions() {
+            const scheme = document.getElementById('colorScheme').value;
+            const grid = document.getElementById('colorGrid');
+            grid.innerHTML = '';
+
+            // Create color swatches
+            Object.keys(colors).forEach(key => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-option' + (key === scheme ? ' selected' : '');
+                swatch.style.backgroundColor = colors[key];
+                swatch.onclick = () => selectColor(key);
+                grid.appendChild(swatch);
+            });
+        }
+
+        function selectColor(color) {
+            document.getElementById('colorScheme').value = color;
+            updateColorOptions();
+            updatePreview();
+        }
+
+        function getTargetDate() {
+            const dateTimeStr = document.getElementById('targetDateTime').value;
+            if (!dateTimeStr) return new Date();
+            return new Date(dateTimeStr + ':00Z');
+        }
+
+        function updateProgress() {
+            const target = getTargetDate();
+            const now = new Date();
+            const total = (target - new Date('2000-01-01')) / (1000 * 60 * 60 * 24);
+            const remaining = (target - now) / (1000 * 60 * 60 * 24);
+
+            if (remaining <= 0) {
+                document.getElementById('progressFill').style.width = '100%';
+            } else {
+                const percent = Math.max(0, Math.min(100, ((total - remaining) / total) * 100));
+                document.getElementById('progressFill').style.width = percent + '%';
+            }
+        }
+
+        function getCountdownValues() {
+            const target = getTargetDate();
+            const now = new Date();
+            const diff = target - now;
+
+            if (diff <= 0) {
+                return { days: 0, hours: 0, minutes: 0, seconds: 0, finished: true };
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            return { days, hours, minutes, seconds, finished: false };
+        }
+
+        function createFlipClock() {
+            const { days, hours, minutes, seconds, finished } = getCountdownValues();
+
+            if (finished) {
+                return `<div style="text-align: center; font-size: 1.5rem; color: #3b82f6;">${document.getElementById('finishMessage').value || 'Event Started!'}</div>`;
+            }
+
+            return `
+                <div class="flip-clock">
+                    <div class="flip-item">
+                        <span class="flip-number">${String(days).padStart(2, '0')}</span>
+                        <span class="flip-label">Days</span>
+                    </div>
+                    <div class="flip-item">
+                        <span class="flip-number">${String(hours).padStart(2, '0')}</span>
+                        <span class="flip-label">Hours</span>
+                    </div>
+                    <div class="flip-item">
+                        <span class="flip-number">${String(minutes).padStart(2, '0')}</span>
+                        <span class="flip-label">Mins</span>
+                    </div>
+                    <div class="flip-item">
+                        <span class="flip-number">${String(seconds).padStart(2, '0')}</span>
+                        <span class="flip-label">Secs</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createDigitalTimer() {
+            const { days, hours, minutes, seconds, finished } = getCountdownValues();
+
+            if (finished) {
+                return `<div style="text-align: center; font-size: 1.5rem; color: #3b82f6;">${document.getElementById('finishMessage').value || 'Event Started!'}</div>`;
+            }
+
+            return `
+                <div class="digital-timer">
+                    ${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
+                </div>
+                <div style="text-align: center; color: #999; margin-top: 10px; font-size: 0.9rem;">Days:Hours:Minutes:Seconds</div>
+            `;
+        }
+
+        function createMinimalTimer() {
+            const { days, hours, minutes, seconds, finished } = getCountdownValues();
+
+            if (finished) {
+                return `<div style="text-align: center; font-size: 1.2rem; color: #3b82f6;">${document.getElementById('finishMessage').value || 'Event Started!'}</div>`;
+            }
+
+            return `
+                <div class="minimal-timer">
+                    <div>${days} days, ${hours} hours, ${minutes} mins, ${seconds} secs</div>
+                </div>
+            `;
+        }
+
+        function createCircleTimer() {
+            const { finished } = getCountdownValues();
+            const target = getTargetDate();
+            const now = new Date();
+            const startTime = new Date('2000-01-01');
+            const totalMs = target - startTime;
+            const elapsedMs = now - startTime;
+            const progress = Math.min(100, (elapsedMs / totalMs) * 100);
+
+            const { days, hours, minutes, seconds } = getCountdownValues();
+
+            if (finished) {
+                return `
+                    <div class="circle-timer" style="--progress: 360deg;">
+                        <div class="circle-timer-inner">
+                            <div style="text-align: center; color: #3b82f6; font-size: 1.2rem; font-weight: bold;">
+                                ${document.getElementById('finishMessage').value || 'Event Started!'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="circle-timer" style="--progress: ${(progress / 100) * 360}deg;">
+                    <div class="circle-timer-inner">
+                        <div style="text-align: center;">
+                            <div style="font-size: 0.9rem; color: #999; margin-bottom: 10px;">Days</div>
+                            <div class="circle-timer-text">${days}</div>
+                            <div style="font-size: 0.75rem; color: #666; margin-top: 10px;">${hours}h ${minutes}m</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePreview() {
+            const style = document.getElementById('timerStyle').value;
+            let html = '';
+
+            if (style === 'flip') {
+                html = createFlipClock();
+            } else if (style === 'digital') {
+                html = createDigitalTimer();
+            } else if (style === 'minimal') {
+                html = createMinimalTimer();
+            } else if (style === 'circle') {
+                html = createCircleTimer();
+            }
+
+            document.getElementById('preview').innerHTML = html;
+            updateProgress();
+            generateEmbedCode();
+        }
+
+        function generateEmbedCode() {
+            const title = document.getElementById('eventTitle').value || 'Countdown';
+            const style = document.getElementById('timerStyle').value;
+            const colorScheme = document.getElementById('colorScheme').value;
+            const color = colors[colorScheme];
+            const dateTime = document.getElementById('targetDateTime').value;
+
+            const code = `<iframe src="https://epochpilot.com/tools/countdown-timer-generator?target=${dateTime}&style=${style}&color=${encodeURIComponent(color)}&title=${encodeURIComponent(title)}" width="500" height="300" frameborder="0" style="border: none; border-radius: 8px;"></iframe>`;
+
+            document.getElementById('embedCode').textContent = code;
+        }
+
+        function copyEmbedCode() {
+            const code = document.getElementById('embedCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            });
+        }
+
+        // Preset functions
+        function setNewYear() {
+            const today = new Date();
+            const nextYear = today.getFullYear() + 1;
+            const newYear = new Date(nextYear, 0, 1, 0, 0);
+            document.getElementById('eventTitle').value = 'New Year ' + nextYear;
+            document.getElementById('targetDateTime').value = newYear.toISOString().slice(0, 16);
+            updatePreview();
+        }
+
+        function setNextChristmas() {
+            const today = new Date();
+            let christmas = new Date(today.getFullYear(), 11, 25);
+            if (christmas < today) {
+                christmas = new Date(today.getFullYear() + 1, 11, 25);
+            }
+            document.getElementById('eventTitle').value = 'Christmas ' + christmas.getFullYear();
+            document.getElementById('targetDateTime').value = christmas.toISOString().slice(0, 16);
+            updatePreview();
+        }
+
+        function set100Days() {
+            const today = new Date();
+            const target = new Date(today.getTime() + 100 * 24 * 60 * 60 * 1000);
+            document.getElementById('eventTitle').value = '100 Days';
+            document.getElementById('targetDateTime').value = target.toISOString().slice(0, 16);
+            updatePreview();
+        }
+
+        function setNextMonth() {
+            const today = new Date();
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+            document.getElementById('eventTitle').value = 'Next Month';
+            document.getElementById('targetDateTime').value = nextMonth.toISOString().slice(0, 16);
+            updatePreview();
+        }
+
+        // Initialize
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 30);
+        document.getElementById('targetDateTime').value = futureDate.toISOString().slice(0, 16);
+        document.getElementById('eventTitle').value = 'Upcoming Event';
+        document.getElementById('finishMessage').value = 'Event Started!';
+
+        updateColorOptions();
+        updatePreview();
+
+        // Update countdown every second
+        setInterval(updatePreview, 1000);
+    </script>
+</body>
+</html>

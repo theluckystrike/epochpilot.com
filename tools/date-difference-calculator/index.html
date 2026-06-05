@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Difference Calculator - epochpilot</title>
+    <meta name="description" content="Calculate duration between dates in years, months, days, hours and more.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/date-difference-calculator">
+
+    <meta property="og:title" content="Date Difference Calculator - epochpilot">
+    <meta property="og:description" content="Calculate duration between dates in multiple units.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/date-difference-calculator">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Date Difference Calculator",
+        "description": "Calculate the duration between two dates in multiple units.",
+        "url": "https://epochpilot.com/tools/date-difference-calculator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background-color: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ddd;
+        }
+
+        input[type="date"],
+        select,
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0a0a0a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        .tab-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: #1a1a1a;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        .tab-btn:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-card {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .details-section {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 0.9rem;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #999;
+        }
+
+        .detail-value {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            background-color: #1a1a1a;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        .day-breakdown {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .day-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 0.9rem;
+        }
+
+        .day-item:last-child {
+            border-bottom: none;
+        }
+
+        .day-name {
+            color: #ddd;
+        }
+
+        .day-count {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Date Difference Calculator</h1>
+        <p class="subtitle">Calculate duration between dates in multiple units</p>
+
+        <div class="main-grid">
+            <div class="section">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('difference')">Date Difference</button>
+                    <button class="tab-btn" onclick="switchTab('arithmetic')">Add/Subtract</button>
+                </div>
+
+                <!-- Difference Tab -->
+                <div id="difference" class="tab-content active">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+
+                    <div class="checkbox-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <input type="checkbox" id="includeEndDate">
+                        <label for="includeEndDate" style="margin-bottom: 0;">Include end date</label>
+                    </div>
+
+                    <button class="button" onclick="calculateDifference()">Calculate</button>
+
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="set100DaysFromNow()">100 Days</button>
+                        <button class="preset-btn" onclick="set1000DaysAgo()">1000 Days Ago</button>
+                        <button class="preset-btn" onclick="setEndOfYear()">End of Year</button>
+                        <button class="preset-btn" onclick="setSinceY2K()">Since Y2K</button>
+                    </div>
+                </div>
+
+                <!-- Arithmetic Tab -->
+                <div id="arithmetic" class="tab-content">
+                    <div class="form-group">
+                        <label for="arithmeticDate">Start Date</label>
+                        <input type="date" id="arithmeticDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arithmeticAmount">Amount</label>
+                        <input type="number" id="arithmeticAmount" value="1" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arithmeticUnit">Unit</label>
+                        <select id="arithmeticUnit">
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                            <option value="months">Months</option>
+                            <option value="years">Years</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arithmeticOp">Operation</label>
+                        <select id="arithmeticOp">
+                            <option value="add">Add</option>
+                            <option value="subtract">Subtract</option>
+                        </select>
+                    </div>
+
+                    <button class="button" onclick="calculateArithmetic()">Calculate</button>
+
+                    <div class="details-section">
+                        <div class="detail-item">
+                            <span class="detail-label">Result Date:</span>
+                            <span class="detail-value" id="arithmeticResult">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Days from today:</span>
+                            <span class="detail-value" id="arithmeticDaysFromNow">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3 style="margin-bottom: 20px; color: #3b82f6;">Results</h3>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Years</div>
+                        <div class="result-value" id="resYears">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Months</div>
+                        <div class="result-value" id="resMonths">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Days</div>
+                        <div class="result-value" id="resDays">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Days</div>
+                        <div class="result-value" id="resTotalDays">-</div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Weeks & Days:</span>
+                        <span class="detail-value" id="resWeeksDays">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Hours:</span>
+                        <span class="detail-value" id="resTotalHours">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Minutes:</span>
+                        <span class="detail-value" id="resTotalMinutes">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Business Days:</span>
+                        <span class="detail-value" id="resBusinessDays">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Weekends:</span>
+                        <span class="detail-value" id="resWeekends">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Leap Years in Range:</span>
+                        <span class="detail-value" id="resLeapYears">-</span>
+                    </div>
+                </div>
+
+                <div class="day-breakdown" id="dayBreakdown" style="display: none;">
+                    <h4 style="color: #3b82f6; margin-bottom: 10px;">Day of Week Breakdown</h4>
+                    <div id="dayBreakdownContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 epochpilot.com
+    </div>
+
+    <script>
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function isBusinessDay(date) {
+            const day = date.getDay();
+            return day !== 0 && day !== 6;
+        }
+
+        function calculateDifference() {
+            const startStr = document.getElementById('startDate').value;
+            const endStr = document.getElementById('endDate').value;
+
+            if (!startStr || !endStr) return;
+
+            const start = new Date(startStr + 'T00:00:00');
+            const end = new Date(endStr + 'T00:00:00');
+
+            if (start > end) {
+                alert('Start date must be before end date');
+                return;
+            }
+
+            // Calculate years, months, days
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + (document.getElementById('includeEndDate').checked ? 1 : 0);
+            const totalWeeks = Math.floor(totalDays / 7);
+            const remainingDays = totalDays % 7;
+            const totalHours = totalDays * 24;
+            const totalMinutes = totalHours * 60;
+
+            // Count business days and weekends
+            let businessDays = 0;
+            let weekends = 0;
+            const dayCount = [0, 0, 0, 0, 0, 0, 0];
+
+            let current = new Date(start);
+            while (current <= end) {
+                const dayOfWeek = current.getDay();
+                dayCount[dayOfWeek]++;
+
+                if (isBusinessDay(current)) {
+                    businessDays++;
+                } else {
+                    weekends++;
+                }
+
+                current.setDate(current.getDate() + 1);
+            }
+
+            // Count leap years
+            let leapYears = 0;
+            for (let y = start.getFullYear(); y <= end.getFullYear(); y++) {
+                if (isLeapYear(y)) leapYears++;
+            }
+
+            // Update DOM
+            document.getElementById('resYears').textContent = years;
+            document.getElementById('resMonths').textContent = months;
+            document.getElementById('resDays').textContent = days;
+            document.getElementById('resTotalDays').textContent = totalDays.toLocaleString();
+            document.getElementById('resWeeksDays').textContent = `${totalWeeks} weeks, ${remainingDays} days`;
+            document.getElementById('resTotalHours').textContent = totalHours.toLocaleString();
+            document.getElementById('resTotalMinutes').textContent = totalMinutes.toLocaleString();
+            document.getElementById('resBusinessDays').textContent = businessDays.toLocaleString();
+            document.getElementById('resWeekends').textContent = weekends.toLocaleString();
+            document.getElementById('resLeapYears').textContent = leapYears;
+
+            // Day breakdown
+            let dayBreakdownHTML = '';
+            dayNames.forEach((name, idx) => {
+                dayBreakdownHTML += `<div class="day-item"><span class="day-name">${name}</span><span class="day-count">${dayCount[idx]}</span></div>`;
+            });
+            document.getElementById('dayBreakdownContent').innerHTML = dayBreakdownHTML;
+            document.getElementById('dayBreakdown').style.display = 'block';
+        }
+
+        function calculateArithmetic() {
+            const dateStr = document.getElementById('arithmeticDate').value;
+            if (!dateStr) return;
+
+            const date = new Date(dateStr + 'T00:00:00');
+            const amount = parseInt(document.getElementById('arithmeticAmount').value) || 0;
+            const unit = document.getElementById('arithmeticUnit').value;
+            const operation = document.getElementById('arithmeticOp').value;
+
+            const multiplier = operation === 'subtract' ? -1 : 1;
+            let result = new Date(date);
+
+            if (unit === 'days') {
+                result.setDate(result.getDate() + amount * multiplier);
+            } else if (unit === 'weeks') {
+                result.setDate(result.getDate() + amount * 7 * multiplier);
+            } else if (unit === 'months') {
+                result.setMonth(result.getMonth() + amount * multiplier);
+            } else if (unit === 'years') {
+                result.setFullYear(result.getFullYear() + amount * multiplier);
+            }
+
+            const resultStr = result.toISOString().split('T')[0];
+            const daysFromNow = Math.floor((result - new Date()) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('arithmeticResult').textContent = resultStr;
+            document.getElementById('arithmeticDaysFromNow').textContent = daysFromNow > 0 ? `+${daysFromNow}` : daysFromNow.toString();
+        }
+
+        function set100DaysFromNow() {
+            const start = new Date();
+            const end = new Date(start.getTime() + 100 * 24 * 60 * 60 * 1000);
+
+            document.getElementById('startDate').value = start.toISOString().split('T')[0];
+            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            calculateDifference();
+        }
+
+        function set1000DaysAgo() {
+            const end = new Date();
+            const start = new Date(end.getTime() - 1000 * 24 * 60 * 60 * 1000);
+
+            document.getElementById('startDate').value = start.toISOString().split('T')[0];
+            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            calculateDifference();
+        }
+
+        function setEndOfYear() {
+            const start = new Date();
+            const end = new Date(start.getFullYear(), 11, 31);
+
+            document.getElementById('startDate').value = start.toISOString().split('T')[0];
+            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            calculateDifference();
+        }
+
+        function setSinceY2K() {
+            const start = new Date('2000-01-01T00:00:00');
+            const end = new Date();
+
+            document.getElementById('startDate').value = '2000-01-01';
+            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            calculateDifference();
+        }
+
+        // Initialize
+        const today = new Date();
+        document.getElementById('startDate').value = today.toISOString().split('T')[0];
+        document.getElementById('endDate').value = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        document.getElementById('arithmeticDate').value = today.toISOString().split('T')[0];
+    </script>
+</body>
+</html>

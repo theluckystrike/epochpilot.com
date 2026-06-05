@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Days Calculator - epochpilot</title>
+    <meta name="description" content="Calculate working days between dates with holiday support for multiple countries.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/business-days-calculator">
+
+    <meta property="og:title" content="Business Days Calculator - epochpilot">
+    <meta property="og:description" content="Calculate working days between dates with holiday support.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/business-days-calculator">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Business Days Calculator",
+        "description": "Calculate working days between dates with holiday support for multiple countries.",
+        "url": "https://epochpilot.com/tools/business-days-calculator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .input-section {
+            background-color: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ddd;
+        }
+
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background-color: #0a0a0a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #3b82f6;
+        }
+
+        .results-section {
+            background-color: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            background-color: #1a1a1a;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #222;
+        }
+
+        .breakdown-table th {
+            background-color: #0a0a0a;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .breakdown-table tr:hover {
+            background-color: #1a1a1a;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #1a1a1a;
+        }
+
+        .calendar-day.working {
+            background-color: #10b981;
+            color: #fff;
+        }
+
+        .calendar-day.weekend {
+            background-color: #444;
+            color: #999;
+        }
+
+        .calendar-day.holiday {
+            background-color: #ef4444;
+            color: #fff;
+        }
+
+        .calendar-day.header {
+            background-color: transparent;
+            font-weight: bold;
+            color: #999;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .calculator {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Business Days Calculator</h1>
+        <p class="subtitle">Calculate working days between dates with holiday support</p>
+
+        <div class="calculator">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country/Holidays</label>
+                    <select id="country">
+                        <option value="us">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="ca">Canada</option>
+                        <option value="au">Australia</option>
+                        <option value="de">Germany</option>
+                        <option value="fr">France</option>
+                        <option value="in">India</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="workWeek">Work Week</label>
+                    <select id="workWeek">
+                        <option value="mon-fri">Monday - Friday</option>
+                        <option value="mon-sat">Monday - Saturday</option>
+                        <option value="sun-thu">Sunday - Thursday</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeStart">
+                    <label for="includeStart" style="margin-bottom: 0;">Include start date</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeEnd">
+                    <label for="includeEnd" style="margin-bottom: 0;">Include end date</label>
+                </div>
+
+                <button class="button" onclick="calculate()">Calculate</button>
+
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setPreset('quarter')">This Quarter</button>
+                    <button class="preset-btn" onclick="setPreset('year')">This Year</button>
+                    <button class="preset-btn" onclick="setPreset('30')">Next 30 Days</button>
+                    <button class="preset-btn" onclick="setPreset('90')">Next 90 Days</button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">Business Days</div>
+                        <div class="result-value" id="businessDays">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Calendar Days</div>
+                        <div class="result-value" id="calendarDays">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Weekends</div>
+                        <div class="result-value" id="weekends">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Holidays</div>
+                        <div class="result-value" id="holidays">-</div>
+                    </div>
+                </div>
+
+                <div id="monthBreakdown" style="display: none;">
+                    <h3 style="margin-top: 25px; margin-bottom: 15px;">Monthly Breakdown</h3>
+                    <table class="breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Business Days</th>
+                                <th>Weekends</th>
+                                <th>Holidays</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 epochpilot.com
+    </div>
+
+    <script>
+        const holidays = {
+            us: {
+                2024: ['2024-01-01', '2024-01-15', '2024-02-19', '2024-03-29', '2024-05-27', '2024-06-19', '2024-07-04', '2024-09-02', '2024-10-14', '2024-11-28', '2024-12-25'],
+                2025: ['2025-01-01', '2025-01-20', '2025-02-17', '2025-04-18', '2025-05-26', '2025-06-19', '2025-07-04', '2025-09-01', '2025-10-13', '2025-11-27', '2025-12-25'],
+                2026: ['2026-01-01', '2026-01-19', '2026-02-16', '2026-04-10', '2026-05-25', '2026-06-19', '2026-07-03', '2026-09-07', '2026-10-12', '2026-11-26', '2026-12-25'],
+                2027: ['2027-01-01', '2027-01-18', '2027-02-15', '2027-04-02', '2027-05-31', '2027-06-18', '2027-07-05', '2027-09-06', '2027-10-11', '2027-11-25', '2027-12-24']
+            },
+            uk: {
+                2024: ['2024-01-01', '2024-04-10', '2024-04-12', '2024-05-06', '2024-05-27', '2024-08-26', '2024-12-25', '2024-12-26'],
+                2025: ['2025-01-01', '2025-04-18', '2025-04-21', '2025-05-05', '2025-05-26', '2025-08-25', '2025-12-25', '2025-12-26'],
+                2026: ['2026-01-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25', '2026-08-31', '2026-12-25', '2026-12-28'],
+                2027: ['2027-01-01', '2027-03-26', '2027-03-29', '2027-05-03', '2027-05-31', '2027-08-30', '2027-12-27', '2027-12-28']
+            },
+            ca: {
+                2024: ['2024-01-01', '2024-02-19', '2024-03-29', '2024-05-20', '2024-07-01', '2024-08-05', '2024-09-30', '2024-10-14', '2024-12-25'],
+                2025: ['2025-01-01', '2025-02-17', '2025-04-18', '2025-05-19', '2025-07-01', '2025-08-04', '2025-09-30', '2025-10-13', '2025-12-25'],
+                2026: ['2026-01-01', '2026-02-16', '2026-04-10', '2026-05-18', '2026-07-01', '2026-08-03', '2026-09-30', '2026-10-12', '2026-12-25'],
+                2027: ['2027-01-01', '2027-02-15', '2027-04-02', '2027-05-17', '2027-07-01', '2027-08-02', '2027-09-30', '2027-10-11', '2027-12-25']
+            },
+            au: {
+                2024: ['2024-01-01', '2024-01-26', '2024-03-11', '2024-03-29', '2024-03-30', '2024-04-25', '2024-06-10', '2024-12-25', '2024-12-26'],
+                2025: ['2025-01-01', '2025-01-27', '2025-03-10', '2025-04-18', '2025-04-25', '2025-06-09', '2025-12-25', '2025-12-26'],
+                2026: ['2026-01-01', '2026-01-26', '2026-02-09', '2026-04-10', '2026-04-27', '2026-06-08', '2026-12-25', '2026-12-28'],
+                2027: ['2027-01-01', '2027-01-25', '2027-02-08', '2027-04-02', '2027-04-26', '2027-06-07', '2027-12-27', '2027-12-28']
+            },
+            de: {
+                2024: ['2024-01-01', '2024-03-29', '2024-03-31', '2024-05-01', '2024-05-09', '2024-05-19', '2024-05-30', '2024-10-03', '2024-12-25', '2024-12-26'],
+                2025: ['2025-01-01', '2025-04-18', '2025-04-20', '2025-05-01', '2025-05-29', '2025-06-08', '2025-06-19', '2025-10-03', '2025-12-25', '2025-12-26'],
+                2026: ['2026-01-01', '2026-04-03', '2026-04-05', '2026-05-01', '2026-05-14', '2026-05-24', '2026-06-04', '2026-10-03', '2026-12-25', '2026-12-26'],
+                2027: ['2027-01-01', '2027-03-26', '2027-03-28', '2027-05-01', '2027-05-06', '2027-05-16', '2027-05-27', '2027-10-03', '2027-12-25', '2027-12-26']
+            },
+            fr: {
+                2024: ['2024-01-01', '2024-04-08', '2024-05-01', '2024-05-08', '2024-05-16', '2024-05-27', '2024-07-14', '2024-08-15', '2024-11-01', '2024-12-25'],
+                2025: ['2025-01-01', '2025-04-21', '2025-05-01', '2025-05-08', '2025-05-29', '2025-06-09', '2025-07-14', '2025-08-15', '2025-11-01', '2025-12-25'],
+                2026: ['2026-01-01', '2026-04-05', '2026-05-01', '2026-05-08', '2026-05-14', '2026-05-25', '2026-07-14', '2026-08-15', '2026-11-01', '2026-12-25'],
+                2027: ['2027-01-01', '2027-03-29', '2027-05-01', '2027-05-08', '2027-06-07', '2027-05-17', '2027-07-14', '2027-08-15', '2027-11-01', '2027-12-25']
+            },
+            in: {
+                2024: ['2024-01-26', '2024-03-08', '2024-03-25', '2024-03-29', '2024-04-11', '2024-04-17', '2024-04-21', '2024-05-23', '2024-08-15', '2024-10-02', '2024-10-12', '2024-11-01', '2024-11-15', '2024-12-25'],
+                2025: ['2025-01-26', '2025-03-14', '2025-04-11', '2025-04-14', '2025-04-17', '2025-05-23', '2025-07-17', '2025-08-15', '2025-10-02', '2025-10-20', '2025-11-01', '2025-12-25'],
+                2026: ['2026-01-26', '2026-03-06', '2026-03-29', '2026-04-02', '2026-04-14', '2026-05-01', '2026-07-07', '2026-08-15', '2026-10-02', '2026-10-09', '2026-11-01', '2026-12-25'],
+                2027: ['2027-01-26', '2027-02-22', '2027-03-11', '2027-04-02', '2027-04-13', '2027-04-21', '2027-05-01', '2027-08-15', '2027-10-02', '2027-10-25', '2027-11-01', '2027-12-25']
+            }
+        };
+
+        function getWorkWeekDays() {
+            const workWeek = document.getElementById('workWeek').value;
+            if (workWeek === 'mon-fri') return [1, 2, 3, 4, 5];
+            if (workWeek === 'mon-sat') return [1, 2, 3, 4, 5, 6];
+            if (workWeek === 'sun-thu') return [0, 1, 2, 3, 4];
+            return [1, 2, 3, 4, 5];
+        }
+
+        function getCountryHolidays(year) {
+            const country = document.getElementById('country').value;
+            const countryHolidays = holidays[country] || {};
+            return countryHolidays[year] || [];
+        }
+
+        function isBusinessDay(date) {
+            const dayOfWeek = date.getDay();
+            const workDays = getWorkWeekDays();
+            const dateStr = date.toISOString().split('T')[0];
+            const year = date.getFullYear();
+            const countryHolidays = getCountryHolidays(year);
+
+            return workDays.includes(dayOfWeek) && !countryHolidays.includes(dateStr);
+        }
+
+        function calculate() {
+            const startStr = document.getElementById('startDate').value;
+            const endStr = document.getElementById('endDate').value;
+
+            if (!startStr || !endStr) return;
+
+            const start = new Date(startStr + 'T00:00:00');
+            const end = new Date(endStr + 'T00:00:00');
+
+            if (start > end) {
+                alert('Start date must be before end date');
+                return;
+            }
+
+            let businessDays = 0;
+            let weekendDays = 0;
+            let holidayDays = 0;
+            const monthData = {};
+
+            const current = new Date(start);
+            const workDays = getWorkWeekDays();
+
+            while (current <= end) {
+                const dateStr = current.toISOString().split('T')[0];
+                const monthKey = dateStr.slice(0, 7);
+                const year = current.getFullYear();
+                const dayOfWeek = current.getDay();
+                const countryHolidays = getCountryHolidays(year);
+
+                if (!monthData[monthKey]) {
+                    monthData[monthKey] = { business: 0, weekend: 0, holiday: 0 };
+                }
+
+                if (workDays.includes(dayOfWeek)) {
+                    if (countryHolidays.includes(dateStr)) {
+                        holidayDays++;
+                        monthData[monthKey].holiday++;
+                    } else {
+                        businessDays++;
+                        monthData[monthKey].business++;
+                    }
+                } else {
+                    weekendDays++;
+                    monthData[monthKey].weekend++;
+                }
+
+                current.setDate(current.getDate() + 1);
+            }
+
+            document.getElementById('businessDays').textContent = businessDays;
+            document.getElementById('calendarDays').textContent = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('weekends').textContent = weekendDays;
+            document.getElementById('holidays').textContent = holidayDays;
+
+            // Monthly breakdown
+            let table = '';
+            Object.keys(monthData).sort().forEach(month => {
+                const data = monthData[month];
+                const [year, monthNum] = month.split('-');
+                const monthName = new Date(year, monthNum - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+                table += `<tr><td>${monthName}</td><td>${data.business}</td><td>${data.weekend}</td><td>${data.holiday}</td></tr>`;
+            });
+
+            document.getElementById('monthTable').innerHTML = table;
+            document.getElementById('monthBreakdown').style.display = 'block';
+        }
+
+        function setPreset(type) {
+            const today = new Date();
+            let start, end;
+
+            switch(type) {
+                case 'quarter':
+                    const quarter = Math.floor(today.getMonth() / 3);
+                    start = new Date(today.getFullYear(), quarter * 3, 1);
+                    end = new Date(today.getFullYear(), (quarter + 1) * 3, 0);
+                    break;
+                case 'year':
+                    start = new Date(today.getFullYear(), 0, 1);
+                    end = new Date(today.getFullYear(), 11, 31);
+                    break;
+                case '30':
+                    start = new Date(today);
+                    end = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+                    break;
+                case '90':
+                    start = new Date(today);
+                    end = new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000);
+                    break;
+            }
+
+            document.getElementById('startDate').value = start.toISOString().split('T')[0];
+            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            calculate();
+        }
+
+        // Initialize with today's date
+        const today = new Date();
+        document.getElementById('startDate').value = today.toISOString().split('T')[0];
+        document.getElementById('endDate').value = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    </script>
+</body>
+</html>
