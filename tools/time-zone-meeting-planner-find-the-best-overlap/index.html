@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Meeting Planner — Find the Best Overlap</title>
+    <meta name="description" content="Add participants from any time zone, set custom hours, and instantly see the best meeting overlap. Export invite text.">
+    <link rel="canonical" href="https://epochpilot.com/tools/time-zone-meeting-planner">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://epochpilot.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://epochpilot.com/tools" },
+        { "@type": "ListItem", "position": 3, "name": "Time Zone Meeting Planner", "item": "https://epochpilot.com/tools/time-zone-meeting-planner" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Time Zone Meeting Planner",
+      "url": "https://epochpilot.com/tools/time-zone-meeting-planner",
+      "description": "Find the best meeting time across time zones with custom working hours and visual timeline.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "JavaScript enabled"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I add a participant?", "acceptedAnswer": { "@type": "Answer", "text": "Use the searchable dropdown to select a time zone, set custom working hours, and click 'Add Participant'." } },
+        { "@type": "Question", "name": "What do the colors mean?", "acceptedAnswer": { "@type": "Answer", "text": "Green: working hours, Yellow: possible meeting overlap, Red: sleeping/off hours." } },
+        { "@type": "Question", "name": "How is the best overlap calculated?", "acceptedAnswer": { "@type": "Answer", "text": "The tool finds all 30-minute slots where every participant is within their working hours." } }
+      ]
+    }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #0b0b0e;
+            color: #e8e8ed;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1300px;
+            width: 100%;
+        }
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #2c2c35;
+            padding-bottom: 0.75rem;
+        }
+        header h1 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header .sub {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 2.2fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        @media (max-width: 850px) {
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #141417;
+            border-radius: 1.5rem;
+            padding: 1.5rem 1.2rem;
+            border: 1px solid #2a2a33;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.6);
+        }
+        .panel h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f1f1f6;
+        }
+        .panel h2 i {
+            color: #f43f5e;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #b0b3c0;
+            letter-spacing: 0.01em;
+        }
+        select, input {
+            background: #1e1e24;
+            border: 1px solid #33333e;
+            color: #e5e5eb;
+            padding: 0.7rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.15s;
+        }
+        select:focus, input:focus {
+            border-color: #f43f5e;
+            box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.25);
+        }
+        select option {
+            background: #1e1e24;
+        }
+        .time-range {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .time-range input {
+            width: 100%;
+        }
+        .btn {
+            background: #f43f5e;
+            border: none;
+            color: white;
+            font-weight: 500;
+            padding: 0.7rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #f43f5e;
+            color: #f43f5e;
+        }
+        .btn-outline:hover {
+            background: #f43f5e20;
+        }
+        .btn:hover {
+            background: #e11d48;
+            transform: scale(0.98);
+        }
+        .participant-list {
+            margin: 1.2rem 0 0.8rem;
+            max-height: 240px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .participant-item {
+            background: #1c1c23;
+            border-radius: 2rem;
+            padding: 0.4rem 1rem 0.4rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #f43f5e;
+        }
+        .participant-item .info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+        .participant-item .info .tz-name {
+            font-weight: 500;
+            color: white;
+        }
+        .participant-item .info .hours {
+            color: #b9bccb;
+        }
+        .participant-item .remove {
+            background: transparent;
+            border: none;
+            color: #f43f5e;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 0.2rem;
+        }
+        .timeline-section {
+            margin-top: 1.2rem;
+        }
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #a1a5b3;
+            padding: 0 0.3rem;
+        }
+        .timeline-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .row-label {
+            width: 110px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            flex-shrink: 0;
+            color: #c9cdda;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .row-bar {
+            display: flex;
+            flex: 1;
+            height: 28px;
+            background: #1a1a22;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #2f2f3b;
+        }
+        .hour-block {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            color: #aaa;
+            border-right: 1px solid #2a2a35;
+            transition: 0.1s;
+            position: relative;
+        }
+        .hour-block:last-child { border-right: none; }
+        .hour-block.green { background: #1f6d3c; color: #d1fae5; }
+        .hour-block.yellow { background: #a16207; color: #fef9c3; }
+        .hour-block.red { background: #7f1d1d; color: #fecaca; }
+        .hour-block.current-time-marker {
+            outline: 2px solid #f43f5e;
+            outline-offset: -2px;
+            z-index: 2;
+        }
+        .overlap-highlight {
+            margin-top: 1.2rem;
+            background: #1d1d26;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            border-left: 4px solid #facc15;
+        }
+        .overlap-highlight strong {
+            color: #facc15;
+        }
+        .export-area {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .export-area textarea {
+            flex: 1;
+            background: #1a1a22;
+            border: 1px solid #33333e;
+            border-radius: 1rem;
+            padding: 0.6rem;
+            color: #d4d4dc;
+            font-size: 0.75rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #6b6f7c;
+            text-align: center;
+        }
+        .badge {
+            background: #2c2c38;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #b0b5c7;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #141417; }
+        ::-webkit-scrollbar-thumb { background: #3a3a48; border-radius: 10px; }
+    </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>⏱️ Time Zone Meeting Planner</h1>
+        <span class="sub">Find the Best Overlap · epochpilot.com</span>
+    </header>
+
+    <div class="tool-grid">
+        <!-- left panel: participants -->
+        <div class="panel">
+            <h2><i>🧑‍💼</i> Participants</h2>
+            <div class="input-group">
+                <label for="tz-select">Time Zone</label>
+                <select id="tz-select" class="searchable-tz"></select>
+            </div>
+            <div class="input-group">
+                <label>Working hours (24h)</label>
+                <div class="time-range">
+                    <input type="time" id="start-hour" value="09:00" step="900">
+                    <span style="color:#9ca3af;">to</span>
+                    <input type="time" id="end-hour" value="17:00" step="900">
+                </div>
+            </div>
+            <button class="btn" id="add-participant-btn">➕ Add participant</button>
+            <div id="participant-list" class="participant-list"></div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <button class="btn-outline btn" id="clear-all-btn" style="flex:1;">🗑️ Clear all</button>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.8rem; color: #9ca3af; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <span><span style="background:#1f6d3c; width:12px;height:12px;display:inline-block;border-radius:4px;"></span> Working</span>
+                <span><span style="background:#a16207; width:12px;height:12px;display:inline-block;border-radius:4px;"></span> Overlap</span>
+                <span><span style="background:#7f1d1d; width:12px;height:12px;display:inline-block;border-radius:4px;"></span> Off hours</span>
+            </div>
+        </div>
+
+        <!-- right panel: timeline + overlap -->
+        <div class="panel">
+            <h2><i>📊</i> Timeline & Overlap</h2>
+            <div id="timeline-container">
+                <div class="timeline-header">
+                    <span>UTC</span>
+                    <span>00:00 – 24:00</span>
+                </div>
+                <div id="timeline-rows" class="timeline-rows">
+                    <!-- dynamic rows -->
+                </div>
+            </div>
+            <div id="overlap-box" class="overlap-highlight">
+                <strong>✨ Best overlap</strong> <span id="overlap-text">Add at least two participants</span>
+            </div>
+            <div class="export-area">
+                <textarea id="export-text" placeholder="Meeting invite preview..." readonly></textarea>
+                <button class="btn-outline btn" id="copy-export-btn" style="white-space:nowrap;">📋 Copy</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-note">epochpilot.com — Time Zone Meeting Planner · All IANA timezones supported</div>
+</div>
+
+<script>
+    (function() {
+        // ---------- IANA timezones (major) ----------
+        const tzList = Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : [
+            "UTC","America/New_York","America/Chicago","America/Denver","America/Los_Angeles",
+            "America/Anchorage","Pacific/Honolulu","Europe/London","Europe/Paris","Europe/Berlin",
+            "Europe/Moscow","Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo",
+            "Australia/Sydney","Pacific/Auckland","America/Sao_Paulo","Africa/Cairo","Africa/Johannesburg"
+        ];
+        // ensure UTC is present
+        if (!tzList.includes('UTC')) tzList.unshift('UTC');
+
+        // ---------- state ----------
+        let participants = []; // { id, tz, startMin, endMin, label }
+        let nextId = 1;
+
+        const tzSelect = document.getElementById('tz-select');
+        const startInput = document.getElementById('start-hour');
+        const endInput = document.getElementById('end-hour');
+        const addBtn = document.getElementById('add-participant-btn');
+        const clearBtn = document.getElementById('clear-all-btn');
+        const participantListEl = document.getElementById('participant-list');
+        const timelineRowsEl = document.getElementById('timeline-rows');
+        const overlapText = document.getElementById('overlap-text');
+        const exportTextarea = document.getElementById('export-text');
+        const copyBtn = document.getElementById('copy-export-btn');
+
+        // populate dropdown
+        function populateTimezoneDropdown() {
+            tzSelect.innerHTML = '';
+            tzList.forEach(tz => {
+                const opt = document.createElement('option');
+                opt.value = tz;
+                opt.textContent = tz.replace(/_/g, ' ');
+                tzSelect.appendChild(opt);
+            });
+            // default to user's timezone if available
+            const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (tzList.includes(userTz)) tzSelect.value = userTz;
+            else tzSelect.value = 'UTC';
+        }
+        populateTimezoneDropdown();
+
+        // helpers
+        function toMinutes(val) {
+            const [h, m] = val.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function formatMinutes(m) {
+            const h = Math.floor(m / 60) % 24;
+            const min = m % 60;
+            return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+        }
+
+        // get current UTC time in minutes
+        function getCurrentUTCMinutes() {
+            const now = new Date();
+            return now.getUTCHours() * 60 + now.getUTCMinutes();
+        }
+
+        // render timeline & overlap
+        function render() {
+            const rowsContainer = timelineRowsEl;
+            rowsContainer.innerHTML = '';
+            if (participants.length === 0) {
+                rowsContainer.innerHTML = '<div style="padding:1rem;text-align:center;color:#6b6f7c;">Add participants to see timeline</div>';
+                overlapText.textContent = 'Add at least two participants';
+                exportTextarea.value = '';
+                return;
+            }
+
+            const currentUtcMin = getCurrentUTCMinutes();
+            const hours = Array.from({length: 24}, (_, i) => i);
+
+            // build row data
+            let rowData = [];
+            participants.forEach(p => {
+                const tz = p.tz;
+                const startLocal = p.startMin;
+                const endLocal = p.endMin;
+                // get offset for today
+                const now = new Date();
+                const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+                let offsetMin = 0;
+                try {
+                    const formatter = new Intl.DateTimeFormat('en', { timeZone: tz, hourCycle: 'h23', hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'numeric', year: 'numeric' });
+                    const parts = formatter.formatToParts(utcDate);
+                    const dateStr = parts.filter(p => p.type !== 'literal').map(p => p.value).join(' ');
+                    // we just need offset: compare with UTC
+                    const localDate = new Date(dateStr);
+                    offsetMin = (localDate - utcDate) / 60000;
+                } catch(e) { offsetMin = 0; }
+
+                // build 24h color array
+                const colors = [];
+                for (let h = 0; h < 24; h++) {
+                    const utcMin = h * 60;
+                    const localMin = (utcMin + offsetMin + 1440) % 1440;
+                    const inWorking = (localMin >= startLocal && localMin < endLocal) || (startLocal > endLocal && (localMin >= startLocal || localMin < endLocal));
+                    // handle overnight: if start > end (e.g., 22:00-06:00)
+                    let isWorking = false;
+                    if (startLocal <= endLocal) {
+                        isWorking = (localMin >= startLocal && localMin < endLocal);
+                    } else {
+                        isWorking = (localMin >= startLocal || localMin < endLocal);
+                    }
+                    colors.push(isWorking ? 'green' : 'red');
+                }
+                rowData.push({ label: p.label, tz: p.tz, colors, offsetMin });
+            });
+
+            // find overlap (all green)
+            const overlapSlots = [];
+            for (let m = 0; m < 1440; m += 30) {
+                const hourIdx = Math.floor(m / 60);
+                const minuteIdx = Math.floor((m % 60) / 30);
+                // check all participants
+                let allGreen = true;
+                for (let r of rowData) {
+                    const localMin = (m + r.offsetMin + 1440) % 1440;
+                    const start = participants.find(p => p.label === r.label)?.startMin ?? 540;
+                    const end = participants.find(p => p.label === r.label)?.endMin ?? 1020;
+                    let isWorking = false;
+                    if (start <= end) {
+                        isWorking = (localMin >= start && localMin < end);
+                    } else {
+                        isWorking = (localMin >= start || localMin < end);
+                    }
+                    if (!isWorking) { allGreen = false; break; }
+                }
+                if (allGreen) overlapSlots.push(m);
+            }
+
+            // merge contiguous overlap slots for display
+            let overlapRanges = [];
+            if (overlapSlots.length > 0) {
+                let start = overlapSlots[0];
+                let end = overlapSlots[0];
+                for (let i = 1; i < overlapSlots.length; i++) {
+                    if (overlapSlots[i] === end + 30) {
+                        end = overlapSlots[i];
+                    } else {
+                        overlapRanges.push({ start, end });
+                        start = overlapSlots[i];
+                        end = overlapSlots[i];
+                    }
+                }
+                overlapRanges.push({ start, end });
+            }
+
+            if (overlapRanges.length > 0) {
+                const times = overlapRanges.map(r => `${formatMinutes(r.start)} – ${formatMinutes(r.end + 30)}`).join('; ');
+                overlapText.textContent = ` ${times} (UTC)`;
+            } else {
+                overlapText.textContent = 'No common working hours found.';
+            }
+
+            // draw rows
+            rowData.forEach((r, idx) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'timeline-row';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'row-label';
+                labelSpan.textContent = r.label.length > 18 ? r.label.substring(0,16)+'…' : r.label;
+                rowDiv.appendChild(labelSpan);
+
+                const bar = document.createElement('div');
+                bar.className = 'row-bar';
+
+                for (let h = 0; h < 24; h++) {
+                    const block = document.createElement('div');
+                    block.className = 'hour-block';
+                    const color = r.colors[h];
+                    block.classList.add(color);
+                    // check if current time falls in this hour block (approx)
+                    const blockStart = h * 60;
+                    const blockEnd = (h+1) * 60;
+                    if (currentUtcMin >= blockStart && currentUtcMin < blockEnd) {
+                        block.classList.add('current-time-marker');
+                    }
+                    // show small time label for every 6h
+                    if (h % 6 === 0) block.textContent = `${String(h).padStart(2,'0')}h`;
+                    bar.appendChild(block);
+                }
+                rowDiv.appendChild(bar);
+                rowsContainer.appendChild(rowDiv);
+            });
+
+            // export text
+            let exportStr = `Meeting plan (epochpilot.com)\nParticipants:\n`;
+            participants.forEach(p => {
+                exportStr += `- ${p.label} (${p.tz}): ${formatMinutes(p.startMin)}-${formatMinutes(p.endMin)} local\n`;
+            });
+            if (overlapRanges.length > 0) {
+                exportStr += `\n✅ Best overlap (UTC): ${overlapRanges.map(r => `${formatMinutes(r.start)} – ${formatMinutes(r.end+30)}`).join(', ')}`;
+            } else {
+                exportStr += `\n❌ No overlap found.`;
+            }
+            exportTextarea.value = exportStr;
+        }
+
+        // add participant
+        function addParticipant() {
+            const tz = tzSelect.value;
+            const startVal = startInput.value || '09:00';
+            const endVal = endInput.value || '17:00';
+            let startMin = toMinutes(startVal);
+            let endMin = toMinutes(endVal);
+            if (startMin === endMin) {
+                alert('Working hours cannot be identical.');
+                return;
+            }
+            // label: timezone + hours
+            const label = `${tz.replace(/_/g,' ')} (${startVal}-${endVal})`;
+            // avoid duplicate
+            if (participants.some(p => p.tz === tz && p.startMin === startMin && p.endMin === endMin)) {
+                alert('Participant with same timezone and hours already added.');
+                return;
+            }
+            participants.push({ id: nextId++, tz, startMin, endMin, label });
+            updateParticipantList();
+            render();
+        }
+
+        function removeParticipant(id) {
+            participants = participants.filter(p => p.id !== id);
+            updateParticipantList();
+            render();
+        }
+
+        function clearAll() {
+            participants = [];
+            updateParticipantList();
+            render();
+        }
+
+        function updateParticipantList() {
+            const list = participantListEl;
+            list.innerHTML = '';
+            participants.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'participant-item';
+                div.innerHTML = `
+                    <div class="info">
+                        <span class="tz-name">${p.tz.replace(/_/g,' ')}</span>
+                        <span class="hours">${formatMinutes(p.startMin)} – ${formatMinutes(p.endMin)}</span>
+                    </div>
+                    <button class="remove" data-id="${p.id}">✕</button>
+                `;
+                div.querySelector('.remove').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeParticipant(p.id);
+                });
+                list.appendChild(div);
+            });
+        }
+
+        // event listeners
+        addBtn.addEventListener('click', addParticipant);
+        clearBtn.addEventListener('click', clearAll);
+
+        copyBtn.addEventListener('click', () => {
+            exportTextarea.select();
+            navigator.clipboard.writeText(exportTextarea.value).then(() => {
+                copyBtn.textContent = '✅ Copied';
+                setTimeout(() => copyBtn.textContent = '📋 Copy', 1800);
+            }).catch(() => {});
+        });
+
+        // initial render
+        render();
+        // re-render every minute to update current time marker
+        setInterval(render, 60000);
+        // also re-render on timezone change? not needed
+
+        // add default participants for demo
+        setTimeout(() => {
+            if (participants.length === 0) {
+                // add two default
+                const defaultTz1 = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const defaultTz2 = defaultTz1 === 'America/New_York' ? 'Europe/London' : 'America/New_York';
+                // set dropdown values
+                tzSelect.value = defaultTz1;
+                startInput.value = '09:00';
+                endInput.value = '17:00';
+                addParticipant();
+                tzSelect.value = defaultTz2;
+                startInput.value = '10:00';
+                endInput.value = '18:00';
+                addParticipant();
+            }
+        }, 100);
+    })();
+</script>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+</body>
+</html>
