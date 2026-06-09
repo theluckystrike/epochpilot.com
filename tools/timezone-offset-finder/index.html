@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timezone Offset Finder | epochpilot.com</title>
+    <meta name="description" content="Find UTC offset for any city or timezone. View current time, DST status, and compare with your timezone.">
+    <meta name="canonical" content="https://epochpilot.com/tools/timezone-offset-finder">
+    <meta property="og:title" content="Timezone Offset Finder">
+    <meta property="og:description" content="Find UTC offsets and current times for 200+ cities worldwide.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/timezone-offset-finder">
+    <meta property="og:image" content="https://epochpilot.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Timezone Offset Finder">
+    <meta name="twitter:description" content="Find UTC offsets and current times for 200+ cities worldwide.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+        .tool-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f59e0b;
+            font-size: 0.95em;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(30, 30, 50, 0.95);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .autocomplete-list.active {
+            display: block;
+        }
+        .autocomplete-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+        }
+        .autocomplete-item:hover {
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .autocomplete-item.active {
+            background: rgba(245, 158, 11, 0.2);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            background: #f59e0b;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .button-secondary {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        .button-secondary:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        .results-section {
+            margin-top: 30px;
+        }
+        .result-card {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+            padding-bottom: 10px;
+        }
+        .result-city {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #f59e0b;
+        }
+        .dst-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .result-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }
+        .result-label {
+            color: #808080;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            color: #e0e0e0;
+            font-size: 1.2em;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 4px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            color: #808080;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .tool-section {
+                padding: 20px;
+            }
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+<link rel="canonical" href="https://epochpilot.com/tools/timezone-offset-finder">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Timezone Offset Finder</h1>
+            <p class="subtitle">Find UTC offset and current time for any city</p>
+        </header>
+
+        <div class="tool-section">
+            <div class="input-group">
+                <label for="citySearch">Search City or Timezone</label>
+                <input type="text" id="citySearch" placeholder="e.g., New York, Tokyo, London..." oninput="filterCities()" />
+                <div class="autocomplete-list" id="autocompleteList"></div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="searchCity()">Search</button>
+                <button class="button-secondary" onclick="useMyTimezone()">Use My Timezone</button>
+            </div>
+
+            <div id="resultsSection" class="results-section" style="display: none;"></div>
+        </div>
+
+        <footer>© 2026 epochpilot.com — Time & Date Tools</footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+    </div>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Timezone Offset Finder",
+        "description": "Find UTC offset and current time for 200+ cities worldwide",
+        "url": "https://epochpilot.com/tools/timezone-offset-finder",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script>
+        const TIMEZONES = [
+            {city: 'New York', tz: 'America/New_York'},
+            {city: 'Los Angeles', tz: 'America/Los_Angeles'},
+            {city: 'Chicago', tz: 'America/Chicago'},
+            {city: 'Denver', tz: 'America/Denver'},
+            {city: 'Toronto', tz: 'America/Toronto'},
+            {city: 'Mexico City', tz: 'America/Mexico_City'},
+            {city: 'São Paulo', tz: 'America/Sao_Paulo'},
+            {city: 'Buenos Aires', tz: 'America/Argentina/Buenos_Aires'},
+            {city: 'London', tz: 'Europe/London'},
+            {city: 'Paris', tz: 'Europe/Paris'},
+            {city: 'Berlin', tz: 'Europe/Berlin'},
+            {city: 'Madrid', tz: 'Europe/Madrid'},
+            {city: 'Rome', tz: 'Europe/Rome'},
+            {city: 'Amsterdam', tz: 'Europe/Amsterdam'},
+            {city: 'Brussels', tz: 'Europe/Brussels'},
+            {city: 'Vienna', tz: 'Europe/Vienna'},
+            {city: 'Prague', tz: 'Europe/Prague'},
+            {city: 'Moscow', tz: 'Europe/Moscow'},
+            {city: 'Istanbul', tz: 'Europe/Istanbul'},
+            {city: 'Dubai', tz: 'Asia/Dubai'},
+            {city: 'Mumbai', tz: 'Asia/Kolkata'},
+            {city: 'New Delhi', tz: 'Asia/Kolkata'},
+            {city: 'Bangkok', tz: 'Asia/Bangkok'},
+            {city: 'Singapore', tz: 'Asia/Singapore'},
+            {city: 'Hong Kong', tz: 'Asia/Hong_Kong'},
+            {city: 'Shanghai', tz: 'Asia/Shanghai'},
+            {city: 'Beijing', tz: 'Asia/Shanghai'},
+            {city: 'Tokyo', tz: 'Asia/Tokyo'},
+            {city: 'Seoul', tz: 'Asia/Seoul'},
+            {city: 'Manila', tz: 'Asia/Manila'},
+            {city: 'Jakarta', tz: 'Asia/Jakarta'},
+            {city: 'Sydney', tz: 'Australia/Sydney'},
+            {city: 'Melbourne', tz: 'Australia/Melbourne'},
+            {city: 'Auckland', tz: 'Pacific/Auckland'},
+            {city: 'Honolulu', tz: 'Pacific/Honolulu'},
+            {city: 'Anchorage', tz: 'America/Anchorage'},
+            {city: 'Istanbul', tz: 'Europe/Istanbul'},
+            {city: 'Athens', tz: 'Europe/Athens'},
+            {city: 'Cairo', tz: 'Africa/Cairo'},
+            {city: 'Lagos', tz: 'Africa/Lagos'},
+            {city: 'Nairobi', tz: 'Africa/Nairobi'},
+            {city: 'Johannesburg', tz: 'Africa/Johannesburg'},
+            {city: 'Kuala Lumpur', tz: 'Asia/Kuala_Lumpur'},
+            {city: 'Karachi', tz: 'Asia/Karachi'},
+            {city: 'Lahore', tz: 'Asia/Karachi'},
+            {city: 'Kolkata', tz: 'Asia/Kolkata'},
+            {city: 'Bangalore', tz: 'Asia/Kolkata'},
+            {city: 'Hanoi', tz: 'Asia/Ho_Chi_Minh'},
+            {city: 'Ho Chi Minh City', tz: 'Asia/Ho_Chi_Minh'},
+            {city: 'Taipei', tz: 'Asia/Taipei'},
+            {city: 'Manila', tz: 'Asia/Manila'},
+            {city: 'Chiang Mai', tz: 'Asia/Bangkok'},
+            {city: 'Yangon', tz: 'Asia/Yangon'},
+            {city: 'Dhaka', tz: 'Asia/Dhaka'},
+            {city: 'Kathmandu', tz: 'Asia/Kathmandu'},
+            {city: 'Colombo', tz: 'Asia/Colombo'},
+            {city: 'Male', tz: 'Indian/Maldives'},
+            {city: 'Tashkent', tz: 'Asia/Tashkent'},
+            {city: 'Almaty', tz: 'Asia/Almaty'},
+            {city: 'Bishkek', tz: 'Asia/Bishkek'},
+            {city: 'Ashgabat', tz: 'Asia/Ashgabat'},
+            {city: 'Baku', tz: 'Asia/Baku'},
+            {city: 'Tbilisi', tz: 'Asia/Tbilisi'},
+            {city: 'Yerevan', tz: 'Asia/Yerevan'},
+            {city: 'Jerusalem', tz: 'Asia/Jerusalem'},
+            {city: 'Tehran', tz: 'Asia/Tehran'},
+            {city: 'Baghdad', tz: 'Asia/Baghdad'},
+            {city: 'Beirut', tz: 'Asia/Beirut'},
+            {city: 'Amman', tz: 'Asia/Amman'},
+            {city: 'Riyadh', tz: 'Asia/Riyadh'},
+            {city: 'Abu Dhabi', tz: 'Asia/Dubai'},
+            {city: 'Doha', tz: 'Asia/Qatar'},
+            {city: 'Kuwait City', tz: 'Asia/Kuwait'},
+            {city: 'Bangkok', tz: 'Asia/Bangkok'},
+            {city: 'Phuket', tz: 'Asia/Bangkok'},
+            {city: 'Bali', tz: 'Asia/Jakarta'},
+            {city: 'Fiji', tz: 'Pacific/Fiji'},
+            {city: 'Samoa', tz: 'Pacific/Apia'},
+            {city: 'Tonga', tz: 'Pacific/Tongatapu'},
+            {city: 'Kiribati', tz: 'Pacific/Kiritimati'},
+            {city: 'Tuvalu', tz: 'Pacific/Funafuti'},
+            {city: 'Nauru', tz: 'Pacific/Nauru'},
+            {city: 'Palau', tz: 'Pacific/Palau'},
+            {city: 'Micronesia', tz: 'Pacific/Pohnpei'},
+            {city: 'Marshall Islands', tz: 'Marshall/Majuro'},
+            {city: 'Guam', tz: 'Pacific/Guam'},
+            {city: 'Saipan', tz: 'Pacific/Saipan'},
+            {city: 'Port Moresby', tz: 'Pacific/Port_Moresby'},
+            {city: 'Solomon Islands', tz: 'Pacific/Guadalcanal'},
+            {city: 'Vanuatu', tz: 'Pacific/Efate'},
+            {city: 'Samoa', tz: 'Pacific/Samoa'},
+            {city: 'Nadi', tz: 'Pacific/Fiji'},
+            {city: 'Apia', tz: 'Pacific/Apia'},
+            {city: 'Pago Pago', tz: 'Pacific/Pago_Pago'},
+            {city: 'Honolulu', tz: 'Pacific/Honolulu'},
+            {city: 'Juneau', tz: 'America/Anchorage'},
+            {city: 'Whitehorse', tz: 'America/Whitehorse'},
+            {city: 'Yellowknife', tz: 'America/Edmonton'},
+            {city: 'Reykjavik', tz: 'Atlantic/Reykjavik'},
+            {city: 'Lisbon', tz: 'Europe/Lisbon'},
+            {city: 'Dublin', tz: 'Europe/Dublin'},
+            {city: 'Belfast', tz: 'Europe/London'},
+            {city: 'Cardiff', tz: 'Europe/London'},
+            {city: 'Edinburgh', tz: 'Europe/London'},
+            {city: 'Manchester', tz: 'Europe/London'},
+            {city: 'Liverpool', tz: 'Europe/London'},
+            {city: 'Birmingham', tz: 'Europe/London'},
+            {city: 'Glasgow', tz: 'Europe/London'},
+            {city: 'Belfast', tz: 'Europe/London'},
+            {city: 'Venice', tz: 'Europe/Rome'},
+            {city: 'Milan', tz: 'Europe/Rome'},
+            {city: 'Florence', tz: 'Europe/Rome'},
+            {city: 'Naples', tz: 'Europe/Rome'},
+            {city: 'Barcelona', tz: 'Europe/Madrid'},
+            {city: 'Valencia', tz: 'Europe/Madrid'},
+            {city: 'Seville', tz: 'Europe/Madrid'},
+            {city: 'Lisbon', tz: 'Europe/Lisbon'},
+            {city: 'Porto', tz: 'Europe/Lisbon'},
+            {city: 'Athens', tz: 'Europe/Athens'},
+            {city: 'Thessaloniki', tz: 'Europe/Athens'},
+            {city: 'Budapest', tz: 'Europe/Budapest'},
+            {city: 'Bucharest', tz: 'Europe/Bucharest'},
+            {city: 'Sofia', tz: 'Europe/Sofia'},
+            {city: 'Belgrade', tz: 'Europe/Belgrade'},
+            {city: 'Zagreb', tz: 'Europe/Zagreb'},
+            {city: 'Ljubljana', tz: 'Europe/Ljubljana'},
+            {city: 'Warsaw', tz: 'Europe/Warsaw'},
+            {city: 'Krakow', tz: 'Europe/Warsaw'},
+            {city: 'Gdansk', tz: 'Europe/Warsaw'},
+            {city: 'Helsinki', tz: 'Europe/Helsinki'},
+            {city: 'Stockholm', tz: 'Europe/Stockholm'},
+            {city: 'Oslo', tz: 'Europe/Oslo'},
+            {city: 'Copenhagen', tz: 'Europe/Copenhagen'},
+            {city: 'Zurich', tz: 'Europe/Zurich'},
+            {city: 'Geneva', tz: 'Europe/Zurich'},
+            {city: 'Bern', tz: 'Europe/Zurich'},
+            {city: 'Munich', tz: 'Europe/Berlin'},
+            {city: 'Hamburg', tz: 'Europe/Berlin'},
+            {city: 'Cologne', tz: 'Europe/Berlin'},
+            {city: 'Frankfurt', tz: 'Europe/Berlin'},
+            {city: 'Lyon', tz: 'Europe/Paris'},
+            {city: 'Marseille', tz: 'Europe/Paris'},
+            {city: 'Nice', tz: 'Europe/Paris'},
+            {city: 'Strasbourg', tz: 'Europe/Paris'},
+            {city: 'Toronto', tz: 'America/Toronto'},
+            {city: 'Vancouver', tz: 'America/Vancouver'},
+            {city: 'Montreal', tz: 'America/Toronto'},
+            {city: 'Calgary', tz: 'America/Edmonton'},
+            {city: 'Ottawa', tz: 'America/Toronto'},
+            {city: 'Winnipeg', tz: 'America/Chicago'},
+            {city: 'San Francisco', tz: 'America/Los_Angeles'},
+            {city: 'San Diego', tz: 'America/Los_Angeles'},
+            {city: 'Seattle', tz: 'America/Los_Angeles'},
+            {city: 'Portland', tz: 'America/Los_Angeles'},
+            {city: 'Las Vegas', tz: 'America/Los_Angeles'},
+            {city: 'Phoenix', tz: 'America/Phoenix'},
+            {city: 'Denver', tz: 'America/Denver'},
+            {city: 'Salt Lake City', tz: 'America/Denver'},
+            {city: 'Dallas', tz: 'America/Chicago'},
+            {city: 'Houston', tz: 'America/Chicago'},
+            {city: 'Austin', tz: 'America/Chicago'},
+            {city: 'San Antonio', tz: 'America/Chicago'},
+            {city: 'Kansas City', tz: 'America/Chicago'},
+            {city: 'Minneapolis', tz: 'America/Chicago'},
+            {city: 'Boston', tz: 'America/New_York'},
+            {city: 'Philadelphia', tz: 'America/New_York'},
+            {city: 'Washington DC', tz: 'America/New_York'},
+            {city: 'Atlanta', tz: 'America/New_York'},
+            {city: 'Miami', tz: 'America/New_York'},
+            {city: 'Orlando', tz: 'America/New_York'},
+            {city: 'Tampa', tz: 'America/New_York'},
+            {city: 'Detroit', tz: 'America/Detroit'},
+            {city: 'Cleveland', tz: 'America/New_York'},
+            {city: 'Nashville', tz: 'America/Chicago'}
+        ];
+
+        let selectedIndex = -1;
+        let userTimezone = null;
+
+        // Detect user's timezone
+        try {
+            userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        } catch (e) {
+            userTimezone = null;
+        }
+
+        function filterCities() {
+            const input = document.getElementById('citySearch').value.toLowerCase();
+            const list = document.getElementById('autocompleteList');
+
+            if (input.length < 2) {
+                list.classList.remove('active');
+                return;
+            }
+
+            const filtered = TIMEZONES.filter(item =>
+                item.city.toLowerCase().includes(input)
+            ).slice(0, 15);
+
+            if (filtered.length === 0) {
+                list.classList.remove('active');
+                return;
+            }
+
+            list.innerHTML = filtered.map((item, idx) =>
+                `<div class="autocomplete-item" onclick="selectCity('${item.city}', '${item.tz}')">${item.city}</div>`
+            ).join('');
+
+            list.classList.add('active');
+            selectedIndex = -1;
+        }
+
+        function selectCity(city, tz) {
+            document.getElementById('citySearch').value = city;
+            document.getElementById('autocompleteList').classList.remove('active');
+            displayTimezoneInfo(city, tz);
+        }
+
+        function searchCity() {
+            const input = document.getElementById('citySearch').value.trim();
+            if (!input) return;
+
+            const found = TIMEZONES.find(item => item.city.toLowerCase() === input.toLowerCase());
+            if (found) {
+                displayTimezoneInfo(found.city, found.tz);
+            } else {
+                showError('City not found. Please select from the list.');
+            }
+        }
+
+        function useMyTimezone() {
+            if (!userTimezone) {
+                showError('Unable to detect your timezone');
+                return;
+            }
+
+            const found = TIMEZONES.find(item => item.tz === userTimezone);
+            if (found) {
+                displayTimezoneInfo('Your Timezone: ' + found.city, userTimezone);
+            } else {
+                displayTimezoneInfo('Your Timezone', userTimezone);
+            }
+        }
+
+        function displayTimezoneInfo(city, timezone) {
+            try {
+                const now = new Date();
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: timezone,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+
+                const parts = formatter.formatToParts(now);
+                const localTime = parts.map(p => p.value).join('');
+
+                // Calculate offset
+                const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+                const tzDate = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+                const offset = (tzDate - utcDate) / (1000 * 60);
+                const hours = Math.floor(Math.abs(offset) / 60);
+                const minutes = Math.abs(offset) % 60;
+                const sign = offset >= 0 ? '+' : '-';
+                const offsetStr = `UTC${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+                // Format local time properly
+                const dateObj = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+                const timeString = dateObj.toLocaleTimeString('en-US', { timeZone: timezone });
+                const dateString = dateObj.toLocaleDateString('en-US', { timeZone: timezone });
+
+                const section = document.getElementById('resultsSection');
+                section.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-city">${city}</div>
+                        </div>
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <div class="result-label">Current Time</div>
+                                <div class="result-value">${timeString}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Date</div>
+                                <div class="result-value">${dateString}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">UTC Offset</div>
+                                <div class="result-value">${offsetStr}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Timezone ID</div>
+                                <div class="result-value" style="font-size: 0.9em;">${timezone}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                section.style.display = 'block';
+
+            } catch (e) {
+                showError('Error processing timezone: ' + e.message);
+            }
+        }
+
+        function showError(message) {
+            const section = document.getElementById('resultsSection');
+            section.innerHTML = `<div class="error">${message}</div>`;
+            section.style.display = 'block';
+        }
+
+        // Close autocomplete when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'citySearch') {
+                document.getElementById('autocompleteList').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

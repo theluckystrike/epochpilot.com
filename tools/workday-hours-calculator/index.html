@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workday Hours Calculator | epochpilot.com</title>
+    <meta name="description" content="Calculate total working hours between two dates. Account for weekends, holidays, and hours per day with precision.">
+    <meta name="canonical" content="https://epochpilot.com/tools/workday-hours-calculator">
+    <meta property="og:title" content="Workday Hours Calculator">
+    <meta property="og:description" content="Calculate total working hours between two dates with holiday exclusions.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/workday-hours-calculator">
+    <meta property="og:image" content="https://epochpilot.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Workday Hours Calculator">
+    <meta name="twitter:description" content="Calculate total working hours between two dates with holiday exclusions.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+        .tool-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f59e0b;
+            font-size: 0.95em;
+        }
+        input[type="date"],
+        input[type="number"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-size: 0.9em;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #f59e0b;
+        }
+        .checkbox-group label {
+            margin: 0;
+            color: #e0e0e0;
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            background: #f59e0b;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .button-secondary {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        .button-secondary:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .result-card {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .result-label {
+            color: #f59e0b;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            color: #e0e0e0;
+            font-size: 1.8em;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        .result-unit {
+            color: #808080;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 4px;
+        }
+        .success {
+            color: #51cf66;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        .info-box {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid #f59e0b;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            color: #808080;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .tool-section {
+                padding: 20px;
+            }
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+<link rel="canonical" href="https://epochpilot.com/tools/workday-hours-calculator">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Workday Hours Calculator</h1>
+            <p class="subtitle">Calculate total working hours between dates</p>
+        </header>
+
+        <div class="tool-section">
+            <div class="info-box">
+                Calculate the total number of working days and hours between two dates. Automatically excludes weekends and holidays.
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" />
+                </div>
+                <div class="input-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" />
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="hoursPerDay">Hours Per Workday</label>
+                    <input type="number" id="hoursPerDay" value="8" min="1" max="24" step="0.5" />
+                </div>
+                <div class="input-group">
+                    <label for="startTime">Start Time (optional)</label>
+                    <input type="text" id="startTime" placeholder="HH:MM (24-hour format)" />
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="excludeWeekends" checked />
+                <label for="excludeWeekends">Exclude Weekends (Sat & Sun)</label>
+            </div>
+
+            <div class="input-group">
+                <label for="holidays">Holidays (one date per line, YYYY-MM-DD)</label>
+                <textarea id="holidays" placeholder="2026-07-04&#10;2026-12-25&#10;2026-01-01"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button onclick="calculateWorkdayHours()">Calculate</button>
+                <button class="button-secondary" onclick="setDefaultDates()">Use This Week</button>
+                <button class="button-secondary" onclick="clearForm()">Clear</button>
+            </div>
+
+            <div id="results" style="display: none;">
+                <div class="results-grid" id="resultsGrid"></div>
+            </div>
+        </div>
+
+        <footer>© 2026 epochpilot.com — Time & Date Tools</footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+    </div>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Workday Hours Calculator",
+        "description": "Calculate total working hours between two dates with holiday and weekend exclusion",
+        "url": "https://epochpilot.com/tools/workday-hours-calculator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script>
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
+        function parseHolidayList() {
+            const holidayText = document.getElementById('holidays').value;
+            const holidays = new Set();
+            if (holidayText.trim()) {
+                holidayText.split('\n').forEach(line => {
+                    const date = line.trim();
+                    if (date) {
+                        holidays.add(new Date(date).toDateString());
+                    }
+                });
+            }
+            return holidays;
+        }
+
+        function calculateWorkdayHours() {
+            const startDateInput = document.getElementById('startDate').value;
+            const endDateInput = document.getElementById('endDate').value;
+            const hoursPerDay = parseFloat(document.getElementById('hoursPerDay').value);
+            const excludeWeekends = document.getElementById('excludeWeekends').checked;
+
+            if (!startDateInput || !endDateInput) {
+                showError('Please select both start and end dates');
+                return;
+            }
+
+            if (isNaN(hoursPerDay) || hoursPerDay <= 0) {
+                showError('Please enter a valid hours per day value');
+                return;
+            }
+
+            try {
+                const startDate = new Date(startDateInput);
+                const endDate = new Date(endDateInput);
+
+                if (startDate > endDate) {
+                    showError('Start date must be before end date');
+                    return;
+                }
+
+                const holidays = parseHolidayList();
+                let workingDays = 0;
+                let totalDays = 0;
+
+                // Count days
+                let currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    totalDays++;
+                    const isHoliday = holidays.has(currentDate.toDateString());
+                    const isWeekendDay = isWeekend(currentDate);
+
+                    if (!isHoliday && (!excludeWeekends || !isWeekendDay)) {
+                        workingDays++;
+                    }
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                const totalHours = workingDays * hoursPerDay;
+                const calendarDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                const weekendDays = excludeWeekends ? (calendarDays - workingDays - (holidays.size)) : 0;
+
+                displayResults([
+                    { label: 'Working Days', value: workingDays, unit: 'days' },
+                    { label: 'Total Working Hours', value: totalHours.toFixed(1), unit: 'hours' },
+                    { label: 'Calendar Days', value: calendarDays, unit: 'days' },
+                    { label: 'Holidays Excluded', value: holidays.size, unit: excludeWeekends ? 'days' : 'n/a' },
+                    { label: 'Hours Per Day', value: hoursPerDay, unit: 'hours' }
+                ]);
+            } catch (e) {
+                showError('Error calculating workdays: ' + e.message);
+            }
+        }
+
+        function setDefaultDates() {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+            const monday = new Date(today.setDate(diff));
+
+            const sunday = new Date(monday);
+            sunday.setDate(sunday.getDate() + 6);
+
+            document.getElementById('startDate').value = formatDate(monday);
+            document.getElementById('endDate').value = formatDate(sunday);
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function clearForm() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('hoursPerDay').value = '8';
+            document.getElementById('holidays').value = '';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function displayResults(results) {
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML = '';
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="result-label">${result.label}</div>
+                    <div class="result-value">${result.value}</div>
+                    <div class="result-unit">${result.unit}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('results').style.display = 'none';
+            const existing = document.querySelector('.error');
+            if (existing) existing.remove();
+            const msg = document.createElement('div');
+            msg.className = 'error';
+            msg.textContent = message;
+            document.querySelector('.button-group').after(msg);
+            setTimeout(() => msg.remove(), 5000);
+        }
+
+        // Initialize with default dates
+        window.addEventListener('load', () => {
+            const today = new Date();
+            document.getElementById('endDate').value = formatDate(today);
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            document.getElementById('startDate').value = formatDate(weekAgo);
+        });
+    </script>
+</body>
+</html>

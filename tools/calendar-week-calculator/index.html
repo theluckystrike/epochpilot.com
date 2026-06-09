@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Week Calculator | epochpilot.com</title>
+    <meta name="description" content="Find ISO week number for any date. View week year, day of week, and week start/end dates instantly.">
+    <meta name="canonical" content="https://epochpilot.com/tools/calendar-week-calculator">
+    <meta property="og:title" content="Calendar Week Calculator">
+    <meta property="og:description" content="Find ISO week number and week details for any date.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/calendar-week-calculator">
+    <meta property="og:image" content="https://epochpilot.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calendar Week Calculator">
+    <meta name="twitter:description" content="Find ISO week number and week details for any date.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+        .tool-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f59e0b;
+            font-size: 0.95em;
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        input[type="date"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            background: #f59e0b;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .button-secondary {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        .button-secondary:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        .results-section {
+            margin-top: 30px;
+        }
+        .current-week-highlight {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .current-week-label {
+            color: #f59e0b;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .week-number-large {
+            font-size: 3em;
+            font-weight: 700;
+            color: #f59e0b;
+            margin-bottom: 10px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        .week-label-text {
+            color: #b0b0b0;
+            font-size: 0.95em;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .result-card {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .result-label {
+            color: #f59e0b;
+            font-weight: 600;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            color: #e0e0e0;
+            font-size: 1.4em;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        .result-unit {
+            color: #808080;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .week-calendar {
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .week-calendar-title {
+            color: #f59e0b;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .day-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        .day-card.current {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: #f59e0b;
+        }
+        .day-name {
+            color: #b0b0b0;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .day-date {
+            color: #e0e0e0;
+            font-size: 0.95em;
+        }
+        .day-num {
+            color: #f59e0b;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 4px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            color: #808080;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .tool-section {
+                padding: 20px;
+            }
+            .week-number-large {
+                font-size: 2em;
+            }
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .week-days {
+                gap: 4px;
+            }
+            .day-card {
+                padding: 8px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+<link rel="canonical" href="https://epochpilot.com/tools/calendar-week-calculator">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calendar Week Calculator</h1>
+            <p class="subtitle">Find ISO week numbers and week details</p>
+        </header>
+
+        <div class="tool-section">
+            <div class="current-week-highlight">
+                <div class="current-week-label">Current Week</div>
+                <div class="week-number-large" id="currentWeekNum">--</div>
+                <div class="week-label-text" id="currentWeekLabel">Select a date to see week details</div>
+            </div>
+
+            <div class="input-group">
+                <label for="dateInput">Select Date</label>
+                <input type="date" id="dateInput" />
+            </div>
+
+            <div class="button-group">
+                <button onclick="calculateWeek()">Calculate</button>
+                <button class="button-secondary" onclick="useToday()">Use Today</button>
+                <button class="button-secondary" onclick="clearResults()">Clear</button>
+            </div>
+
+            <div id="resultsSection" class="results-section" style="display: none;"></div>
+        </div>
+
+        <footer>© 2026 epochpilot.com — Time & Date Tools</footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+    </div>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calendar Week Calculator",
+        "description": "Find ISO week number and week details for any date",
+        "url": "https://epochpilot.com/tools/calendar-week-calculator",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script>
+        const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function getISOWeek(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const weekNum = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return { week: weekNum, year: d.getUTCFullYear() };
+        }
+
+        function getWeekStartEnd(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            const monday = new Date(d.setDate(diff));
+            const sunday = new Date(monday);
+            sunday.setDate(sunday.getDate() + 6);
+            return { start: monday, end: sunday };
+        }
+
+        function calculateWeek() {
+            const dateInput = document.getElementById('dateInput').value;
+            if (!dateInput) {
+                showError('Please select a date');
+                return;
+            }
+
+            try {
+                const date = new Date(dateInput + 'T00:00:00');
+                const isoWeek = getISOWeek(date);
+                const weekRange = getWeekStartEnd(date);
+                const dayOfWeek = DAYS[date.getDay()];
+                const daysUntilWeekend = 6 - date.getDay();
+
+                displayResults(date, isoWeek, weekRange, dayOfWeek, daysUntilWeekend);
+            } catch (e) {
+                showError('Error calculating week');
+            }
+        }
+
+        function displayResults(date, isoWeek, weekRange, dayOfWeek, daysUntilWeekend) {
+            const formatDate = (d) => {
+                return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+            };
+
+            const formatDateShort = (d) => {
+                return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
+            };
+
+            // Update current week highlight
+            document.getElementById('currentWeekNum').textContent = `W${String(isoWeek.week).padStart(2, '0')}`;
+            document.getElementById('currentWeekLabel').textContent = `${formatDate(date)} • ${dayOfWeek}`;
+
+            // Generate week calendar
+            let weekCalendarHTML = '<div class="week-calendar"><div class="week-calendar-title">Week Overview</div><div class="week-days">';
+            const weekStart = weekRange.start;
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(weekStart);
+                dayDate.setDate(dayDate.getDate() + i);
+                const isCurrentDay = dayDate.toDateString() === date.toDateString();
+                const dayName = DAYS[dayDate.getDay()];
+
+                weekCalendarHTML += `
+                    <div class="day-card ${isCurrentDay ? 'current' : ''}">
+                        <div class="day-name">${dayName.substring(0, 3)}</div>
+                        <div class="day-date">${dayDate.getDate()}</div>
+                        <div class="day-num">${dayName === 'Monday' ? '1' : dayName === 'Tuesday' ? '2' : dayName === 'Wednesday' ? '3' : dayName === 'Thursday' ? '4' : dayName === 'Friday' ? '5' : dayName === 'Saturday' ? '6' : '7'}</div>
+                    </div>
+                `;
+            }
+            weekCalendarHTML += '</div></div>';
+
+            const section = document.getElementById('resultsSection');
+            section.innerHTML = `
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">ISO Week Number</div>
+                        <div class="result-value">W${String(isoWeek.week).padStart(2, '0')}</div>
+                        <div class="result-unit">Week ${isoWeek.week} of ${isoWeek.year}</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Week Year</div>
+                        <div class="result-value">${isoWeek.year}</div>
+                        <div class="result-unit">ISO Week Year</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Day of Week</div>
+                        <div class="result-value">${dayOfWeek}</div>
+                        <div class="result-unit">(Day ${date.getDay() === 0 ? 7 : date.getDay()})</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Days to Weekend</div>
+                        <div class="result-value">${daysUntilWeekend}</div>
+                        <div class="result-unit">${daysUntilWeekend === 1 ? 'day' : 'days'}</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Week Start</div>
+                        <div class="result-value">${formatDateShort(weekRange.start)}</div>
+                        <div class="result-unit">Monday</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Week End</div>
+                        <div class="result-value">${formatDateShort(weekRange.end)}</div>
+                        <div class="result-unit">Sunday</div>
+                    </div>
+                </div>
+                ${weekCalendarHTML}
+            `;
+            section.style.display = 'block';
+        }
+
+        function useToday() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('dateInput').value = `${year}-${month}-${day}`;
+            calculateWeek();
+        }
+
+        function clearResults() {
+            document.getElementById('dateInput').value = '';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('currentWeekNum').textContent = '--';
+            document.getElementById('currentWeekLabel').textContent = 'Select a date to see week details';
+        }
+
+        function showError(message) {
+            const section = document.getElementById('resultsSection');
+            section.innerHTML = `<div class="error">${message}</div>`;
+            section.style.display = 'block';
+        }
+
+        // Initialize with today's date
+        window.addEventListener('load', () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('dateInput').value = `${year}-${month}-${day}`;
+        });
+    </script>
+</body>
+</html>

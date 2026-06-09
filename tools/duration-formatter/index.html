@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duration Formatter | epochpilot.com</title>
+    <meta name="description" content="Convert between duration formats: seconds, minutes, hours, days, and ISO 8601. All formats shown simultaneously.">
+    <meta name="canonical" content="https://epochpilot.com/tools/duration-formatter">
+    <meta property="og:title" content="Duration Formatter">
+    <meta property="og:description" content="Convert between multiple duration formats instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epochpilot.com/tools/duration-formatter">
+    <meta property="og:image" content="https://epochpilot.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Duration Formatter">
+    <meta name="twitter:description" content="Convert between multiple duration formats instantly.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+        .tool-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #f59e0b;
+            font-size: 0.85em;
+        }
+        input[type="number"],
+        input[type="text"] {
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            padding: 8px 16px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+        .preset-btn:hover {
+            background: rgba(245, 158, 11, 0.25);
+            border-color: #f59e0b;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            background: #f59e0b;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .button-secondary {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        .button-secondary:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .result-card {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .result-label {
+            color: #f59e0b;
+            font-weight: 600;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            color: #e0e0e0;
+            font-size: 1.3em;
+            word-break: break-all;
+            font-family: 'Monaco', 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        .copy-btn {
+            padding: 6px 12px;
+            font-size: 0.75em;
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .copy-btn:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 4px;
+        }
+        .info-box {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid #f59e0b;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            color: #808080;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .tool-section {
+                padding: 20px;
+            }
+            .input-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+<link rel="canonical" href="https://epochpilot.com/tools/duration-formatter">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Duration Formatter</h1>
+            <p class="subtitle">Convert between all duration formats</p>
+        </header>
+
+        <div class="tool-section">
+            <div class="info-box">
+                Enter duration in any format and see conversions to all other formats simultaneously.
+            </div>
+
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="seconds">Seconds</label>
+                    <input type="number" id="seconds" placeholder="0" step="0.01" oninput="convertFromField('seconds')" />
+                </div>
+                <div class="input-group">
+                    <label for="minutes">Minutes</label>
+                    <input type="number" id="minutes" placeholder="0" step="0.01" oninput="convertFromField('minutes')" />
+                </div>
+                <div class="input-group">
+                    <label for="hours">Hours</label>
+                    <input type="number" id="hours" placeholder="0" step="0.01" oninput="convertFromField('hours')" />
+                </div>
+                <div class="input-group">
+                    <label for="days">Days</label>
+                    <input type="number" id="days" placeholder="0" step="0.001" oninput="convertFromField('days')" />
+                </div>
+                <div class="input-group">
+                    <label for="iso8601">ISO 8601</label>
+                    <input type="text" id="iso8601" placeholder="PT2H30M" oninput="convertFromField('iso8601')" />
+                </div>
+                <div class="input-group">
+                    <label for="humanReadable">Human Readable</label>
+                    <input type="text" id="humanReadable" placeholder="2h 30m" oninput="convertFromField('humanReadable')" />
+                </div>
+            </div>
+
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="setPreset(1)">1 minute</button>
+                <button class="preset-btn" onclick="setPreset(5)">5 minutes</button>
+                <button class="preset-btn" onclick="setPreset(3600)">1 hour</button>
+                <button class="preset-btn" onclick="setPreset(28800)">8 hours</button>
+                <button class="preset-btn" onclick="setPreset(86400)">1 day</button>
+                <button class="preset-btn" onclick="setPreset(604800)">1 week</button>
+            </div>
+
+            <div class="button-group">
+                <button class="button-secondary" onclick="clearAll()">Clear All</button>
+            </div>
+
+            <div id="results" style="display: none;">
+                <div class="results-grid" id="resultsGrid"></div>
+            </div>
+        </div>
+
+        <footer>© 2026 epochpilot.com — Time & Date Tools</footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+    </div>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Duration Formatter",
+        "description": "Convert between all duration formats: seconds, minutes, hours, days, and ISO 8601",
+        "url": "https://epochpilot.com/tools/duration-formatter",
+        "applicationCategory": "UtilityApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script>
+        let ignoreChange = false;
+
+        function convertFromField(field) {
+            if (ignoreChange) return;
+
+            let totalSeconds = 0;
+
+            switch(field) {
+                case 'seconds':
+                    totalSeconds = parseFloat(document.getElementById('seconds').value) || 0;
+                    break;
+                case 'minutes':
+                    totalSeconds = (parseFloat(document.getElementById('minutes').value) || 0) * 60;
+                    break;
+                case 'hours':
+                    totalSeconds = (parseFloat(document.getElementById('hours').value) || 0) * 3600;
+                    break;
+                case 'days':
+                    totalSeconds = (parseFloat(document.getElementById('days').value) || 0) * 86400;
+                    break;
+                case 'iso8601':
+                    totalSeconds = parseISO8601(document.getElementById('iso8601').value);
+                    break;
+                case 'humanReadable':
+                    totalSeconds = parseHumanReadable(document.getElementById('humanReadable').value);
+                    break;
+            }
+
+            if (totalSeconds >= 0) {
+                updateAllFields(totalSeconds);
+                displayResults(totalSeconds);
+            }
+        }
+
+        function parseISO8601(str) {
+            if (!str) return 0;
+            const regex = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/;
+            const match = str.match(regex);
+            if (!match) return 0;
+
+            const hours = (parseInt(match[1]) || 0) * 3600;
+            const minutes = (parseInt(match[2]) || 0) * 60;
+            const seconds = parseFloat(match[3]) || 0;
+
+            return hours + minutes + seconds;
+        }
+
+        function parseHumanReadable(str) {
+            if (!str) return 0;
+            let total = 0;
+            const regex = /(\d+(?:\.\d+)?)\s*([smhd])/gi;
+            let match;
+
+            while ((match = regex.exec(str)) !== null) {
+                const value = parseFloat(match[1]);
+                const unit = match[2].toLowerCase();
+
+                switch(unit) {
+                    case 's': total += value; break;
+                    case 'm': total += value * 60; break;
+                    case 'h': total += value * 3600; break;
+                    case 'd': total += value * 86400; break;
+                }
+            }
+
+            return total;
+        }
+
+        function updateAllFields(totalSeconds) {
+            ignoreChange = true;
+
+            document.getElementById('seconds').value = totalSeconds.toFixed(2);
+            document.getElementById('minutes').value = (totalSeconds / 60).toFixed(4);
+            document.getElementById('hours').value = (totalSeconds / 3600).toFixed(6);
+            document.getElementById('days').value = (totalSeconds / 86400).toFixed(8);
+            document.getElementById('iso8601').value = formatISO8601(totalSeconds);
+            document.getElementById('humanReadable').value = formatHumanReadable(totalSeconds);
+
+            ignoreChange = false;
+        }
+
+        function formatISO8601(seconds) {
+            let remaining = Math.round(seconds);
+            const hours = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const minutes = Math.floor(remaining / 60);
+            remaining %= 60;
+            const secs = remaining;
+
+            let result = 'PT';
+            if (hours > 0) result += hours + 'H';
+            if (minutes > 0) result += minutes + 'M';
+            if (secs > 0 || result === 'PT') result += secs + 'S';
+
+            return result;
+        }
+
+        function formatHumanReadable(seconds) {
+            const days = Math.floor(seconds / 86400);
+            let remaining = seconds % 86400;
+            const hours = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const minutes = Math.floor(remaining / 60);
+            const secs = Math.round(remaining % 60);
+
+            let parts = [];
+            if (days > 0) parts.push(days + 'd');
+            if (hours > 0) parts.push(hours + 'h');
+            if (minutes > 0) parts.push(minutes + 'm');
+            if (secs > 0) parts.push(secs + 's');
+
+            return parts.length > 0 ? parts.join(' ') : '0s';
+        }
+
+        function displayResults(totalSeconds) {
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML = '';
+
+            const results = [
+                { label: 'Seconds', value: totalSeconds.toFixed(2) },
+                { label: 'Minutes', value: (totalSeconds / 60).toFixed(4) },
+                { label: 'Hours', value: (totalSeconds / 3600).toFixed(6) },
+                { label: 'Days', value: (totalSeconds / 86400).toFixed(8) },
+                { label: 'ISO 8601', value: formatISO8601(totalSeconds) },
+                { label: 'Human Readable', value: formatHumanReadable(totalSeconds) }
+            ];
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="result-label">${result.label}</div>
+                    <div class="result-value">${result.value}</div>
+                    <button class="copy-btn" onclick="copyToClipboard('${result.value}')">Copy</button>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.createElement('div');
+                msg.textContent = 'Copied!';
+                msg.style.cssText = 'position:fixed;top:20px;right:20px;background:#51cf66;color:#1a1a2e;padding:10px 20px;border-radius:6px;z-index:1000;';
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000);
+            });
+        }
+
+        function setPreset(seconds) {
+            updateAllFields(seconds);
+            displayResults(seconds);
+        }
+
+        function clearAll() {
+            document.getElementById('seconds').value = '';
+            document.getElementById('minutes').value = '';
+            document.getElementById('hours').value = '';
+            document.getElementById('days').value = '';
+            document.getElementById('iso8601').value = '';
+            document.getElementById('humanReadable').value = '';
+            document.getElementById('results').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
