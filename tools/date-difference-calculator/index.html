@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Difference Calculator - epochpilot</title>
-    <meta name="description" content="Calculate duration between dates in years, months, days, hours and more.">
+    <title>Date Difference Calculator — Free Tool | EpochPilot</title>
+    <meta name="description" content="Calculate exact time difference between two dates. Get years, months, days, hours, minutes, and seconds breakdown instantly.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://epochpilot.com/tools/date-difference-calculator">
+    <link rel="canonical" href="https://epochpilot.com/tools/date-difference-calculator/">
 
-    <meta property="og:title" content="Date Difference Calculator - epochpilot">
-    <meta property="og:description" content="Calculate duration between dates in multiple units.">
+    <meta property="og:title" content="Date Difference Calculator — EpochPilot">
+    <meta property="og:description" content="Calculate exact difference between dates in years, months, days, hours, and more.">
+    <meta property="og:url" content="https://epochpilot.com/tools/date-difference-calculator/">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://epochpilot.com/tools/date-difference-calculator">
 
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Date Difference Calculator",
-        "description": "Calculate the duration between two dates in multiple units.",
-        "url": "https://epochpilot.com/tools/date-difference-calculator",
-        "applicationCategory": "UtilityApplication",
+        "url": "https://epochpilot.com/tools/date-difference-calculator/",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Web",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -28,6 +28,8 @@
         }
     }
     </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 
     <style>
         * {
@@ -37,65 +39,60 @@
         }
 
         body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #3b82f6;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #fff;
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            color: #999;
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .tool-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 28px;
             margin-bottom: 30px;
         }
 
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .section {
-            background-color: #111;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #222;
-        }
-
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            color: #ddd;
+            font-weight: 600;
+            color: #e8e8e8;
+            font-size: 0.95rem;
         }
 
         input[type="date"],
-        select,
-        input[type="number"] {
+        input[type="time"],
+        select {
             width: 100%;
             padding: 12px;
-            background-color: #0a0a0a;
-            color: #fff;
-            border: 1px solid #333;
+            background: #0a0a0a;
+            border: 1px solid #444;
             border-radius: 6px;
-            font-size: 1rem;
+            color: #e8e8e8;
+            font-size: 0.95rem;
         }
 
         input:focus,
@@ -105,99 +102,138 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        .button {
-            background-color: #3b82f6;
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .button:hover {
-            background-color: #2563eb;
-        }
-
-        .tab-buttons {
+        .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 20px;
             margin-bottom: 20px;
         }
 
-        .tab-btn {
-            background-color: #1a1a1a;
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
-            padding: 10px;
+        .date-pair {
+            background: #0a0a0a;
+            border: 1px solid #444;
             border-radius: 6px;
-            cursor: pointer;
+            padding: 16px;
+        }
+
+        .date-pair-label {
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
-        .tab-btn.active {
-            background-color: #3b82f6;
-            color: #fff;
+        .date-pair input {
+            margin-bottom: 10px;
         }
 
-        .tab-btn:hover {
-            background-color: #3b82f6;
-            color: #fff;
+        .date-pair input:last-child {
+            margin-bottom: 0;
         }
 
-        .tab-content {
-            display: none;
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 16px 0;
         }
 
-        .tab-content.active {
-            display: block;
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.secondary:hover {
+            background: #64748b;
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
         }
 
         .result-card {
-            background-color: #0a0a0a;
-            padding: 15px;
+            background: #0a0a0a;
+            border: 2px solid #3b82f6;
             border-radius: 6px;
-            border-left: 3px solid #3b82f6;
+            padding: 16px;
+            text-align: center;
         }
 
         .result-label {
+            color: #b0b0b0;
             font-size: 0.85rem;
-            color: #999;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .result-value {
-            font-size: 1.5rem;
-            color: #3b82f6;
-            font-weight: bold;
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 700;
+            word-break: break-word;
         }
 
-        .details-section {
-            background-color: #0a0a0a;
-            padding: 15px;
+        .result-unit {
+            color: #808080;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .detail-box {
+            background: #1a1a1a;
+            border: 1px solid #444;
             border-radius: 6px;
-            margin-top: 20px;
-            border: 1px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .detail-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: #fff;
         }
 
         .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #222;
-            font-size: 0.9rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
         }
 
         .detail-item:last-child {
@@ -205,423 +241,244 @@
         }
 
         .detail-label {
-            color: #999;
+            color: #b0b0b0;
+            font-size: 0.9rem;
         }
 
         .detail-value {
-            color: #3b82f6;
-            font-weight: bold;
+            color: #e8e8e8;
+            font-weight: 600;
+            text-align: right;
         }
 
-        .preset-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .preset-btn {
-            background-color: #1a1a1a;
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-
-        .preset-btn:hover {
-            background-color: #3b82f6;
-            color: #fff;
-        }
-
-        .day-breakdown {
-            background-color: #0a0a0a;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-        }
-
-        .day-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #222;
+        .info-box {
+            background: #0f172a;
+            border-left: 4px solid #3b82f6;
+            padding: 14px;
+            border-radius: 4px;
+            margin: 16px 0;
             font-size: 0.9rem;
+            color: #cbd5e1;
         }
 
-        .day-item:last-child {
-            border-bottom: none;
-        }
-
-        .day-name {
-            color: #ddd;
-        }
-
-        .day-count {
-            color: #3b82f6;
-            font-weight: bold;
-        }
-
-        .footer {
+        .partner-div {
+            margin: 30px auto;
+            max-width: 728px;
             text-align: center;
-            padding: 30px 0;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #222;
-            margin-top: 40px;
+            padding: 18px 24px;
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            border: 1px solid #334155;
+            border-radius: 10px;
         }
 
-        @media (max-width: 768px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
+        .partner-div p {
+            margin: 0;
+        }
 
-            h1 {
-                font-size: 1.8rem;
-            }
+        .partner-div p:first-child {
+            margin-bottom: 6px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
 
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
+        .partner-div a {
+            color: #38bdf8;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-decoration: none;
+        }
 
-            .tab-buttons {
-                grid-template-columns: 1fr;
-            }
+        .partner-div p:last-child {
+            margin-top: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
 
-            .preset-buttons {
-                grid-template-columns: 1fr;
-            }
+        .ad-unit {
+            margin: 20px auto;
+            max-width: 728px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #707070;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
         <h1>Date Difference Calculator</h1>
-        <p class="subtitle">Calculate duration between dates in multiple units</p>
+        <p class="subtitle">Calculate exact time difference between any two dates. Get breakdown in years, months, days, hours, and more.</p>
 
-        <div class="main-grid">
-            <div class="section">
-                <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchTab('difference')">Date Difference</button>
-                    <button class="tab-btn" onclick="switchTab('arithmetic')">Add/Subtract</button>
+        <div class="tool-section">
+            <div class="form-row">
+                <div class="date-pair">
+                    <div class="date-pair-label">From Date</div>
+                    <input type="date" id="fromDate">
+                    <input type="time" id="fromTime" value="00:00">
                 </div>
-
-                <!-- Difference Tab -->
-                <div id="difference" class="tab-content active">
-                    <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input type="date" id="startDate">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input type="date" id="endDate">
-                    </div>
-
-                    <div class="checkbox-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                        <input type="checkbox" id="includeEndDate">
-                        <label for="includeEndDate" style="margin-bottom: 0;">Include end date</label>
-                    </div>
-
-                    <button class="button" onclick="calculateDifference()">Calculate</button>
-
-                    <div class="preset-buttons">
-                        <button class="preset-btn" onclick="set100DaysFromNow()">100 Days</button>
-                        <button class="preset-btn" onclick="set1000DaysAgo()">1000 Days Ago</button>
-                        <button class="preset-btn" onclick="setEndOfYear()">End of Year</button>
-                        <button class="preset-btn" onclick="setSinceY2K()">Since Y2K</button>
-                    </div>
-                </div>
-
-                <!-- Arithmetic Tab -->
-                <div id="arithmetic" class="tab-content">
-                    <div class="form-group">
-                        <label for="arithmeticDate">Start Date</label>
-                        <input type="date" id="arithmeticDate">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="arithmeticAmount">Amount</label>
-                        <input type="number" id="arithmeticAmount" value="1" min="1">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="arithmeticUnit">Unit</label>
-                        <select id="arithmeticUnit">
-                            <option value="days">Days</option>
-                            <option value="weeks">Weeks</option>
-                            <option value="months">Months</option>
-                            <option value="years">Years</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="arithmeticOp">Operation</label>
-                        <select id="arithmeticOp">
-                            <option value="add">Add</option>
-                            <option value="subtract">Subtract</option>
-                        </select>
-                    </div>
-
-                    <button class="button" onclick="calculateArithmetic()">Calculate</button>
-
-                    <div class="details-section">
-                        <div class="detail-item">
-                            <span class="detail-label">Result Date:</span>
-                            <span class="detail-value" id="arithmeticResult">-</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Days from today:</span>
-                            <span class="detail-value" id="arithmeticDaysFromNow">-</span>
-                        </div>
-                    </div>
+                <div class="date-pair">
+                    <div class="date-pair-label">To Date</div>
+                    <input type="date" id="toDate">
+                    <input type="time" id="toTime" value="00:00">
                 </div>
             </div>
 
-            <div class="section">
-                <h3 style="margin-bottom: 20px; color: #3b82f6;">Results</h3>
-                <div class="results-grid">
-                    <div class="result-card">
-                        <div class="result-label">Years</div>
-                        <div class="result-value" id="resYears">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Months</div>
-                        <div class="result-value" id="resMonths">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Days</div>
-                        <div class="result-value" id="resDays">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Total Days</div>
-                        <div class="result-value" id="resTotalDays">-</div>
-                    </div>
-                </div>
-
-                <div class="details-section">
-                    <div class="detail-item">
-                        <span class="detail-label">Total Weeks & Days:</span>
-                        <span class="detail-value" id="resWeeksDays">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Total Hours:</span>
-                        <span class="detail-value" id="resTotalHours">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Total Minutes:</span>
-                        <span class="detail-value" id="resTotalMinutes">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Business Days:</span>
-                        <span class="detail-value" id="resBusinessDays">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Weekends:</span>
-                        <span class="detail-value" id="resWeekends">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Leap Years in Range:</span>
-                        <span class="detail-value" id="resLeapYears">-</span>
-                    </div>
-                </div>
-
-                <div class="day-breakdown" id="dayBreakdown" style="display: none;">
-                    <h4 style="color: #3b82f6; margin-bottom: 10px;">Day of Week Breakdown</h4>
-                    <div id="dayBreakdownContent"></div>
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeTime" checked>
+                    <label for="includeTime">Include time in calculation</label>
                 </div>
             </div>
+
+            <div class="button-group">
+                <button onclick="calculateDifference()">Calculate Difference</button>
+                <button class="secondary" onclick="resetForm()">Reset</button>
+            </div>
+
+            <div id="results"></div>
         </div>
-    </div>
 
-    <div class="footer">
-        © 2026 epochpilot.com
+        <div class="ad-unit">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="partner-div">
+            <p>Recommended by our team</p>
+            <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener">BeLikeNative.com</a>
+            <p>The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 EpochPilot. All rights reserved. <a href="https://epochpilot.com/tools/">Back to tools</a></p>
+        </footer>
     </div>
 
     <script>
-        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        function initializeDate() {
+            const today = new Date();
+            const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(tab).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function isLeapYear(year) {
-            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-        }
-
-        function isBusinessDay(date) {
-            const day = date.getDay();
-            return day !== 0 && day !== 6;
+            document.getElementById('fromDate').valueAsDate = oneMonthAgo;
+            document.getElementById('toDate').valueAsDate = today;
         }
 
         function calculateDifference() {
-            const startStr = document.getElementById('startDate').value;
-            const endStr = document.getElementById('endDate').value;
+            const fromDateStr = document.getElementById('fromDate').value;
+            const toDateStr = document.getElementById('toDate').value;
+            const fromTime = document.getElementById('fromTime').value;
+            const toTime = document.getElementById('toTime').value;
+            const includeTime = document.getElementById('includeTime').checked;
 
-            if (!startStr || !endStr) return;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
 
-            const start = new Date(startStr + 'T00:00:00');
-            const end = new Date(endStr + 'T00:00:00');
-
-            if (start > end) {
-                alert('Start date must be before end date');
+            if (!fromDateStr || !toDateStr) {
+                resultsDiv.innerHTML = '<div style="background: #7f1d1d; border: 1px solid #dc2626; color: #fca5a5; padding: 14px; border-radius: 6px; margin: 14px 0;">Please select both dates</div>';
                 return;
             }
 
-            // Calculate years, months, days
-            let years = end.getFullYear() - start.getFullYear();
-            let months = end.getMonth() - start.getMonth();
-            let days = end.getDate() - start.getDate();
+            let fromDate = new Date(fromDateStr + 'T00:00:00');
+            let toDate = new Date(toDateStr + 'T00:00:00');
 
-            if (days < 0) {
-                months--;
-                const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
-                days += prevMonth.getDate();
+            if (includeTime) {
+                const [fromH, fromM] = fromTime.split(':');
+                const [toH, toM] = toTime.split(':');
+                fromDate.setHours(parseInt(fromH), parseInt(fromM));
+                toDate.setHours(parseInt(toH), parseInt(toM));
             }
 
-            if (months < 0) {
-                years--;
-                months += 12;
+            // Ensure from is before to
+            const isForward = fromDate <= toDate;
+            if (!isForward) {
+                [fromDate, toDate] = [toDate, fromDate];
             }
 
-            const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + (document.getElementById('includeEndDate').checked ? 1 : 0);
-            const totalWeeks = Math.floor(totalDays / 7);
-            const remainingDays = totalDays % 7;
-            const totalHours = totalDays * 24;
-            const totalMinutes = totalHours * 60;
+            // Calculate total milliseconds
+            const totalMs = toDate - fromDate;
+            const totalSeconds = Math.floor(totalMs / 1000);
+            const totalMinutes = Math.floor(totalMs / 60000);
+            const totalHours = Math.floor(totalMs / 3600000);
+            const totalDays = Math.floor(totalMs / 86400000);
 
-            // Count business days and weekends
-            let businessDays = 0;
-            let weekends = 0;
-            const dayCount = [0, 0, 0, 0, 0, 0, 0];
+            // Calculate detailed breakdown
+            let years = 0;
+            let months = 0;
+            let days = 0;
 
-            let current = new Date(start);
-            while (current <= end) {
-                const dayOfWeek = current.getDay();
-                dayCount[dayOfWeek]++;
+            let workDate = new Date(fromDate);
 
-                if (isBusinessDay(current)) {
-                    businessDays++;
-                } else {
-                    weekends++;
-                }
-
-                current.setDate(current.getDate() + 1);
+            // Count full years
+            while (new Date(workDate.getFullYear() + 1, workDate.getMonth(), workDate.getDate()) <= toDate) {
+                years++;
+                workDate.setFullYear(workDate.getFullYear() + 1);
             }
 
-            // Count leap years
-            let leapYears = 0;
-            for (let y = start.getFullYear(); y <= end.getFullYear(); y++) {
-                if (isLeapYear(y)) leapYears++;
+            // Count full months
+            while (new Date(workDate.getFullYear(), workDate.getMonth() + 1, workDate.getDate()) <= toDate) {
+                months++;
+                workDate.setMonth(workDate.getMonth() + 1);
             }
 
-            // Update DOM
-            document.getElementById('resYears').textContent = years;
-            document.getElementById('resMonths').textContent = months;
-            document.getElementById('resDays').textContent = days;
-            document.getElementById('resTotalDays').textContent = totalDays.toLocaleString();
-            document.getElementById('resWeeksDays').textContent = `${totalWeeks} weeks, ${remainingDays} days`;
-            document.getElementById('resTotalHours').textContent = totalHours.toLocaleString();
-            document.getElementById('resTotalMinutes').textContent = totalMinutes.toLocaleString();
-            document.getElementById('resBusinessDays').textContent = businessDays.toLocaleString();
-            document.getElementById('resWeekends').textContent = weekends.toLocaleString();
-            document.getElementById('resLeapYears').textContent = leapYears;
+            // Count remaining days
+            days = Math.floor((toDate - workDate) / 86400000);
 
-            // Day breakdown
-            let dayBreakdownHTML = '';
-            dayNames.forEach((name, idx) => {
-                dayBreakdownHTML += `<div class="day-item"><span class="day-name">${name}</span><span class="day-count">${dayCount[idx]}</span></div>`;
-            });
-            document.getElementById('dayBreakdownContent').innerHTML = dayBreakdownHTML;
-            document.getElementById('dayBreakdown').style.display = 'block';
+            // Calculate remaining time
+            const remainingMs = toDate - new Date(workDate.getFullYear(), workDate.getMonth(), workDate.getDate() + days, 0, 0, 0);
+            const remainingHours = Math.floor((remainingMs % 86400000) / 3600000);
+            const remainingMinutes = Math.floor((remainingMs % 3600000) / 60000);
+            const remainingSeconds = Math.floor((remainingMs % 60000) / 1000);
+
+            let html = '<div class="results-grid">';
+            html += '<div class="result-card"><div class="result-label">Years</div><div class="result-value">' + years + '</div></div>';
+            html += '<div class="result-card"><div class="result-label">Months</div><div class="result-value">' + months + '</div></div>';
+            html += '<div class="result-card"><div class="result-label">Days</div><div class="result-value">' + days + '</div></div>';
+            html += '<div class="result-card"><div class="result-label">Hours</div><div class="result-value">' + remainingHours + '</div></div>';
+            html += '<div class="result-card"><div class="result-label">Minutes</div><div class="result-value">' + remainingMinutes + '</div></div>';
+            html += '<div class="result-card"><div class="result-label">Seconds</div><div class="result-value">' + remainingSeconds + '</div></div>';
+            html += '</div>';
+
+            html += '<div class="detail-box">';
+            html += '<h3>Total Time Span</h3>';
+            html += '<div class="detail-item"><div class="detail-label">Total Days</div><div class="detail-value">' + totalDays.toLocaleString() + ' days</div></div>';
+            html += '<div class="detail-item"><div class="detail-label">Total Hours</div><div class="detail-value">' + totalHours.toLocaleString() + ' hours</div></div>';
+            html += '<div class="detail-item"><div class="detail-label">Total Minutes</div><div class="detail-value">' + totalMinutes.toLocaleString() + ' minutes</div></div>';
+            html += '<div class="detail-item"><div class="detail-label">Total Seconds</div><div class="detail-value">' + totalSeconds.toLocaleString() + ' seconds</div></div>';
+            html += '</div>';
+
+            html += '<div class="detail-box">';
+            html += '<h3>Complete Breakdown</h3>';
+            html += '<div class="detail-item"><div class="detail-label">From</div><div class="detail-value">' + fromDate.toLocaleString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) + '</div></div>';
+            html += '<div class="detail-item"><div class="detail-label">To</div><div class="detail-value">' + toDate.toLocaleString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) + '</div></div>';
+            html += '<div class="detail-item"><div class="detail-label">Result</div><div class="detail-value">' + years + 'y ' + months + 'm ' + days + 'd ' + remainingHours + 'h ' + remainingMinutes + 'min</div></div>';
+            html += '</div>';
+
+            html += '<div class="info-box">Total weeks: ' + Math.floor(totalDays / 7) + ' weeks and ' + (totalDays % 7) + ' days</div>';
+
+            resultsDiv.innerHTML = html;
         }
 
-        function calculateArithmetic() {
-            const dateStr = document.getElementById('arithmeticDate').value;
-            if (!dateStr) return;
-
-            const date = new Date(dateStr + 'T00:00:00');
-            const amount = parseInt(document.getElementById('arithmeticAmount').value) || 0;
-            const unit = document.getElementById('arithmeticUnit').value;
-            const operation = document.getElementById('arithmeticOp').value;
-
-            const multiplier = operation === 'subtract' ? -1 : 1;
-            let result = new Date(date);
-
-            if (unit === 'days') {
-                result.setDate(result.getDate() + amount * multiplier);
-            } else if (unit === 'weeks') {
-                result.setDate(result.getDate() + amount * 7 * multiplier);
-            } else if (unit === 'months') {
-                result.setMonth(result.getMonth() + amount * multiplier);
-            } else if (unit === 'years') {
-                result.setFullYear(result.getFullYear() + amount * multiplier);
-            }
-
-            const resultStr = result.toISOString().split('T')[0];
-            const daysFromNow = Math.floor((result - new Date()) / (1000 * 60 * 60 * 24));
-
-            document.getElementById('arithmeticResult').textContent = resultStr;
-            document.getElementById('arithmeticDaysFromNow').textContent = daysFromNow > 0 ? `+${daysFromNow}` : daysFromNow.toString();
+        function resetForm() {
+            document.getElementById('results').innerHTML = '';
+            initializeDate();
         }
 
-        function set100DaysFromNow() {
-            const start = new Date();
-            const end = new Date(start.getTime() + 100 * 24 * 60 * 60 * 1000);
-
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = end.toISOString().split('T')[0];
-            calculateDifference();
-        }
-
-        function set1000DaysAgo() {
-            const end = new Date();
-            const start = new Date(end.getTime() - 1000 * 24 * 60 * 60 * 1000);
-
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = end.toISOString().split('T')[0];
-            calculateDifference();
-        }
-
-        function setEndOfYear() {
-            const start = new Date();
-            const end = new Date(start.getFullYear(), 11, 31);
-
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = end.toISOString().split('T')[0];
-            calculateDifference();
-        }
-
-        function setSinceY2K() {
-            const start = new Date('2000-01-01T00:00:00');
-            const end = new Date();
-
-            document.getElementById('startDate').value = '2000-01-01';
-            document.getElementById('endDate').value = end.toISOString().split('T')[0];
-            calculateDifference();
-        }
-
-        // Initialize
-        const today = new Date();
-        document.getElementById('startDate').value = today.toISOString().split('T')[0];
-        document.getElementById('endDate').value = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        document.getElementById('arithmeticDate').value = today.toISOString().split('T')[0];
+        initializeDate();
     </script>
-<div style="margin:20px auto;max-width:728px;text-align:center">
-<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-</div>
-<div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
-<p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
-<a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-</div>
 </body>
 </html>

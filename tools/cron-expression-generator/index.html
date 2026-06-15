@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Expression Generator — Free Tool | EpochPilot</title>
+    <meta name="description" content="Visual cron expression builder. Generate, test & decode cron schedules with next 10 execution times preview. No coding required.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/cron-expression-generator/">
+
+    <meta property="og:title" content="Cron Expression Generator — EpochPilot">
+    <meta property="og:description" content="Visual cron expression builder with human-readable descriptions and next 10 execution times.">
+    <meta property="og:url" content="https://epochpilot.com/tools/cron-expression-generator/">
+    <meta property="og:type" content="website">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Cron Expression Generator",
+        "url": "https://epochpilot.com/tools/cron-expression-generator/",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e8e8e8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .tool-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+            font-family: "Courier New", monospace;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .cron-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cron-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cron-field label {
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .cron-field input,
+        .cron-field select {
+            padding: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.secondary:hover {
+            background: #64748b;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            background: #333;
+            color: #e8e8e8;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .output-box {
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px 0;
+            font-family: "Courier New", monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #2563eb;
+        }
+
+        .execution-times {
+            margin-top: 20px;
+        }
+
+        .execution-times h3 {
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            color: #fff;
+        }
+
+        .execution-times ol {
+            list-style-position: inside;
+            padding-left: 0;
+        }
+
+        .execution-times li {
+            padding: 8px;
+            background: #0a0a0a;
+            border-left: 3px solid #3b82f6;
+            margin-bottom: 6px;
+            border-radius: 2px;
+            color: #d0d0d0;
+            font-family: "Courier New", monospace;
+            font-size: 0.9rem;
+        }
+
+        .description-box {
+            background: #1a1a1a;
+            border: 1px solid #3b82f6;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px 0;
+            color: #d0d0d0;
+        }
+
+        .description-box h4 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .error {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 14px 0;
+        }
+
+        .partner-div {
+            margin: 30px auto;
+            max-width: 728px;
+            text-align: center;
+            padding: 18px 24px;
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            border: 1px solid #334155;
+            border-radius: 10px;
+        }
+
+        .partner-div p {
+            margin: 0;
+        }
+
+        .partner-div p:first-child {
+            margin-bottom: 6px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .partner-div a {
+            color: #38bdf8;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-decoration: none;
+        }
+
+        .partner-div p:last-child {
+            margin-top: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .ad-unit {
+            margin: 20px auto;
+            max-width: 728px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #707070;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cron Expression Generator</h1>
+        <p class="subtitle">Build, test & decode cron schedules visually. Get next 10 execution times instantly.</p>
+
+        <div class="tool-section">
+            <div>
+                <p style="margin-bottom: 16px; color: #b0b0b0;">Quick presets:</p>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setCron('* * * * *')">Every minute</button>
+                    <button class="preset-btn" onclick="setCron('0 * * * *')">Every hour</button>
+                    <button class="preset-btn" onclick="setCron('0 0 * * *')">Daily</button>
+                    <button class="preset-btn" onclick="setCron('0 0 * * 0')">Weekly (Sun)</button>
+                    <button class="preset-btn" onclick="setCron('0 0 1 * *')">Monthly</button>
+                    <button class="preset-btn" onclick="setCron('0 */6 * * *')">Every 6 hours</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cron Expression</label>
+                <input type="text" id="cronInput" placeholder="* * * * *" value="0 9 * * MON-FRI">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                    <label>Or build it visually:</label>
+                    <div class="cron-fields">
+                        <div class="cron-field">
+                            <label style="font-size: 0.8rem;">Minute</label>
+                            <input type="text" id="minute" value="0" maxlength="2">
+                        </div>
+                        <div class="cron-field">
+                            <label style="font-size: 0.8rem;">Hour</label>
+                            <input type="text" id="hour" value="9" maxlength="2">
+                        </div>
+                        <div class="cron-field">
+                            <label style="font-size: 0.8rem;">Day of Month</label>
+                            <input type="text" id="day" value="*" maxlength="2">
+                        </div>
+                        <div class="cron-field">
+                            <label style="font-size: 0.8rem;">Month</label>
+                            <input type="text" id="month" value="*" maxlength="2">
+                        </div>
+                        <div class="cron-field">
+                            <label style="font-size: 0.8rem;">Day of Week</label>
+                            <input type="text" id="dow" value="MON-FRI" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label>&nbsp;</label>
+                    <button style="width: 100%; padding: 10px;" onclick="buildFromFields()">Build Expression</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="generateCron()">Generate Executions</button>
+                <button class="secondary" onclick="decodeCron()">Decode</button>
+            </div>
+
+            <div id="errorMessage"></div>
+
+            <div id="output"></div>
+        </div>
+
+        <div class="ad-unit">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="partner-div">
+            <p>Recommended by our team</p>
+            <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener">BeLikeNative.com</a>
+            <p>The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 EpochPilot. All rights reserved. <a href="https://epochpilot.com/tools/">Back to tools</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function setCron(expr) {
+            document.getElementById('cronInput').value = expr;
+            generateCron();
+        }
+
+        function buildFromFields() {
+            const minute = document.getElementById('minute').value || '0';
+            const hour = document.getElementById('hour').value || '0';
+            const day = document.getElementById('day').value || '*';
+            const month = document.getElementById('month').value || '*';
+            const dow = document.getElementById('dow').value || '*';
+
+            document.getElementById('cronInput').value = `${minute} ${hour} ${day} ${month} ${dow}`;
+            generateCron();
+        }
+
+        function isValidCron(cron) {
+            const parts = cron.trim().split(/\s+/);
+            return parts.length === 5;
+        }
+
+        function decodeCron() {
+            const cron = document.getElementById('cronInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.innerHTML = '';
+
+            if (!isValidCron(cron)) {
+                errorDiv.innerHTML = '<div class="error">Invalid cron format. Expected 5 fields: minute hour day month day-of-week</div>';
+                return;
+            }
+
+            const parts = cron.split(/\s+/);
+            const descriptions = {
+                '0': 'at minute 0 (start of hour)',
+                '30': 'at minute 30 (half hour)',
+                '*': 'every minute',
+                '0-59': 'every minute',
+                '1-5': 'Monday through Friday',
+                '0': 'Sunday',
+                'MON-FRI': 'Monday through Friday',
+                'SUN': 'Sunday',
+                'MON': 'Monday',
+                'TUE': 'Tuesday',
+                'WED': 'Wednesday',
+                'THU': 'Thursday',
+                'FRI': 'Friday',
+                'SAT': 'Saturday'
+            };
+
+            let output = '<div class="description-box"><h4>Cron Description</h4>';
+            output += `<p><strong>Minute:</strong> ${parts[0]}</p>`;
+            output += `<p><strong>Hour:</strong> ${parts[1]}</p>`;
+            output += `<p><strong>Day of Month:</strong> ${parts[2]}</p>`;
+            output += `<p><strong>Month:</strong> ${parts[3]}</p>`;
+            output += `<p><strong>Day of Week:</strong> ${parts[4]}</p>`;
+            output += '<p style="margin-top: 12px; color: #3b82f6;"><em>This cron expression will execute at specified times.</em></p>';
+            output += '</div>';
+
+            document.getElementById('output').innerHTML = output;
+        }
+
+        function generateCron() {
+            const cron = document.getElementById('cronInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.innerHTML = '';
+
+            if (!isValidCron(cron)) {
+                errorDiv.innerHTML = '<div class="error">Invalid cron format. Expected 5 fields: minute hour day month day-of-week</div>';
+                return;
+            }
+
+            const parts = cron.split(/\s+/);
+            const [minute, hour, day, month, dow] = parts;
+
+            let output = '<div class="output-box" style="padding: 16px; position: relative;">';
+            output += `<span style="color: #3b82f6; font-weight: 600;">${cron}</span>`;
+            output += '<button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>';
+            output += '</div>';
+
+            output += '<div class="description-box"><h4>Schedule Details</h4>';
+            output += `<p><strong>Minute:</strong> ${minute === '*' ? 'Every minute' : 'At minute ' + minute}</p>`;
+            output += `<p><strong>Hour:</strong> ${hour === '*' ? 'Every hour' : hour === '0' ? 'At midnight' : 'At ' + hour + ':00'}</p>`;
+            output += `<p><strong>Day:</strong> ${day === '*' ? 'Every day' : 'On day ' + day}</p>`;
+            output += `<p><strong>Month:</strong> ${month === '*' ? 'Every month' : 'In month ' + month}</p>`;
+            output += `<p><strong>Day of Week:</strong> ${dow === '*' ? 'Any day' : dow}</p>`;
+            output += '</div>';
+
+            // Generate next 10 executions
+            const now = new Date();
+            const executions = [];
+            let current = new Date(now);
+            let count = 0;
+
+            while (executions.length < 10 && count < 10000) {
+                current.setMinutes(current.getMinutes() + 1);
+
+                // Simple matching logic
+                if (matchesCron(current, minute, hour, day, month, dow)) {
+                    executions.push(new Date(current));
+                }
+                count++;
+            }
+
+            output += '<div class="execution-times">';
+            output += '<h3>Next 10 Executions</h3>';
+            output += '<ol>';
+            executions.slice(0, 10).forEach(dt => {
+                output += `<li>${dt.toLocaleString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'})}</li>`;
+            });
+            output += '</ol></div>';
+
+            document.getElementById('output').innerHTML = output;
+        }
+
+        function matchesCron(date, minute, hour, day, month, dow) {
+            const m = date.getMinutes();
+            const h = date.getHours();
+            const d = date.getDate();
+            const mo = date.getMonth() + 1;
+            const dw = date.getDay();
+
+            if (!matchesField(m, minute) || !matchesField(h, hour) || !matchesField(mo, month)) {
+                return false;
+            }
+
+            // Day and day-of-week: if both specified, match either
+            const dayMatch = day === '*' || matchesField(d, day);
+            const dowMatch = dow === '*' || matchesDayOfWeek(dw, dow);
+
+            if (day === '*' && dow === '*') return true;
+            if (day === '*') return dowMatch;
+            if (dow === '*') return dayMatch;
+            return dayMatch || dowMatch;
+        }
+
+        function matchesField(value, field) {
+            if (field === '*') return true;
+            if (field.includes('-')) {
+                const [start, end] = field.split('-').map(Number);
+                return value >= start && value <= end;
+            }
+            if (field.includes(',')) {
+                return field.split(',').map(Number).includes(value);
+            }
+            if (field.includes('/')) {
+                const [range, step] = field.split('/');
+                const stepNum = Number(step);
+                if (range === '*') return value % stepNum === 0;
+                const [start, end] = range.includes('-') ? range.split('-').map(Number) : [0, 59];
+                return value >= start && value <= end && value % stepNum === 0;
+            }
+            return Number(field) === value;
+        }
+
+        function matchesDayOfWeek(dow, field) {
+            const dayMap = {
+                'SUN': 0, 'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4, 'FRI': 5, 'SAT': 6,
+                '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6
+            };
+
+            if (field.includes('-')) {
+                const parts = field.split('-');
+                const start = dayMap[parts[0]] || Number(parts[0]);
+                const end = dayMap[parts[1]] || Number(parts[1]);
+                return dow >= start && dow <= end;
+            }
+
+            if (field.includes(',')) {
+                return field.split(',').some(f => {
+                    const val = dayMap[f] || Number(f);
+                    return val === dow;
+                });
+            }
+
+            const val = dayMap[field] || Number(field);
+            return val === dow;
+        }
+
+        function copyToClipboard(button) {
+            const cron = document.getElementById('cronInput').value;
+            navigator.clipboard.writeText(cron).then(() => {
+                const orig = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => button.textContent = orig, 2000);
+            });
+        }
+
+        // Initialize on load
+        generateCron();
+    </script>
+</body>
+</html>

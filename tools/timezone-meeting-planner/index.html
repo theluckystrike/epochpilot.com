@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timezone Meeting Planner — Free Tool | EpochPilot</title>
+    <meta name="description" content="Find best meeting times across timezones. Add participants, view local times, and identify optimal hours for global teams.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/timezone-meeting-planner/">
+
+    <meta property="og:title" content="Timezone Meeting Planner — EpochPilot">
+    <meta property="og:description" content="Find optimal meeting times across multiple timezones instantly.">
+    <meta property="og:url" content="https://epochpilot.com/tools/timezone-meeting-planner/">
+    <meta property="og:type" content="website">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Timezone Meeting Planner",
+        "url": "https://epochpilot.com/tools/timezone-meeting-planner/",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e8e8e8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .tool-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .participant-card {
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: end;
+            gap: 12px;
+        }
+
+        .participant-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .participant-inputs input,
+        .participant-inputs select {
+            margin: 0;
+        }
+
+        .remove-btn {
+            padding: 10px 14px;
+            background: #7f1d1d;
+            color: white;
+            border: 1px solid #dc2626;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn:hover {
+            background: #991b1b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.secondary:hover {
+            background: #64748b;
+        }
+
+        .time-grid {
+            display: grid;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .time-slot {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .time-slot.good {
+            border-color: #22c55e;
+            border-left: 4px solid #22c55e;
+        }
+
+        .time-slot.fair {
+            border-color: #eab308;
+            border-left: 4px solid #eab308;
+        }
+
+        .time-slot.poor {
+            border-color: #ef4444;
+            border-left: 4px solid #ef4444;
+        }
+
+        .time-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .time-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .time-detail {
+            background: #0a0a0a;
+            padding: 12px;
+            border-radius: 4px;
+            border-left: 3px solid #3b82f6;
+            font-size: 0.9rem;
+        }
+
+        .time-detail .label {
+            color: #b0b0b0;
+            font-size: 0.85rem;
+        }
+
+        .time-detail .value {
+            color: #e8e8e8;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .quality-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .quality-good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .quality-fair {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .quality-poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .partner-div {
+            margin: 30px auto;
+            max-width: 728px;
+            text-align: center;
+            padding: 18px 24px;
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            border: 1px solid #334155;
+            border-radius: 10px;
+        }
+
+        .partner-div p {
+            margin: 0;
+        }
+
+        .partner-div p:first-child {
+            margin-bottom: 6px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .partner-div a {
+            color: #38bdf8;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-decoration: none;
+        }
+
+        .partner-div p:last-child {
+            margin-top: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .ad-unit {
+            margin: 20px auto;
+            max-width: 728px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #707070;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 14px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Timezone Meeting Planner</h1>
+        <p class="subtitle">Find optimal meeting times across timezones. Add participants and discover best time windows for everyone.</p>
+
+        <div class="tool-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Meeting Date</label>
+                    <input type="date" id="meetingDate">
+                </div>
+                <div class="form-group">
+                    <label>Meeting Duration (minutes)</label>
+                    <input type="number" id="duration" value="60" min="15" max="480">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Add Participants</label>
+                <div id="participantsList"></div>
+                <button class="secondary" onclick="addParticipant()">+ Add Participant</button>
+            </div>
+
+            <div class="button-group">
+                <button onclick="findBestTimes()">Find Best Meeting Times</button>
+                <button class="secondary" onclick="resetForm()">Reset</button>
+            </div>
+
+            <div id="errorMessage"></div>
+            <div id="results"></div>
+        </div>
+
+        <div class="ad-unit">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="partner-div">
+            <p>Recommended by our team</p>
+            <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener">BeLikeNative.com</a>
+            <p>The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 EpochPilot. All rights reserved. <a href="https://epochpilot.com/tools/">Back to tools</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const timezones = [
+            'UTC', 'EST', 'CST', 'MST', 'PST', 'GMT', 'CET', 'IST', 'JST', 'AEST',
+            'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo', 'Asia/Shanghai', 'Asia/Hong_Kong',
+            'Asia/Singapore', 'Asia/Bangkok', 'Australia/Sydney', 'America/Toronto', 'America/Vancouver',
+            'America/Denver', 'America/Chicago', 'America/New_York'
+        ];
+
+        let participants = [];
+
+        function initializeDate() {
+            const today = new Date();
+            const dateStr = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
+            document.getElementById('meetingDate').value = dateStr;
+        }
+
+        function addParticipant() {
+            const id = Date.now();
+            participants.push({ id, name: '', timezone: 'UTC' });
+            renderParticipants();
+        }
+
+        function removeParticipant(id) {
+            participants = participants.filter(p => p.id !== id);
+            renderParticipants();
+        }
+
+        function updateParticipant(id, field, value) {
+            const p = participants.find(x => x.id === id);
+            if (p) p[field] = value;
+        }
+
+        function renderParticipants() {
+            const list = document.getElementById('participantsList');
+            if (participants.length === 0) {
+                list.innerHTML = '';
+                return;
+            }
+
+            list.innerHTML = participants.map(p => `
+                <div class="participant-card">
+                    <div class="participant-inputs">
+                        <input type="text" placeholder="Name" value="${p.name}" onchange="updateParticipant(${p.id}, 'name', this.value)">
+                        <select onchange="updateParticipant(${p.id}, 'timezone', this.value)">
+                            ${timezones.map(tz => `<option value="${tz}" ${p.timezone === tz ? 'selected' : ''}>${tz}</option>`).join('')}
+                        </select>
+                    </div>
+                    <button class="remove-btn" onclick="removeParticipant(${p.id})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function findBestTimes() {
+            const dateStr = document.getElementById('meetingDate').value;
+            const duration = parseInt(document.getElementById('duration').value) || 60;
+            const errorDiv = document.getElementById('errorMessage');
+            const resultsDiv = document.getElementById('results');
+
+            errorDiv.innerHTML = '';
+            resultsDiv.innerHTML = '';
+
+            if (!dateStr || participants.length < 2) {
+                errorDiv.innerHTML = '<div class="error">Select a date and add at least 2 participants</div>';
+                return;
+            }
+
+            if (participants.some(p => !p.name || !p.timezone)) {
+                errorDiv.innerHTML = '<div class="error">All participants must have a name and timezone</div>';
+                return;
+            }
+
+            const baseDate = new Date(dateStr + 'T00:00:00Z');
+            const results = [];
+
+            // Check each hour of the day
+            for (let hour = 0; hour < 24; hour++) {
+                const times = [];
+                let qualityScore = 0;
+
+                participants.forEach(p => {
+                    const offset = getTimezoneOffset(p.timezone);
+                    const localHour = (hour + offset + 24) % 24;
+
+                    // Score based on work hours (9 AM - 5 PM is ideal)
+                    let score = 0;
+                    if (localHour >= 9 && localHour < 17) {
+                        score = 100;
+                    } else if (localHour >= 8 && localHour < 18) {
+                        score = 70;
+                    } else if (localHour >= 7 && localHour < 19) {
+                        score = 40;
+                    } else if (localHour >= 6 && localHour < 22) {
+                        score = 20;
+                    } else {
+                        score = 0;
+                    }
+
+                    qualityScore += score;
+                    times.push({ name: p.name, timezone: p.timezone, hour: localHour, score });
+                });
+
+                qualityScore = Math.round(qualityScore / participants.length);
+
+                results.push({
+                    hour,
+                    times,
+                    quality: qualityScore,
+                    endHour: (hour + Math.ceil(duration / 60)) % 24
+                });
+            }
+
+            // Sort by quality
+            results.sort((a, b) => b.quality - a.quality);
+
+            let html = '<h2 style="margin-top: 20px; margin-bottom: 16px; font-size: 1.3rem;">Best Meeting Times</h2>';
+
+            results.slice(0, 5).forEach(result => {
+                const qualityLevel = result.quality >= 80 ? 'good' : result.quality >= 50 ? 'fair' : 'poor';
+                const qualityText = result.quality >= 80 ? 'Good' : result.quality >= 50 ? 'Fair' : 'Poor';
+                const startDate = new Date(baseDate);
+                startDate.setHours(result.hour);
+
+                html += `<div class="time-slot ${qualityLevel}">
+                    <div class="time-header">${String(result.hour).padStart(2, '0')}:00 UTC (${startDate.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'})})</div>
+                    <div class="time-details">`;
+
+                result.times.forEach(t => {
+                    const timeStr = String(t.hour).padStart(2, '0') + ':00';
+                    html += `<div class="time-detail">
+                        <div class="label">${t.name} (${t.timezone})</div>
+                        <div class="value">${timeStr}</div>
+                    </div>`;
+                });
+
+                html += `</div>
+                    <span class="quality-badge quality-${qualityLevel}">${qualityText} • ${result.quality}% suitable</span>
+                </div>`;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function getTimezoneOffset(tz) {
+            const offsetMap = {
+                'UTC': 0, 'GMT': 0,
+                'EST': -5, 'EDT': -4,
+                'CST': -6, 'CDT': -5,
+                'MST': -7, 'MDT': -6,
+                'PST': -8, 'PDT': -7,
+                'CET': 1, 'CEST': 2,
+                'IST': 5.5,
+                'JST': 9,
+                'AEST': 10,
+                'Europe/London': 0,
+                'Europe/Paris': 1,
+                'Europe/Berlin': 1,
+                'Asia/Tokyo': 9,
+                'Asia/Shanghai': 8,
+                'Asia/Hong_Kong': 8,
+                'Asia/Singapore': 8,
+                'Asia/Bangkok': 7,
+                'Australia/Sydney': 10,
+                'America/Toronto': -5,
+                'America/Vancouver': -8,
+                'America/Denver': -7,
+                'America/Chicago': -6,
+                'America/New_York': -5
+            };
+            return offsetMap[tz] || 0;
+        }
+
+        function resetForm() {
+            participants = [];
+            renderParticipants();
+            document.getElementById('errorMessage').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+            initializeDate();
+        }
+
+        // Add default participants
+        participants = [
+            { id: 1, name: 'Team A', timezone: 'America/New_York' },
+            { id: 2, name: 'Team B', timezone: 'Europe/London' },
+            { id: 3, name: 'Team C', timezone: 'Asia/Tokyo' }
+        ];
+
+        renderParticipants();
+        initializeDate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer Creator — Free Tool | EpochPilot</title>
+    <meta name="description" content="Create customizable countdown timers to any date. Shareable timer display for events, deadlines, launches, and celebrations.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://epochpilot.com/tools/countdown-timer-creator/">
+
+    <meta property="og:title" content="Countdown Timer Creator — EpochPilot">
+    <meta property="og:description" content="Create and share customizable countdown timers instantly.">
+    <meta property="og:url" content="https://epochpilot.com/tools/countdown-timer-creator/">
+    <meta property="og:type" content="website">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Countdown Timer Creator",
+        "url": "https://epochpilot.com/tools/countdown-timer-creator/",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e8e8e8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .tool-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #e8e8e8;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .color-picker-group input[type="color"] {
+            width: 50px;
+            height: 44px;
+            padding: 4px;
+            cursor: pointer;
+        }
+
+        .color-preset {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-btn:hover {
+            border-color: #3b82f6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.secondary:hover {
+            background: #64748b;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .timer-numbers {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            color: #3b82f6;
+        }
+
+        .timer-units {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            font-size: 0.9rem;
+        }
+
+        .timer-unit {
+            background: #0a0a0a;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .timer-unit-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .timer-unit-label {
+            color: #b0b0b0;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+
+        .timer-message {
+            font-size: 1rem;
+            color: #d0d0d0;
+            margin-top: 16px;
+            min-height: 24px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .timer-finished {
+            background: linear-gradient(135deg, #7f1d1d, #0a0a0a);
+            border-color: #dc2626;
+        }
+
+        .timer-finished .timer-numbers {
+            color: #22c55e;
+        }
+
+        .share-section {
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .share-section label {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .share-url {
+            display: flex;
+            gap: 8px;
+        }
+
+        .share-url input {
+            flex: 1;
+        }
+
+        .share-url button {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+        }
+
+        .partner-div {
+            margin: 30px auto;
+            max-width: 728px;
+            text-align: center;
+            padding: 18px 24px;
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            border: 1px solid #334155;
+            border-radius: 10px;
+        }
+
+        .partner-div p {
+            margin: 0;
+        }
+
+        .partner-div p:first-child {
+            margin-bottom: 6px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .partner-div a {
+            color: #38bdf8;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-decoration: none;
+        }
+
+        .partner-div p:last-child {
+            margin-top: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .ad-unit {
+            margin: 20px auto;
+            max-width: 728px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #707070;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 14px 0;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            background: #333;
+            color: #e8e8e8;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer Creator</h1>
+        <p class="subtitle">Create customizable countdown timers to any date. Perfect for events, launches, and deadlines.</p>
+
+        <div class="tool-section">
+            <div class="form-group">
+                <label>Event Title</label>
+                <input type="text" id="eventTitle" placeholder="e.g., New Year 2027" value="New Year 2027">
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setPreset('New Year 2027', '2027-01-01', '00:00')">New Year</button>
+                    <button class="preset-btn" onclick="setPreset('Black Friday 2026', '2026-11-27', '00:00')">Black Friday</button>
+                    <button class="preset-btn" onclick="setPreset('Christmas 2026', '2026-12-25', '00:00')">Christmas</button>
+                    <button class="preset-btn" onclick="setPreset('Summer Vacation', '2026-06-21', '00:00')">Summer Solstice</button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Target Date</label>
+                    <input type="date" id="targetDate">
+                </div>
+                <div class="form-group">
+                    <label>Target Time</label>
+                    <input type="time" id="targetTime" value="00:00">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Completion Message</label>
+                <textarea id="completionMessage" placeholder="e.g., Happy New Year!">Happy New Year!</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Display Color Scheme</label>
+                <div class="color-picker-group">
+                    <input type="color" id="accentColor" value="#3b82f6">
+                </div>
+                <div class="color-preset">
+                    <button class="color-btn" style="background: #3b82f6;" onclick="setColor('#3b82f6')"></button>
+                    <button class="color-btn" style="background: #ec4899;" onclick="setColor('#ec4899')"></button>
+                    <button class="color-btn" style="background: #22c55e;" onclick="setColor('#22c55e')"></button>
+                    <button class="color-btn" style="background: #f59e0b;" onclick="setColor('#f59e0b')"></button>
+                    <button class="color-btn" style="background: #8b5cf6;" onclick="setColor('#8b5cf6')"></button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="createTimer()">Create & Display Timer</button>
+                <button class="secondary" onclick="resetForm()">Reset</button>
+            </div>
+
+            <div id="errorMessage"></div>
+            <div id="timerContainer"></div>
+        </div>
+
+        <div class="ad-unit">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="partner-div">
+            <p>Recommended by our team</p>
+            <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener">BeLikeNative.com</a>
+            <p>The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 EpochPilot. All rights reserved. <a href="https://epochpilot.com/tools/">Back to tools</a></p>
+        </footer>
+    </div>
+
+    <script>
+        let timerInterval = null;
+        let timerData = null;
+
+        function initializeDate() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 30);
+            const dateStr = tomorrow.getFullYear() + '-' +
+                String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+                String(tomorrow.getDate()).padStart(2, '0');
+            document.getElementById('targetDate').value = dateStr;
+        }
+
+        function setPreset(title, date, time) {
+            document.getElementById('eventTitle').value = title;
+            document.getElementById('targetDate').value = date;
+            document.getElementById('targetTime').value = time;
+        }
+
+        function setColor(color) {
+            document.getElementById('accentColor').value = color;
+        }
+
+        function createTimer() {
+            const title = document.getElementById('eventTitle').value;
+            const dateStr = document.getElementById('targetDate').value;
+            const timeStr = document.getElementById('targetTime').value;
+            const message = document.getElementById('completionMessage').value;
+            const color = document.getElementById('accentColor').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.innerHTML = '';
+
+            if (!title || !dateStr) {
+                errorDiv.innerHTML = '<div class="error">Please enter an event title and target date</div>';
+                return;
+            }
+
+            const targetDate = new Date(dateStr + 'T' + timeStr + ':00');
+            if (targetDate <= new Date()) {
+                errorDiv.innerHTML = '<div class="error">Target date must be in the future</div>';
+                return;
+            }
+
+            timerData = { title, targetDate, message, color };
+
+            if (timerInterval) clearInterval(timerInterval);
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (!timerData) return;
+
+            const now = new Date();
+            const diff = timerData.targetDate - now;
+
+            const days = Math.floor(diff / 86400000);
+            const hours = Math.floor((diff % 86400000) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+
+            const isFinished = diff <= 0;
+
+            let html = `<div class="timer-display ${isFinished ? 'timer-finished' : ''}" style="border-color: ${timerData.color};">`;
+            html += `<div class="timer-title">${timerData.title}</div>`;
+
+            if (isFinished) {
+                html += `<div class="timer-numbers">🎉</div>`;
+                html += `<div class="timer-message">${timerData.message}</div>`;
+            } else {
+                html += `<div class="timer-numbers" style="color: ${timerData.color};">${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</div>`;
+
+                html += `<div class="timer-units">`;
+                html += `<div class="timer-unit"><div class="timer-unit-value" style="color: ${timerData.color};">${days}</div><div class="timer-unit-label">Days</div></div>`;
+                html += `<div class="timer-unit"><div class="timer-unit-value" style="color: ${timerData.color};">${hours}</div><div class="timer-unit-label">Hours</div></div>`;
+                html += `<div class="timer-unit"><div class="timer-unit-value" style="color: ${timerData.color};">${minutes}</div><div class="timer-unit-label">Minutes</div></div>`;
+                html += `<div class="timer-unit"><div class="timer-unit-value" style="color: ${timerData.color};">${seconds}</div><div class="timer-unit-label">Seconds</div></div>`;
+                html += `</div>`;
+
+                html += `<div class="share-section">`;
+                html += `<label>Share Link (copy below)</label>`;
+                const shareUrl = window.location.href.split('?')[0] + '?timer=' + encodeURIComponent(JSON.stringify({
+                    title: timerData.title,
+                    targetDate: timerData.targetDate.toISOString(),
+                    message: timerData.message,
+                    color: timerData.color
+                }));
+                html += `<div class="share-url">`;
+                html += `<input type="text" readonly value="${shareUrl}" style="font-size: 0.85rem;">`;
+                html += `<button style="padding: 10px 14px; font-size: 0.9rem;" onclick="copyShareLink('${shareUrl}')">Copy</button>`;
+                html += `</div>`;
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+
+            const container = document.getElementById('timerContainer');
+            container.innerHTML = html;
+        }
+
+        function copyShareLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Share link copied to clipboard!');
+            });
+        }
+
+        function resetForm() {
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('errorMessage').innerHTML = '';
+            document.getElementById('timerContainer').innerHTML = '';
+            document.getElementById('eventTitle').value = 'New Year 2027';
+            document.getElementById('completionMessage').value = 'Happy New Year!';
+            initializeDate();
+        }
+
+        // Load from URL params if shared
+        function loadFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const timerParam = params.get('timer');
+            if (timerParam) {
+                try {
+                    const data = JSON.parse(decodeURIComponent(timerParam));
+                    document.getElementById('eventTitle').value = data.title;
+                    document.getElementById('completionMessage').value = data.message;
+                    document.getElementById('accentColor').value = data.color;
+
+                    const targetDate = new Date(data.targetDate);
+                    const dateStr = targetDate.getFullYear() + '-' +
+                        String(targetDate.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(targetDate.getDate()).padStart(2, '0');
+                    const timeStr = String(targetDate.getHours()).padStart(2, '0') + ':' + String(targetDate.getMinutes()).padStart(2, '0');
+
+                    document.getElementById('targetDate').value = dateStr;
+                    document.getElementById('targetTime').value = timeStr;
+
+                    timerData = {
+                        title: data.title,
+                        targetDate: targetDate,
+                        message: data.message,
+                        color: data.color
+                    };
+
+                    updateTimer();
+                    timerInterval = setInterval(updateTimer, 1000);
+                } catch (e) {
+                    console.log('Could not load timer from URL');
+                }
+            }
+        }
+
+        initializeDate();
+        loadFromUrl();
+    </script>
+</body>
+</html>
