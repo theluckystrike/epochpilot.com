@@ -80,14 +80,19 @@ function renderDiffMode(container) {
       months += 12;
     }
 
-    // Business days (weekdays)
+    /* Business days (weekdays).
+       The date inputs are "YYYY-MM-DD", which parses as UTC midnight, so the whole
+       count must run on the UTC calendar. Reading getDay()/setDate() — which are
+       LOCAL — off a UTC-midnight instant shifts the weekday by one for every visitor
+       west of UTC, and the count came out one short on many ranges
+       (2026-08-24 to 2026-09-24 gave 22 in America/Los_Angeles against 23 in UTC). */
     let businessDays = 0;
     const iter = new Date(Math.min(start, end));
     const endTime = Math.max(start, end);
     while (iter < endTime) {
-      const dow = iter.getDay();
+      const dow = iter.getUTCDay();
       if (dow !== 0 && dow !== 6) businessDays++;
-      iter.setDate(iter.getDate() + 1);
+      iter.setUTCDate(iter.getUTCDate() + 1);
     }
 
     const direction = end >= start ? 'later' : 'earlier';

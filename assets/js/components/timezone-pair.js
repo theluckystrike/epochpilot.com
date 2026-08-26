@@ -69,6 +69,50 @@ export function init(container, config) {
   fromSel.value = fromDefault;
   toSel.value = toDefault;
 
+  /* Offset of `tz` at the instant `date`, in milliseconds. */
+  function tzOffsetMs(date, tz) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const p = {};
+    dtf.formatToParts(date).forEach(x => { if (x.type !== 'literal') p[x.type] = x.value; });
+    const hour = p.hour === '24' ? 0 : Number(p.hour);
+    const asUTC = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day),
+                           hour, Number(p.minute), Number(p.second));
+    return asUTC - date.getTime();
+  }
+
+  /* Wall-clock fields read as a time in `tz`, converted to the UTC instant.
+     Two passes are needed because the zone's offset depends on the instant we
+     are still solving for. The old code took a single offset reading at the
+     visitor's own local instant, which was an hour out for several hours on
+     every DST transition day and gave different answers to visitors in
+     different timezones. This is independent of the visitor's timezone. */
+  function zonedWallToUtc(f, tz) {
+    const wallAsUtc = Date.UTC(f.y, f.mo - 1, f.d, f.h, f.mi, f.s);
+    let guess = wallAsUtc - tzOffsetMs(new Date(wallAsUtc), tz);
+    guess = wallAsUtc - tzOffsetMs(new Date(guess), tz);
+    return new Date(guess);
+  }
+
+  /* Parse "YYYY-MM-DD HH:MM[:SS]" (or with a T) or a bare "HH:MM[:SS]" into
+     wall-clock fields. A bare time means today's date in `tz`, not the
+     visitor's own date. Returns null if the string is not recognised. */
+  function parseWallFields(str, tz) {
+    let m = /^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(str);
+    if (m) return { y: +m[1], mo: +m[2], d: +m[3], h: +m[4], mi: +m[5], s: +(m[6] || 0) };
+    m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(str);
+    if (m) {
+      const t = new Intl.DateTimeFormat('en-CA', {
+        timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date()).split('-');
+      return { y: +t[0], mo: +t[1], d: +t[2], h: +m[1], mi: +m[2], s: +(m[3] || 0) };
+    }
+    return null;
+  }
+
   function formatInTz(date, tz) {
     return new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
@@ -105,28 +149,21 @@ export function init(container, config) {
   function doConvert() {
     const fromTz = fromSel.value;
     const toTz = toSel.value;
-    let timeStr = document.getElementById('tz-time-input').value.trim();
-
-    // If just HH:MM, prefix with today's date
-    if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
-      const today = new Date();
-      timeStr = today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0') + 'T' + timeStr + ':00';
-    }
+    const timeStr = document.getElementById('tz-time-input').value.trim();
 
     try {
-      const inputDate = new Date(timeStr);
-      if (isNaN(inputDate.getTime())) {
+      const fields = parseWallFields(timeStr, fromTz);
+      if (!fields) {
         document.getElementById('tz-result').textContent = 'Could not parse date/time. Try: 2025-04-02 14:30 or just 14:30';
         return;
       }
 
-      // Interpret the input as being in fromTz
-      const naiveInFrom = new Date(inputDate.toLocaleString('en-US', { timeZone: fromTz }));
-      const naiveInLocal = new Date(inputDate.toLocaleString('en-US'));
-      const offset = naiveInLocal - naiveInFrom;
-      const corrected = new Date(inputDate.getTime() + offset);
+      // Interpret the input as a wall-clock time in fromTz.
+      const corrected = zonedWallToUtc(fields, fromTz);
+      if (isNaN(corrected.getTime())) {
+        document.getElementById('tz-result').textContent = 'Could not parse date/time. Try: 2025-04-02 14:30 or just 14:30';
+        return;
+      }
 
       const fromStr = formatInTz(corrected, fromTz);
       const toStr = formatInTz(corrected, toTz);

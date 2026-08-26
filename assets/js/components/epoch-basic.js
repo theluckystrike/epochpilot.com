@@ -53,10 +53,19 @@ export function init(container, config) {
   function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
+  /* ISO-8601 week number: weeks start Monday and week 1 is the week holding
+     the first Thursday of the year. The previous version used a Sunday-start
+     count derived from an elapsed-milliseconds subtraction, which disagreed
+     with ISO at every year boundary and was additionally off by one on the
+     34 days a year when the local clock shifts for DST. Everything here runs
+     on the UTC calendar date, so no offset change can move the day. */
   function getWeekNumber(d) {
-    const oneJan = new Date(d.getFullYear(), 0, 1);
-    const days = Math.floor((d - oneJan) / 86400000);
-    return Math.ceil((days + oneJan.getDay() + 1) / 7);
+    let t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    const dayOfWeek = new Date(t).getUTCDay() || 7;   // Mon = 1 ... Sun = 7
+    t += (4 - dayOfWeek) * 86400000;                  // step to that week's Thursday
+    const isoYear = new Date(t).getUTCFullYear();
+    const jan1 = Date.UTC(isoYear, 0, 1);
+    return Math.ceil(((t - jan1) / 86400000 + 1) / 7);
   }
 
   function doConvert() {
@@ -90,7 +99,7 @@ export function init(container, config) {
     html += gridRow('UTC', d.toUTCString());
     html += gridRow('Local Time', d.toLocaleString());
     html += gridRow('Day of Week', d.toLocaleDateString('en-US', { weekday: 'long' }));
-    html += gridRow('Week of Year', getWeekNumber(d));
+    html += gridRow('Week of Year (ISO 8601)', getWeekNumber(d));
     document.getElementById('ep-result').innerHTML = html;
   }
 
