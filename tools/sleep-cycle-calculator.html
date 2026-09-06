@@ -322,11 +322,11 @@
       return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
     }
 
-    // add minutes to date
+    // add minutes of elapsed sleep to a date. Must be exact-ms: setMinutes is a
+    // wall-clock setter and would gain or lose an hour across a DST transition,
+    // making the cycle count and the hours label on the result wrong that night.
     function addMinutes(date, mins) {
-      const d = new Date(date);
-      d.setMinutes(d.getMinutes() + mins);
-      return d;
+      return new Date(date.getTime() + mins * 60000);
     }
 
     // generate wake times from bedtime (mode 1)

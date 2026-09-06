@@ -387,10 +387,11 @@
     <script>
         const holidays = {
             us: {
-                2024: ['2024-01-01', '2024-01-15', '2024-02-19', '2024-03-29', '2024-05-27', '2024-06-19', '2024-07-04', '2024-09-02', '2024-10-14', '2024-11-28', '2024-12-25'],
-                2025: ['2025-01-01', '2025-01-20', '2025-02-17', '2025-04-18', '2025-05-26', '2025-06-19', '2025-07-04', '2025-09-01', '2025-10-13', '2025-11-27', '2025-12-25'],
-                2026: ['2026-01-01', '2026-01-19', '2026-02-16', '2026-04-10', '2026-05-25', '2026-06-19', '2026-07-03', '2026-09-07', '2026-10-12', '2026-11-26', '2026-12-25'],
-                2027: ['2027-01-01', '2027-01-18', '2027-02-15', '2027-04-02', '2027-05-31', '2027-06-18', '2027-07-05', '2027-09-06', '2027-10-11', '2027-11-25', '2027-12-24']
+                // 11 federal holidays per 5 U.S.C. 6103, observed dates per 5 CFR 610.202 (Sat -> Fri, Sun -> Mon)
+                2024: ['2024-01-01', '2024-01-15', '2024-02-19', '2024-05-27', '2024-06-19', '2024-07-04', '2024-09-02', '2024-10-14', '2024-11-11', '2024-11-28', '2024-12-25'],
+                2025: ['2025-01-01', '2025-01-20', '2025-02-17', '2025-05-26', '2025-06-19', '2025-07-04', '2025-09-01', '2025-10-13', '2025-11-11', '2025-11-27', '2025-12-25'],
+                2026: ['2026-01-01', '2026-01-19', '2026-02-16', '2026-05-25', '2026-06-19', '2026-07-03', '2026-09-07', '2026-10-12', '2026-11-11', '2026-11-26', '2026-12-25'],
+                2027: ['2027-01-01', '2027-01-18', '2027-02-15', '2027-05-31', '2027-06-18', '2027-07-05', '2027-09-06', '2027-10-11', '2027-11-11', '2027-11-25', '2027-12-24']
             },
             uk: {
                 2024: ['2024-01-01', '2024-04-10', '2024-04-12', '2024-05-06', '2024-05-27', '2024-08-26', '2024-12-25', '2024-12-26'],
@@ -444,10 +445,28 @@
             return countryHolidays[year] || [];
         }
 
+        // YYYY-MM-DD of the LOCAL calendar day; toISOString() would name the UTC day instead
+        function toDateStr(date) {
+            return date.getFullYear() + '-' +
+                   String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(date.getDate()).padStart(2, '0');
+        }
+
+        // Whole calendar days between two local dates, read off the date parts. A calendar-day
+        // count is DST-invariant, so the millisecond span is the wrong basis: a fall-back day is
+        // 25 hours long, which pushes the span past an integer boundary and makes Math.ceil round
+        // up. 2026-10-28 to 2026-11-06 spans 217 hours in America/New_York, not 216, and
+        // ceil(217/24) is 10 rather than 9, printing 11 days where 10 is right. Date.UTC
+        // normalises both ends to the same offset, so the difference is always a whole day count.
+        function calendarDaysBetween(from, to) {
+            return (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+                  - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / 86400000;
+        }
+
         function isBusinessDay(date) {
             const dayOfWeek = date.getDay();
             const workDays = getWorkWeekDays();
-            const dateStr = date.toISOString().split('T')[0];
+            const dateStr = toDateStr(date);
             const year = date.getFullYear();
             const countryHolidays = getCountryHolidays(year);
 
@@ -477,7 +496,7 @@
             const workDays = getWorkWeekDays();
 
             while (current <= end) {
-                const dateStr = current.toISOString().split('T')[0];
+                const dateStr = toDateStr(current);
                 const monthKey = dateStr.slice(0, 7);
                 const year = current.getFullYear();
                 const dayOfWeek = current.getDay();
@@ -504,7 +523,8 @@
             }
 
             document.getElementById('businessDays').textContent = businessDays;
-            document.getElementById('calendarDays').textContent = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            // Inclusive count, so +1; counted on the calendar, not off the millisecond span.
+            document.getElementById('calendarDays').textContent = calendarDaysBetween(start, end) + 1;
             document.getElementById('weekends').textContent = weekendDays;
             document.getElementById('holidays').textContent = holidayDays;
 
@@ -545,15 +565,15 @@
                     break;
             }
 
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = end.toISOString().split('T')[0];
+            document.getElementById('startDate').value = toDateStr(start);
+            document.getElementById('endDate').value = toDateStr(end);
             calculate();
         }
 
         // Initialize with today's date
         const today = new Date();
-        document.getElementById('startDate').value = today.toISOString().split('T')[0];
-        document.getElementById('endDate').value = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        document.getElementById('startDate').value = toDateStr(today);
+        document.getElementById('endDate').value = toDateStr(new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000));
     </script>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>

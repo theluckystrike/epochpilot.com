@@ -315,6 +315,24 @@
             return day === 0 || day === 6;
         }
 
+        // A bare 'YYYY-MM-DD' is parsed by Date as UTC midnight, but every reader below
+        // (getDay, getDate, toDateString) asks for the LOCAL calendar. West of UTC those
+        // disagree: new Date('2026-06-01') is 2026-05-31 20:00 in America/New_York, so the
+        // whole span silently shifts back a day. Pinning the time makes it local midnight.
+        function parseLocalDate(str) {
+            return /^\d{4}-\d{2}-\d{2}$/.test(str) ? new Date(str + 'T00:00:00') : new Date(str);
+        }
+
+        // Whole calendar days between two local dates, read off the date parts. A calendar-day
+        // count is DST-invariant, so the millisecond span is the wrong basis: a fall-back day is
+        // 25 hours long, which pushes the span past an integer boundary and makes Math.ceil round
+        // up. Date.UTC normalises both ends to the same offset, so the difference is always a
+        // whole day count.
+        function calendarDaysBetween(from, to) {
+            return (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+                  - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / 86400000;
+        }
+
         function parseHolidayList() {
             const holidayText = document.getElementById('holidays').value;
             const holidays = new Set();
@@ -322,7 +340,8 @@
                 holidayText.split('\n').forEach(line => {
                     const date = line.trim();
                     if (date) {
-                        holidays.add(new Date(date).toDateString());
+                        // same calendar as the day loop below, or a typed holiday never matches
+                        holidays.add(parseLocalDate(date).toDateString());
                     }
                 });
             }
@@ -346,8 +365,8 @@
             }
 
             try {
-                const startDate = new Date(startDateInput);
-                const endDate = new Date(endDateInput);
+                const startDate = parseLocalDate(startDateInput);
+                const endDate = parseLocalDate(endDateInput);
 
                 if (startDate > endDate) {
                     showError('Start date must be before end date');
@@ -373,7 +392,8 @@
                 }
 
                 const totalHours = workingDays * hoursPerDay;
-                const calendarDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                // Inclusive count, so +1; counted on the calendar, not off the millisecond span.
+                const calendarDays = calendarDaysBetween(startDate, endDate) + 1;
                 const weekendDays = excludeWeekends ? (calendarDays - workingDays - (holidays.size)) : 0;
 
                 displayResults([

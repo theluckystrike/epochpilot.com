@@ -98,7 +98,7 @@ function epochToHuman() {
   html += gridRow('Epoch (s)', Math.floor(ms / 1000));
   html += gridRow('Epoch (ms)', ms);
   html += gridRow('Day of Week', d.toLocaleDateString('en-US', { weekday: 'long' }));
-  html += gridRow('Week of Year', getWeekNumber(d));
+  html += gridRow('Week of Year (ISO 8601)', getWeekNumber(d));
   document.getElementById('epoch-result').innerHTML = html;
 }
 
@@ -106,10 +106,13 @@ function gridRow(label, value) {
   return '<span class="result-label">' + label + '</span><span class="result-value">' + value + '</span>';
 }
 
+// ISO 8601: weeks start Monday, week 1 is the week holding the year's first Thursday
 function getWeekNumber(d) {
-  var oneJan = new Date(d.getFullYear(), 0, 1);
-  var days = Math.floor((d - oneJan) / 86400000);
-  return Math.ceil((days + oneJan.getDay() + 1) / 7);
+  var t = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  var dayOfWeek = new Date(t).getUTCDay() || 7;
+  t += (4 - dayOfWeek) * 86400000;
+  var isoYear = new Date(t).getUTCFullYear();
+  return Math.ceil(((t - Date.UTC(isoYear, 0, 1)) / 86400000 + 1) / 7);
 }
 
 // ===== Human to Epoch =====
@@ -348,8 +351,10 @@ function fieldMatches(field, value, min, max) {
       var stepParts = part.split('/');
       var step = parseInt(stepParts[1]);
       if (isNaN(step) || step <= 0) return false;
-      var rangeStart = stepParts[0] === '*' ? min : parseInt(stepParts[0]);
-      if ((value - rangeStart) >= 0 && (value - rangeStart) % step === 0) return true;
+      var stepRange = stepParts[0].split('-');
+      var rangeStart = stepParts[0] === '*' ? min : parseInt(stepRange[0]);
+      var rangeEnd = (stepParts[0] !== '*' && stepRange.length > 1) ? parseInt(stepRange[1]) : max;
+      if (value >= rangeStart && value <= rangeEnd && (value - rangeStart) % step === 0) return true;
       continue;
     }
 

@@ -378,6 +378,16 @@
             document.getElementById('toDate').valueAsDate = today;
         }
 
+        // Whole calendar days between two local dates, read off the date parts. With the time
+        // component OFF this page is asking a calendar question, so the millisecond span is the
+        // wrong basis: a DST spring-forward inside the span makes 2026-03-01 to 2026-03-15 last
+        // 335 hours, and 335/24 floors to 13 rather than 14. Date.UTC normalises both ends to
+        // the same offset, so the difference is always an exact multiple of a day.
+        function calendarDaysBetween(from, to) {
+            return (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+                  - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / 86400000;
+        }
+
         function calculateDifference() {
             const fromDateStr = document.getElementById('fromDate').value;
             const toDateStr = document.getElementById('toDate').value;
@@ -414,7 +424,9 @@
             const totalSeconds = Math.floor(totalMs / 1000);
             const totalMinutes = Math.floor(totalMs / 60000);
             const totalHours = Math.floor(totalMs / 3600000);
-            const totalDays = Math.floor(totalMs / 86400000);
+            // Time component ON is an elapsed-duration question, so the millisecond span is
+            // correct; OFF is a calendar question, so count calendar days instead.
+            const totalDays = includeTime ? Math.floor(totalMs / 86400000) : calendarDaysBetween(fromDate, toDate);
 
             // Calculate detailed breakdown
             let years = 0;
@@ -435,8 +447,9 @@
                 workDate.setMonth(workDate.getMonth() + 1);
             }
 
-            // Count remaining days
-            days = Math.floor((toDate - workDate) / 86400000);
+            // Count remaining days - same two bases as totalDays above, or the y/m/d breakdown
+            // would print "13d" beside a "Total Days 14 days" it is meant to agree with.
+            days = includeTime ? Math.floor((toDate - workDate) / 86400000) : calendarDaysBetween(workDate, toDate);
 
             // Calculate remaining time
             const remainingMs = toDate - new Date(workDate.getFullYear(), workDate.getMonth(), workDate.getDate() + days, 0, 0, 0);

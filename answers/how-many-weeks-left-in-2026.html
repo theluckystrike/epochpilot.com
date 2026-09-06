@@ -133,9 +133,21 @@
 <script>
 (function(){
   var now=new Date(),eoy=new Date(2026,11,31,23,59,59,999);
+  // Whole calendar days between two local dates, read off the date parts. Both anchors here
+  // are LOCAL wall-clock instants and the answer is printed as a calendar count ("N days
+  // remaining out of 365"), so the millisecond span is the wrong basis: any UTC-offset change
+  // between now and the end of the year moves the span off a whole number of days. A fall-back
+  // adds an hour, so before 01:00 local on any day preceding it Math.ceil rounds a whole day
+  // up; a spring-forward removes one, so after 23:00 local it rounds a whole day down.
+  // Date.UTC normalises both ends to the same offset, so the difference is always exact.
+  function calendarDaysBetween(from,to){
+    return (Date.UTC(to.getFullYear(),to.getMonth(),to.getDate())
+          - Date.UTC(from.getFullYear(),from.getMonth(),from.getDate()))/86400000;
+  }
   if(now.getFullYear()>2026){document.getElementById("result").textContent="0";document.getElementById("details").textContent="2026 has already ended.";return;}
   if(now.getFullYear()<2026){var start=new Date(2026,0,1);var diff=eoy-start;var weeks=Math.ceil(diff/6048e5);document.getElementById("result").textContent=weeks;document.getElementById("details").textContent="2026 hasn't started yet. The full year has "+weeks+" weeks.";return;}
-  var diff=eoy-now;var days=Math.ceil(diff/864e5);var weeks=Math.floor(days/7);var extra=days%7;document.getElementById("result").textContent=weeks+" weeks"+(extra?" and "+extra+" day"+(extra>1?"s":""):"");document.getElementById("details").textContent="That's "+days+" days remaining out of 365 total days in 2026.";
+  // Inclusive of today, so +1: 2026-01-01 must read 365 out of 365.
+  var days=calendarDaysBetween(now,eoy)+1;var weeks=Math.floor(days/7);var extra=days%7;document.getElementById("result").textContent=weeks+" weeks"+(extra?" and "+extra+" day"+(extra>1?"s":""):"");document.getElementById("details").textContent="That's "+days+" days remaining out of 365 total days in 2026.";
 })();
 </script>
 <script src="/assets/js/share.js"></script>
