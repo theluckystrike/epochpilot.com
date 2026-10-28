@@ -41,9 +41,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "EpochPilot — Epoch & Timestamp Converter",
+  "name": "Epoch & Timestamp Converter",
   "url": "https://epochpilot.com/",
-  "description": "Convert Unix timestamps to human-readable dates, compare timezones, parse cron expressions, and calculate time differences. Free browser-based time tools.",
+  "description": "Live clocks, timezone conversion, cron parsing, and time math. All client-side, all free.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {
@@ -57,66 +57,73 @@
     "url": "https://zovo.one"
   },
   "datePublished": "2026-04-05",
-  "dateModified": "2026-05-27",
-  "featureList": ["Unix Epoch to Human-Readable Converter", "Human Date to Epoch Converter", "Timezone Converter with IANA Database", "Time Difference Calculator", "Cron Expression Parser with Presets", "Relative Time Calculator", "Live UTC and Local Clocks"]
+  "dateModified": "2026-10-28",
+  "featureList": [
+    "Epoch & Timestamp Converter",
+    "Epoch to Human-Readable",
+    "Human-Readable to Epoch",
+    "Timezone Converter",
+    "Time Difference Calculator",
+    "Cron Expression Parser",
+    "Relative Time"
+  ]
 }
 </script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I convert a Unix timestamp to a human-readable date?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Paste your Unix timestamp (seconds or milliseconds) into EpochPilot's converter and click Convert. The tool auto-detects whether the value is in seconds (10 digits) or milliseconds (13 digits) and displays the result in UTC, your local timezone, and ISO 8601 format."
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I convert a Unix timestamp to a readable date?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Paste your Unix timestamp into the epoch converter field above and click Convert. EpochPilot auto-detects whether your value is in seconds (10 digits) or milliseconds (13 digits) and shows the result in UTC, local time, and ISO 8601 format."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the current Unix epoch time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The live clock at the top of EpochPilot shows the current Unix epoch in seconds, updating every second. It also displays the equivalent UTC time, your local time, and the ISO 8601 representation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I parse and test a cron expression?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Enter your 5-field cron expression (minute, hour, day of month, month, day of week) into the cron parser. EpochPilot generates a human-readable description of the schedule and shows the next 10 execution times. Use the preset dropdown for common schedules."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does EpochPilot handle Daylight Saving Time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The timezone converter uses the browser's Intl.DateTimeFormat API backed by the IANA timezone database. DST transitions are handled automatically by the operating system's ICU data, so you always get correct results without manual offset adjustments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Y2038 problem?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "On January 19, 2038, 32-bit signed integers counting seconds since epoch will overflow. Modern 64-bit systems are unaffected, but older embedded systems and databases using INT columns may break. EpochPilot uses JavaScript's 64-bit number type and handles dates well beyond 2038."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data safe when using EpochPilot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EpochPilot runs entirely in your browser. No timestamps, dates, or cron expressions are sent to any server. The site is static HTML and JavaScript hosted on Cloudflare Workers — you can verify this by checking the Network tab in your browser's developer tools."
+        }
       }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the current Unix epoch timestamp?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "EpochPilot displays the current Unix epoch in real-time at the top of the page, updating every second. The live clock shows the current timestamp in seconds, along with UTC time, local time, and ISO 8601 format."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I parse a cron expression?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Enter your 5-field cron expression (minute, hour, day, month, weekday) into EpochPilot's cron parser. It generates a plain-English description and shows the next 10 execution times. Presets are available for common schedules like every 5 minutes, daily at midnight, and weekdays at 9 AM."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I convert between timezones?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Select your source timezone, enter a time, and choose the target timezone. EpochPilot uses the browser's Intl.DateTimeFormat API with the IANA timezone database, so DST transitions are handled correctly without custom offset tables."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between seconds and milliseconds timestamps?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Unix timestamps in seconds have 10 digits (e.g., 1712000000) while millisecond timestamps have 13 digits (e.g., 1712000000000). JavaScript's Date.now() returns milliseconds, Python's time.time() returns seconds. EpochPilot auto-detects the format."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will Unix timestamps break in 2038?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Y2038 problem affects 32-bit systems storing timestamps as signed integers. On January 19, 2038, 32-bit timestamps overflow. Most modern systems use 64-bit timestamps now, but embedded systems and older databases may be affected. EpochPilot uses JavaScript's 64-bit number type."
-      }
-    }
-  ]
-}
-</script>
+    ]
+  }</script>
 </head>
 <body>
 <header class="site-header">
@@ -140,6 +147,11 @@
   <div class="hero">
     <h1>Epoch &amp; Timestamp Converter</h1>
     <p>Live clocks, timezone conversion, cron parsing, and time math. All client-side, all free.</p>
+    <div class="page-answer" style="max-width:720px;margin:16px auto 0;padding:12px 16px;border-left:3px solid #2563eb;background:rgba(37,99,235,0.08);border-radius:4px;">
+      <p style="margin:0;">EpochPilot converts a Unix timestamp to a readable date and back again, in seconds or milliseconds. It also compares timezones from the IANA database, parses five-field cron expressions, and subtracts two dates. Six tools sit on one page. Every one runs in your browser, so no timestamp leaves your device.</p>
+      <p style="margin:6px 0 0;font-size:0.85rem;opacity:0.75;">Updated 2026-10-28</p>
+    </div>
+
   </div>
 
   <div id="tool-container">
@@ -281,7 +293,7 @@
 
   </div>
 
-  <div class="last-updated"><time datetime="2026-05-27">Last updated: May 27, 2026</time></div>
+  <div class="last-updated"><time datetime="2026-05-27">Last updated: 2026-10-28</time></div>
 
   <!-- Browse All Tools -->
   <div class="tool-section" style="text-align:center;">
@@ -321,7 +333,7 @@
 
     <details>
       <summary>Is my data safe when using EpochPilot?</summary>
-      <p>EpochPilot runs entirely in your browser. No timestamps, dates, or cron expressions are sent to any server. The site is static HTML and JavaScript hosted on GitHub Pages — you can verify this by checking the Network tab in your browser's developer tools.</p>
+      <p>EpochPilot runs entirely in your browser. No timestamps, dates, or cron expressions are sent to any server. The site is static HTML and JavaScript hosted on Cloudflare Workers — you can verify this by checking the Network tab in your browser's developer tools.</p>
     </details>
   </section>
 
@@ -342,7 +354,7 @@
     <p>EpochPilot is designed for backend developers who work with API timestamps daily, DevOps engineers debugging cron schedules and log timestamps, database administrators converting between stored epoch values and readable dates, and QA testers verifying time-dependent behavior across timezones. If you work with developer tools beyond timestamps, <a href="https://kappakit.com">KappaKit</a> provides Base64, JWT, hash, and UUID utilities in a similar single-page format. For machine learning engineers working with training schedules and pipeline orchestration, the cron parser pairs well with tools like <a href="https://heytensor.com">HeyTensor</a> for tensor shape debugging.</p>
 
     <h3>Privacy</h3>
-    <p>Everything in EpochPilot runs locally in your browser. No timestamps, timezone data, or cron expressions are transmitted to any server. The site is static HTML, CSS, and vanilla JavaScript hosted on GitHub Pages with Cloudflare CDN. The source code is fully open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>. There are no cookies, no analytics, and no tracking of any kind.</p>
+    <p>Everything in EpochPilot runs locally in your browser. No timestamps, timezone data, or cron expressions are transmitted to any server. The site is static HTML, CSS, and vanilla JavaScript hosted on Cloudflare Workers. The source code is fully open on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>. There are no cookies, no analytics, and no tracking of any kind.</p>
 
     <h3>Contact</h3>
     <p>EpochPilot is built and maintained by <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=inline&amp;utm_campaign=home">Michael Lip</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/epochpilot.com">GitHub</a>.</p>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convert Epoch Time on the Command Line: date, GNU date and Milliseconds | EpochPilot</title>
+<meta name="description" content="Convert a Unix timestamp to a date in the terminal with date -r on macOS and date -d @ on GNU systems, including millisecond values and the reverse direction.">
+<link rel="canonical" href="https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html">
+<link rel="alternate" type="application/atom+xml" title="EpochPilot — Epoch &amp; Timestamp Converter Blog Feed" href="/blog/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Convert Epoch Time on the Command Line: date, GNU date and Milliseconds">
+<meta property="og:description" content="Convert a Unix timestamp to a date in the terminal with date -r on macOS and date -d @ on GNU systems, including millisecond values and the reverse direction.">
+<meta property="og:url" content="https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Convert Epoch Time on the Command Line: date, GNU date and Milliseconds">
+<meta name="twitter:description" content="Convert a Unix timestamp to a date in the terminal with date -r on macOS and date -d @ on GNU systems, including millisecond values and the reverse direction.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Convert an Epoch Timestamp in the Terminal",
+  "description": "On macOS use date -u -r 1700000000 to turn a timestamp into a date. On Linux use date -u -d @1700000000. The -u flag keeps the output in UTC. Add a fractional part on GNU date to keep milliseconds. To get a timestamp back, run date -u +%s.",
+  "url": "https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html",
+  "datePublished": "2026-10-28",
+  "dateModified": "2026-10-28",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://epochpilot.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://epochpilot.com/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Convert an Epoch Timestamp in the Terminal"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert a Unix timestamp to a date in the terminal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use date -u -r TIMESTAMP on macOS and date -u -d @TIMESTAMP on Linux."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does date -d fail on macOS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The macOS date is the BSD version and has no -d flag. Install GNU date as gdate or use date -r."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get the current Unix timestamp in bash?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run date -u +%s. The value is in seconds."
+      }
+    }
+  ]
+}
+</script>
+</head><body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+      <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro ✦</a>
+      <a href="https://zovo.one/tools?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=about" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="article-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Convert an Epoch Timestamp in the Terminal</span></nav>
+    <h1>Convert an Epoch Timestamp in the Terminal</h1>
+    <div class="page-answer" style="margin:1rem 0;padding:12px 16px;border-left:3px solid #2563eb;background:rgba(37,99,235,0.08);border-radius:4px;">
+      <p style="margin:0;">On macOS use date -u -r 1700000000 to turn a timestamp into a date. On Linux use date -u -d @1700000000. The -u flag keeps the output in UTC. Add a fractional part on GNU date to keep milliseconds. To get a timestamp back, run date -u +%s.</p>
+      <p style="margin:6px 0 0;font-size:0.85rem;opacity:0.75;">By Michael Lip &middot; Updated 2026-10-28</p>
+    </div>
+<p>Two versions of <code>date</code> are in common use. BSD <code>date</code> ships with macOS. GNU <code>date</code> ships with Linux and is often installed on macOS as <code>gdate</code>. The flags differ, so a command copied from the wrong page fails with an illegal option error.</p>
+
+<h2>macOS and BSD: date -r</h2>
+<pre><code>date -u -r 1700000000 '+%Y-%m-%dT%H:%M:%SZ'</code></pre>
+<p>Output on this machine:</p>
+<pre><code>2023-11-14T22:13:20Z</code></pre>
+<p><code>-r</code> takes seconds since the epoch. <code>-u</code> prints UTC. Without <code>-u</code> the same instant prints in the local zone.</p>
+
+<h2>Linux and GNU: date -d @</h2>
+<pre><code>date -u -d @1700000000 '+%Y-%m-%dT%H:%M:%SZ'</code></pre>
+<p>Output from GNU date on this machine, installed as <code>gdate</code>:</p>
+<pre><code>gdate -u -d @1700000000 '+%Y-%m-%dT%H:%M:%SZ'
+2023-11-14T22:13:20Z</code></pre>
+<p>The at sign is part of the GNU syntax. A bare number is read as another date format and gives a wrong or failed result.</p>
+
+<h2>Millisecond timestamps</h2>
+<pre><code>gdate -u -d @1700000000.123 '+%Y-%m-%dT%H:%M:%S.%3NZ'</code></pre>
+<pre><code>2023-11-14T22:13:20.123Z</code></pre>
+<p>GNU date accepts a fractional part after the at sign. BSD <code>date</code> on macOS does not. Divide by 1000 first when no GNU date is installed: <code>date -u -r $((1700000000123/1000))</code>.</p>
+
+<h2>The reverse direction</h2>
+<pre><code>date -u +%s
+gdate -u +%s</code></pre>
+<p>Both printed the same value on this machine at the same moment: 1793176000. Use <code>+%s</code> to stamp a log line or to compare two files.</p>
+
+<h2>Before 1970</h2>
+<pre><code>gdate -u -d @-86400 '+%Y-%m-%dT%H:%M:%SZ'
+date -u -r 0 '+%Y-%m-%dT%H:%M:%SZ'</code></pre>
+<pre><code>1969-12-31T00:00:00Z
+1970-01-01T00:00:00Z</code></pre>
+<p>A negative timestamp is valid. <code>date -r 0</code> shows the start of the epoch itself, which is a quick sanity check on any machine.</p>
+
+<h2>Which timestamp is in the file</h2>
+<p>Count the digits. Ten digits is seconds. Thirteen digits is milliseconds. Nineteen digits is nanoseconds, and both versions need a division before the conversion. For a browser check of one value, the <a href="/tools/epoch-to-date.html">epoch to date converter</a> shows UTC and your local time side by side, and the <a href="/research/timestamp-precision-guide.html">precision guide</a> covers the nanosecond case.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How do I convert a Unix timestamp to a date in the terminal?</summary>
+      <p>Use date -u -r TIMESTAMP on macOS and date -u -d @TIMESTAMP on Linux.</p>
+    </details>
+    <details>
+      <summary>Why does date -d fail on macOS?</summary>
+      <p>The macOS date is the BSD version and has no -d flag. Install GNU date as gdate or use date -r.</p>
+    </details>
+    <details>
+      <summary>How do I get the current Unix timestamp in bash?</summary>
+      <p>Run date -u +%s. The value is in seconds.</p>
+    </details>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=footer&amp;utm_campaign=guides-convert-epoch-timestamp-command-line">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://b2berp.com">B2BERP — Business Tools</a>
+            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudkit.com">ClaudKit — API Tools</a>
+            <a href="https://dismissticket.com">DismissTicket — Support</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Security</a>
+            <a href="https://ml0x.com?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=guides-convert-epoch-timestamp-command-line">ML0X — ML Basics</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
+            <a href="https://recipetool.net">RecipeTool — Cooking</a>
+            <a href="https://viryd.com">Viryd — Dev Tools</a>
+            <a href="https://tg.zovo.one/">Tiny Telegram Tools — Telegram Bots</a>
+        </div>
+    </div>
+</nav>
+
+<div class="pow-strip">
+  <div class="pow-strip-inner">
+    <span class="pow-label">By the same builder:</span>
+    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
+    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
+    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
+    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+    <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=inline&amp;utm_campaign=guides-convert-epoch-timestamp-command-line" rel="nofollow">Zovo — AI Dev Tools</a>
+  </div>
+</div>
+</body>
+</html>

@@ -239,4 +239,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url><loc>https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html</loc><lastmod>2026-10-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html</loc><lastmod>2026-10-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://epochpilot.com/guides/convert-epoch-timestamp-command-line.html</loc><lastmod>2026-10-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
