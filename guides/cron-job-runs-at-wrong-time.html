@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Job Runs at the Wrong Time: Time Zone and DST Causes | EpochPilot</title>
+<meta name="description" content="Find out why a cron job fires at the wrong hour. The daemon reads the five fields in its own time zone, and daylight saving moves that hour twice a year.">
+<link rel="canonical" href="https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html">
+<link rel="alternate" type="application/atom+xml" title="EpochPilot — Epoch &amp; Timestamp Converter Blog Feed" href="/blog/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cron Job Runs at the Wrong Time: Time Zone and DST Causes">
+<meta property="og:description" content="Find out why a cron job fires at the wrong hour. The daemon reads the five fields in its own time zone, and daylight saving moves that hour twice a year.">
+<meta property="og:url" content="https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cron Job Runs at the Wrong Time: Time Zone and DST Causes">
+<meta name="twitter:description" content="Find out why a cron job fires at the wrong hour. The daemon reads the five fields in its own time zone, and daylight saving moves that hour twice a year.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why a Cron Job Runs at the Wrong Time",
+  "description": "A cron job runs at the wrong time because the daemon reads the five fields in its own time zone, not UTC or yours. If the server sits in UTC and you wrote 9 AM, the job starts at 9 AM UTC. Daylight saving shifts that hour, so a job inside the 2 AM change can skip or repeat.",
+  "url": "https://epochpilot.com/guides/cron-job-runs-at-wrong-time.html",
+  "datePublished": "2026-10-28",
+  "dateModified": "2026-10-28",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://epochpilot.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://epochpilot.com/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Why a Cron Job Runs at the Wrong Time"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does cron use UTC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The daemon uses its own system time zone, which is UTC only when the server is set to UTC."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I run a cron job at 9 AM my time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Convert 9 AM in your zone to the same moment in the server's zone, then write that hour in the crontab."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does CRON_TZ work on macOS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The macOS crontab manual does not document CRON_TZ. Read the manual on the machine before you rely on it."
+      }
+    }
+  ]
+}
+</script>
+</head><body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+      <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro ✦</a>
+      <a href="https://zovo.one/tools?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=about" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="article-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Why a Cron Job Runs at the Wrong Time</span></nav>
+    <h1>Why a Cron Job Runs at the Wrong Time</h1>
+    <div class="page-answer" style="margin:1rem 0;padding:12px 16px;border-left:3px solid #2563eb;background:rgba(37,99,235,0.08);border-radius:4px;">
+      <p style="margin:0;">A cron job runs at the wrong time because the daemon reads the five fields in its own time zone, not UTC or yours. If the server sits in UTC and you wrote 9 AM, the job starts at 9 AM UTC. Daylight saving shifts that hour, so a job inside the 2 AM change can skip or repeat.</p>
+      <p style="margin:6px 0 0;font-size:0.85rem;opacity:0.75;">By Michael Lip &middot; Updated 2026-10-28</p>
+    </div>
+<p>Cron has no time zone field. The five fields are minute, hour, day of month, month and day of week. The daemon compares them to its own clock. Your own clock is a third clock, and the gap between the two is the bug.</p>
+
+<h2>Step 1: read the clock the daemon uses</h2>
+<pre><code>date +'%Z %z'
+timedatectl status 2&gt;/dev/null | head -5</code></pre>
+<p>Run this on the machine that runs cron, not on your laptop. The output names the zone and the offset from UTC. When the server prints UTC and the crontab says <code>0 9 * * *</code>, the job starts at 9 AM UTC.</p>
+
+<h2>Step 2: convert the intended time to that zone</h2>
+<p>Write the schedule in the daemon's zone. For a 9 AM Warsaw start on a UTC server in winter, write 8 AM, because Warsaw is UTC+1 in winter and UTC+2 in summer. A fixed cron line cannot follow that shift.</p>
+
+<h2>Step 3: decide what the job needs</h2>
+<p>Most jobs do not need a local wall clock. A backup that runs every six hours can stay in UTC. A report that a person reads at 9 AM local does need the local hour, and that is where daylight saving breaks a fixed line.</p>
+
+<h2>Daylight saving moves the hour</h2>
+<p>The macOS <code>crontab(5)</code> manual states the problem in its own words:</p>
+<pre><code>If you are in one of the 70-odd countries that observe Daylight Savings
+Time, jobs scheduled during the rollback or advance will be affected.  In
+general, it is not a good idea to schedule jobs during this period.</code></pre>
+<p>A job at 2:30 AM local runs once, twice, or not at all, depending on the direction of the change. Move the job out of the 2 AM to 3 AM window. Pick 4 AM or 1 AM.</p>
+
+<h2>CRON_TZ is not portable</h2>
+<p>Some Linux cron builds read a <code>CRON_TZ</code> variable at the top of the file. The macOS <code>crontab(5)</code> page does not document it, and a search of that manual returns no match. Do not put <code>CRON_TZ</code> in a crontab and assume it works. Read the manual on the target machine first.</p>
+
+<h2>Fixes that work</h2>
+<ul>
+<li>Write the fields in the daemon's zone. Print the zone on the server and keep it in a comment above the line.</li>
+<li>Run the job every hour and let the program decide. Compare the current hour in the target zone inside the script and exit when it is not the right one.</li>
+<li>Set <code>TZ</code> inside the command when the program itself needs a zone: <code>TZ=Europe/Warsaw /usr/local/bin/report</code>. This changes the program's clock, not the start time.</li>
+<li>On Linux, a systemd timer with <code>OnCalendar=*-*-* 09:00:00 Europe/Warsaw</code> follows the zone and the daylight saving change.</li>
+<li>Log the start time in UTC. A wrong-hour bug is plain to see in a log that records the offset.</li>
+</ul>
+
+<h2>Check the expression before you deploy</h2>
+<p>Paste the line into the <a href="/tools/cron-expression-generator/">cron expression generator</a> to read it in plain English. The <a href="/tools/cron-next-runs.html">next runs tool</a> lists the coming execution times, so a mismatch with the server zone is visible before the job fires. The <a href="/research/cron-expression-patterns.html">cron pattern research</a> lists common schedules with their exact fields.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Does cron use UTC?</summary>
+      <p>No. The daemon uses its own system time zone, which is UTC only when the server is set to UTC.</p>
+    </details>
+    <details>
+      <summary>How do I run a cron job at 9 AM my time?</summary>
+      <p>Convert 9 AM in your zone to the same moment in the server&#x27;s zone, then write that hour in the crontab.</p>
+    </details>
+    <details>
+      <summary>Does CRON_TZ work on macOS?</summary>
+      <p>The macOS crontab manual does not document CRON_TZ. Read the manual on the machine before you rely on it.</p>
+    </details>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=footer&amp;utm_campaign=guides-cron-job-runs-at-wrong-time">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://b2berp.com">B2BERP — Business Tools</a>
+            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudkit.com">ClaudKit — API Tools</a>
+            <a href="https://dismissticket.com">DismissTicket — Support</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Security</a>
+            <a href="https://ml0x.com?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=guides-cron-job-runs-at-wrong-time">ML0X — ML Basics</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
+            <a href="https://recipetool.net">RecipeTool — Cooking</a>
+            <a href="https://viryd.com">Viryd — Dev Tools</a>
+            <a href="https://tg.zovo.one/">Tiny Telegram Tools — Telegram Bots</a>
+        </div>
+    </div>
+</nav>
+
+<div class="pow-strip">
+  <div class="pow-strip-inner">
+    <span class="pow-label">By the same builder:</span>
+    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
+    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
+    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
+    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+    <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=inline&amp;utm_campaign=guides-cron-job-runs-at-wrong-time" rel="nofollow">Zovo — AI Dev Tools</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Convert a Unix Timestamp in Excel and Google Sheets | EpochPilot</title>
+<meta name="description" content="Convert a Unix timestamp to a date in Excel or Google Sheets with one formula, handle 13-digit milliseconds, and go back from date to epoch.">
+<link rel="canonical" href="https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html">
+<link rel="alternate" hreflang="en" href="https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html">
+<link rel="alternate" hreflang="x-default" href="https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html">
+<link rel="alternate" type="application/atom+xml" title="EpochPilot — Epoch &amp; Timestamp Converter Blog Feed" href="/blog/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How to Convert a Unix Timestamp in Excel and Google Sheets">
+<meta property="og:description" content="Convert a Unix timestamp to a date in Excel or Google Sheets with one formula, handle 13-digit milliseconds, and go back from date to epoch.">
+<meta property="og:url" content="https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://epochpilot.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Convert a Unix Timestamp in Excel and Google Sheets">
+<meta name="twitter:description" content="Convert a Unix timestamp to a date in Excel or Google Sheets with one formula, handle 13-digit milliseconds, and go back from date to epoch.">
+<meta name="twitter:image" content="https://epochpilot.com/assets/og-image.png">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Unix Timestamp in Excel and Google Sheets",
+  "description": "A Unix timestamp converts to a spreadsheet date with =(A1/86400)+DATE(1970,1,1). Divide by 86400 because a day holds that many seconds, then anchor the result at 1 January 1970. For a 13-digit millisecond value divide by 86400000 instead. Format the cell as a date and time to see the result.",
+  "url": "https://epochpilot.com/guides/unix-timestamp-in-excel-google-sheets.html",
+  "datePublished": "2026-10-28",
+  "dateModified": "2026-10-28",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EpochPilot",
+    "url": "https://epochpilot.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://epochpilot.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://epochpilot.com/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Unix Timestamp in Excel and Google Sheets"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What formula converts a Unix timestamp in Excel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "=(A1/86400)+DATE(1970,1,1). Divide the seconds by 86400 and add the date 1 January 1970."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do I get a date in 1970 when I use my timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The value is probably milliseconds and you divided by 86400. Divide a 13-digit value by 86400000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do Excel and Google Sheets use the same formula?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Both use a serial day number, so the same formula works in both."
+      }
+    }
+  ]
+}
+</script>
+</head><body>
+<header class="site-header">
+  <a href="/" class="site-logo">EpochPilot</a>
+  <nav class="site-nav">
+    <a href="/">Tools</a>
+    <a href="/blog/">Blog</a>
+    <a href="/about.html">About</a>
+      <div class="nav-right">
+      <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro ✦</a>
+      <a href="https://zovo.one/tools?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=about" class="nav-zovo">Zovo Tools</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="article-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Unix Timestamp in Excel and Google Sheets</span></nav>
+    <h1>Unix Timestamp in Excel and Google Sheets</h1>
+    <div class="page-answer" style="margin:1rem 0;padding:12px 16px;border-left:3px solid #2563eb;background:rgba(37,99,235,0.08);border-radius:4px;">
+      <p style="margin:0;">A Unix timestamp converts to a spreadsheet date with =(A1/86400)+DATE(1970,1,1). Divide by 86400 because a day holds that many seconds, then anchor the result at 1 January 1970. For a 13-digit millisecond value divide by 86400000 instead. Format the cell as a date and time to see the result.</p>
+      <p style="margin:6px 0 0;font-size:0.85rem;opacity:0.75;">By Michael Lip &middot; Updated 2026-10-28</p>
+    </div>
+<p>Spreadsheets store a date as a serial number of days. Unix time counts seconds from 1 January 1970. One division and one anchor turn that second count into a date the cell can format.</p>
+
+<h2>The formula for a seconds timestamp</h2>
+<pre><code>=(A1/86400)+DATE(1970,1,1)</code></pre>
+<p>Put the timestamp in cell A1. Divide it by 86400, the number of seconds in a day. Add <code>DATE(1970,1,1)</code>, the anchor date. Set the cell format to a date and time, for example <code>yyyy-mm-dd hh:mm:ss</code>.</p>
+<p>Test it with a known value. Unix time 1700000000 is 2023-11-14T22:13:20Z. The division gives 19675.925925925927 days. Adding the anchor gives 2023-11-14 22:13:20.</p>
+
+<h2>The formula for a milliseconds timestamp</h2>
+<pre><code>=(A1/86400000)+DATE(1970,1,1)</code></pre>
+<p>JavaScript and Java usually hand you milliseconds. A millisecond timestamp has 13 digits and a seconds timestamp has 10. Divide by 86400000, the number of milliseconds in a day. The rest of the formula does not change.</p>
+
+<h2>Convert a date back to a timestamp</h2>
+<pre><code>=(A1-DATE(1970,1,1))*86400</code></pre>
+<p>This formula is the inverse. It subtracts the anchor and multiplies by 86400. Wrap it in <code>ROUND</code> when the cell holds a fractional second.</p>
+
+<h2>Why DATE(1970,1,1) and not 25569</h2>
+<p>Do not copy the number 25569 from a blog post. That number is the serial for 1 January 1970 in the 1900 date system only. Excel also offers a 1904 date system for some Mac workbooks, and the serial changes with it. <code>DATE(1970,1,1)</code> builds the anchor from the workbook's own system, so the formula survives the switch.</p>
+
+<h2>The same formulas in Google Sheets</h2>
+<p>Google Sheets uses the same serial day number. Paste the formulas without a change. Both <code>DATE</code> and the arithmetic behave the same way. If a cell shows a five-digit number, apply Format, Number, Date and time.</p>
+
+<h2>Common faults</h2>
+<ul>
+<li>A 10-digit value divided by 86400000 gives a date in 1970. Count the digits before you divide.</li>
+<li>A text value does not divide. Use <code>VALUE(A1)</code> or import the column as a number.</li>
+<li>A negative timestamp is valid. It gives a date before 1970 and the formula still works.</li>
+<li>The timestamp holds no time zone. Unix time is UTC, so the formula gives a UTC wall clock. Add your offset when the sheet must show local time.</li>
+</ul>
+
+<h2>Check the answer before you fill a column</h2>
+<p>Run one value through the <a href="/tools/epoch-to-date.html">epoch to date converter</a> and compare. Use the <a href="/tools/milliseconds-converter.html">milliseconds converter</a> for a 13-digit value. To go the other way, use the <a href="/tools/date-to-epoch.html">date to epoch converter</a>. For the full list of storage formats, read the <a href="/research/timestamp-format-encyclopedia.html">timestamp format encyclopedia</a>.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>What formula converts a Unix timestamp in Excel?</summary>
+      <p>=(A1/86400)+DATE(1970,1,1). Divide the seconds by 86400 and add the date 1 January 1970.</p>
+    </details>
+    <details>
+      <summary>Why do I get a date in 1970 when I use my timestamp?</summary>
+      <p>The value is probably milliseconds and you divided by 86400. Divide a 13-digit value by 86400000.</p>
+    </details>
+    <details>
+      <summary>Do Excel and Google Sheets use the same formula?</summary>
+      <p>Yes. Both use a serial day number, so the same formula works in both.</p>
+    </details>
+  </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=epochpilot&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=footer&amp;utm_campaign=guides-unix-timestamp-in-excel-google-sheets">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://b2berp.com">B2BERP — Business Tools</a>
+            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudkit.com">ClaudKit — API Tools</a>
+            <a href="https://dismissticket.com">DismissTicket — Support</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://heytensor.com">HeyTensor — ML Tools</a>
+            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Security</a>
+            <a href="https://ml0x.com?utm_source=epochpilot&amp;utm_medium=nav&amp;utm_campaign=guides-unix-timestamp-in-excel-google-sheets">ML0X — ML Basics</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
+            <a href="https://recipetool.net">RecipeTool — Cooking</a>
+            <a href="https://viryd.com">Viryd — Dev Tools</a>
+            <a href="https://tg.zovo.one/">Tiny Telegram Tools — Telegram Bots</a>
+        </div>
+    </div>
+</nav>
+
+<div class="pow-strip">
+  <div class="pow-strip-inner">
+    <span class="pow-label">By the same builder:</span>
+    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
+    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
+    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
+    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+    <a href="https://zovo.one/lifetime?utm_source=epochpilot&amp;utm_medium=inline&amp;utm_campaign=guides-unix-timestamp-in-excel-google-sheets" rel="nofollow">Zovo — AI Dev Tools</a>
+  </div>
+</div>
+</body>
+</html>
